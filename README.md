@@ -1,5 +1,5 @@
 
-![nextcms-banner](/public/images/auth-decoration.png)
+![nextcms-banner](/public/images/auth-decoration.png){ width=500 height=300 }
 
 # NextCMS
 
@@ -7,6 +7,8 @@
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/yourusername/nextcms)
 
 NextCMS is a modern content management system built with Next.js and Tailwind CSS. It provides a flexible solution for managing website content, featuring a user-friendly interface, drag-and-drop block management, and support for internationalization (i18n). Perfect for developers and content managers seeking a customizable and scalable CMS.
+
+The project is a fork of [tailwind-nextjs-starter-blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) by Timothy Lin, adapted to fit the needs of a full-featured CMS. The original project is licensed under the MIT License.
 
 ## Features
 
@@ -29,8 +31,9 @@ NextCMS is a modern content management system built with Next.js and Tailwind CS
 1. Clone the repo
 
 ```bash
-npx degit 'yourusername/nextcms'
+npx degit 'jefftko/nextcms'
 ```
+
 
 Licence
 MIT © Jeff Zhu
