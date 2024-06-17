@@ -1,0 +1,65 @@
+{
+  "header": {
+    "logo": {
+      "src": "https://tinacms-template.s3.us-west-1.amazonaws.com/logo_aimx.png",
+      "alt": "aimx",
+      "width": 130,
+      "height": 130
+    },
+    "nav": [
+      {
+        "href": "",
+        "label": "Home"
+      },
+      {
+        "href": "about",
+        "label": "About"
+      },
+      {
+        "href": "posts",
+        "label": "Blog"
+      },
+      {
+        "href": "#",
+        "label": "子菜单",
+        "children": [
+          {
+            "href": "https://tinacms.org",
+            "label": "TinaCMS"
+          },
+          {
+            "href": "https://nextjs.org",
+            "label": "Next.js"
+          }
+        ]
+      },
+      {
+        "href": "#",
+        "label": "子菜单二",
+        "children": [
+          {
+            "href": "https://tinacms.org",
+            "label": "TinaCMS"
+          },
+          {
+            "href": "https://nextjs.org",
+            "label": "Next.js"
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "color": "default",
+    "social": {
+      "facebook": "/",
+      "twitter": "/",
+      "instagram": "/"
+    }
+  },
+  "theme": {
+    "color": "blue",
+    "font": "sans",
+    "darkMode": "system"
+  }
+}

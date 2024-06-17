@@ -1,0 +1,50 @@
+{
+  "nav": [
+    {
+      "href": "/admin/dashboard",
+      "label": "Dashboard",
+      "icon": "dashboard"
+    },
+    {
+      "href": "/admin/content",
+      "label": "Content Management",
+      "icon": "article",
+      "children": [
+        {
+          "href": "/admin/pages",
+          "label": "Page Management"
+        },
+        {
+          "href": "/admin/blocks",
+          "label": "Block Management"
+        },
+        {
+          "href": "/admin/media",
+          "label": "Media Management"
+        },
+        {
+          "href": "/admin/categories",
+          "label": "Categories"
+        },
+        {
+          "href": "/admin/tags",
+          "label": "Tags"
+        },
+        {
+          "href": "/admin/posts",
+          "label": "Articles"
+        }
+      ]
+    },
+    {
+      "href": "/admin/users",
+      "label": "User Management",
+      "icon": "users"
+    },
+    {
+      "href": "/admin/settings",
+      "label": "Settings",
+      "icon": "setting"
+    }
+  ]
+}
