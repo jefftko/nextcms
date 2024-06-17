@@ -1,5 +1,5 @@
 
-![nextcms-banner](/public/static/images/twitter-card.png)
+![nextcms-banner](/public/images/auth-decoration.png)
 
 # NextCMS
 
