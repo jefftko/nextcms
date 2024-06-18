@@ -25,6 +25,8 @@ import {
   Copy,
   LeftExpand,
   RightExpand,
+  File,
+  Photo
 } from './basic-icons'
 
 export const IconComponents = {
@@ -54,6 +56,8 @@ export const StrokeIconComponents = {
   check: Check,
   leftExpand: LeftExpand,
   rightExpand: RightExpand,
+  file: File,
+  photo: Photo,
 }
 
 type SocialIconProps = {

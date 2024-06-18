@@ -6,9 +6,9 @@
       "icon": "dashboard"
     },
     {
-      "href": "/admin/content",
-      "label": "Content Management",
-      "icon": "article",
+      "href": "/admin/page-builder",
+      "label": "Page Builder",
+      "icon": "file",
       "children": [
         {
           "href": "/admin/pages",
@@ -17,11 +17,19 @@
         {
           "href": "/admin/blocks",
           "label": "Block Management"
-        },
-        {
-          "href": "/admin/media",
-          "label": "Media Management"
-        },
+        }
+      ]
+    },
+    {
+      "href": "/admin/media",
+      "label": "Media Management",
+      "icon": "photo"
+    },
+    {
+      "href": "/admin/content",
+      "label": "Content Management",
+      "icon": "article",
+      "children": [
         {
           "href": "/admin/categories",
           "label": "Categories"
@@ -31,7 +39,7 @@
           "label": "Tags"
         },
         {
-          "href": "/admin/posts",
+          "href": "/admin/articles",
           "label": "Articles"
         }
       ]
