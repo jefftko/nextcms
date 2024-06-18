@@ -39,7 +39,6 @@ const ListField = ({ label, name, fields, value, onChange }) => {
         <Accordion
           title={`${label}_${index}`}
           className="mt-2"
-          handleDelete={() => removeItem(index)}
         >
           <div key={index} className="mb-4 p-2">
             <div className="flex flex-wrap justify-between">

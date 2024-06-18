@@ -22,9 +22,6 @@ interface ListLayoutProps {
   pageNumber?: number
 }
 
-async function getTranslations(locale: string) {
-  return await serverSideTranslations(locale, ['admin'])
-}
 
 export default function PagesContent({ posts, title, pageNumber = 1 }: ListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')

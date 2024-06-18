@@ -26,7 +26,7 @@ import {
   LeftExpand,
   RightExpand,
   File,
-  Photo
+  Photo,
 } from './basic-icons'
 
 export const IconComponents = {
