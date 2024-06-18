@@ -1,5 +1,5 @@
 
-![nextcms-banner](/public/images/logo-with-text.png){ width=500 height=300 }
+![nextcms-banner](/public/images/logo-with-text.png)
 
 # NextCMS
 
