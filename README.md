@@ -1,5 +1,5 @@
 
-![nextcms-banner](/public/images/auth-decoration.png){ width=500 height=300 }
+![nextcms-banner](/public/images/logo-with-text.png){ width=500 height=300 }
 
 # NextCMS
 
@@ -34,6 +34,26 @@ NextCMS is a modern content management system built with Next.js and Tailwind CS
 npx degit 'jefftko/nextcms'
 ```
 
+## Installation
+
+```bash
+yarn
+```
+
+##Development
+First, run the development server:
+
+```bash
+yarn dev
+```
+Open http://localhost:3000 with your browser to see the result.
+
+Edit the layout in app or content in data. The pages auto-update as you edit them with live reloading.
+
+## Open Source License
 
 Licence
 MIT © Jeff Zhu
+
+## Acknowledgements
+This project is based on the tailwind-nextjs-starter-blog created by Timothy Lin. Some of the code and concepts have been adapted to fit the needs of this project. The original project is licensed under the MIT License.
