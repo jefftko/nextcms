@@ -2,7 +2,7 @@
 
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
 // import json data
-import jsonData from '@/data/global/admin.json'
+import jsonData from '@/data/global/admin.json' assert { type: 'json' }
 
 interface ContextProps {
   sidebarOpen: boolean

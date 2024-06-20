@@ -67,7 +67,7 @@ export default function EditorBody() {
   return (
     <>
       <Layout layout={layout as keyof typeof layouts}>
-        {blocks.length === 0 && <Loading />}
+        {/*blocks.length === 0 ? (<Loading />):(<ContentBlocks blocks={blocks} />)*/}
         <ContentBlocks blocks={blocks} />
       </Layout>
     </>

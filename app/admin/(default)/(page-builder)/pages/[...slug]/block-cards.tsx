@@ -30,7 +30,10 @@ export default function BlockCards({ schemas }) {
     <>
       {/* Card 4 */}
       {schemas.map((schema, index) => (
-        <div className="col-span-6 overflow-hidden rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
+        <div
+          className="col-span-6 overflow-hidden rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          key={index}
+        >
           <div className="flex h-full flex-col">
             {/* Image */}
             <Image

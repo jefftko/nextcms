@@ -59,7 +59,7 @@ export default function EditorBody() {
   useEffect(() => {
     //sendMessageToIframe({type: 'set-width', width: widthType}, currentOrigin)
     sendMessageToIframe({ type: 'highlight', blockId }, currentOrigin)
-    console.log('blockId', blockId)
+    //console.log('blockId', blockId)
   }, [blockId])
 
   return (

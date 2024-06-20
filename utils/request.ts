@@ -15,6 +15,18 @@ async function request(url, options = {}) {
   try {
     const response = await fetch(url, finalOptions)
     const data = await response.json()
+
+    // 检查响应内容类型
+    const contentType = response.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text() // 获取响应文本
+      throw new Error(`Expected JSON response but got: ${text}`)
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
     if (response.ok) {
       return data
     } else {

@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { Icon } from '@/components/icons'
 import { usePageData } from '@/app/admin/page-data'
 import { useAppProvider } from '@/app/admin/app-provider'
-import request from '@/utils/request'
 import { useMessage } from '@/app/admin/message-provider'
+import { editPage, createPage } from '@/services/pageBuilderService'
 
 interface HeaderProps {
   setWidth: (width: string) => void
@@ -59,38 +59,29 @@ export default function EditorHeader({ setWidth }: HeaderProps) {
       setToast({ message: 'Blocks cannot be empty', type: 'error' })
       return
     }
-    let resData
-    if (action === 'edit') {
-      resData = await request(`/admin/api/file`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          ...data,
-          lastmod: new Date().toISOString(),
-          date: data?.date ?? new Date().toISOString(),
-        }),
-      })
-    } else {
-      resData = await request('/admin/api/file', {
-        method: 'POST',
-        body: JSON.stringify({
-          ...data,
-          lastmod: new Date().toISOString(),
-          date: data?.date ?? new Date().toISOString(),
-        }),
-      })
-    }
-    if (resData) {
-      if (resData.status == 'success') {
-        setToast({ message: 'Page saved successfully', type: 'success' })
-        //if page is new ,redirect to edit page
-        if (action === 'create') {
-          window.location.href = `/admin/pages/edit/${pageData.pagePath}`
-        }
-        //reload page
+    try {
+      let resData
+      if (action === 'edit') {
+        resData = await editPage(data)
       } else {
-        setToast({ message: resData.message, type: 'error' })
-        console.error('Error saving MDX file:', resData.message)
+        resData = await createPage(data)
       }
+      if (resData) {
+        if (resData.status == 'success') {
+          setToast({ message: 'Page saved successfully', type: 'success' })
+          //if page is new ,redirect to edit page
+          if (action === 'create') {
+            window.location.href = `/admin/pages/edit/${pageData.pagePath}`
+          }
+          //reload page
+        } else {
+          setToast({ message: resData.message, type: 'error' })
+          console.error('Error saving MDX file:', resData.message)
+        }
+      }
+    } catch (error) {
+      setToast({ message: 'Error saving MDX file', type: 'error' })
+      console.error('Error saving MDX file:', error)
     }
     return
   }
@@ -123,8 +114,6 @@ export default function EditorHeader({ setWidth }: HeaderProps) {
 
           <button
             className="text-slate-500 hover:text-slate-600 lg:hidden"
-            aria-controls="sidebar"
-            aria-expanded={sidebarOpen}
             onClick={() => {
               setSidebarOpen(!sidebarOpen)
             }}

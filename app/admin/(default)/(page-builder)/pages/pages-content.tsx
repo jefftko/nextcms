@@ -22,7 +22,6 @@ interface ListLayoutProps {
   pageNumber?: number
 }
 
-
 export default function PagesContent({ posts, title, pageNumber = 1 }: ListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false)

@@ -4,6 +4,7 @@ import componentMap from '@/components/ComponentMap'
 import OverlayWrapper from '@/components/wrappers/OverlayWrapper'
 
 export const ContentBlocks = ({ blocks }) => {
+  if (!blocks || blocks.length === 0) return null
   return (
     <>
       {blocks.map((block, index) => {

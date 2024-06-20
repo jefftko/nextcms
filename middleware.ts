@@ -14,7 +14,7 @@ const legacyPrefixs = ['/admin']
 export default auth((req) => {
   const { pathname } = req.nextUrl
 
-  console.log('auth', req.auth)
+  //console.log('auth', req.auth)
 
   if (!req.auth?.user && pathname.startsWith('/admin')) {
     return NextResponse.redirect(new URL('/admin/signin', req.nextUrl).toString())

@@ -26,6 +26,7 @@
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
       "@/utils/*": ["utils/*"],
+      "@/services/*": ["services/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     },
     "plugins": [

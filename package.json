@@ -24,6 +24,7 @@
     "easymde": "^2.18.0",
     "esbuild": "0.18.11",
     "flatpickr": "^4.6.13",
+    "formidable": "^3.5.1",
     "github-slugger": "^1.4.0",
     "gray-matter": "^4.0.2",
     "image-size": "1.0.0",

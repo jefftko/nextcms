@@ -36,10 +36,7 @@ const ListField = ({ label, name, fields, value, onChange }) => {
         </button>
       </div>
       {value?.map((item, index) => (
-        <Accordion
-          title={`${label}_${index}`}
-          className="mt-2"
-        >
+        <Accordion title={`${label}_${index}`} className="mt-2">
           <div key={index} className="mb-4 p-2">
             <div className="flex flex-wrap justify-between">
               {Object.keys(fields).map((fieldName) => (

@@ -68,9 +68,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AppProvider>
             <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
             <div className="flex min-h-screen flex-col overflow-hidden supports-[overflow:clip]:overflow-clip">
-              <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+              {/*<SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
                 {children}
-              </SearchProvider>
+              </SearchProvider>*/}
+              {children}
             </div>
           </AppProvider>
         </ThemeProviders>

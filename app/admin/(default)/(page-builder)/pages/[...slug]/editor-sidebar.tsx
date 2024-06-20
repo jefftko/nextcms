@@ -56,9 +56,12 @@ export default function EditorSidebar() {
     //计算出当前右侧面板的宽度
     //const rightPanel = document.querySelector('.right-panel')
     //get id  editor-content width
-    console.log(startWidth)
     const editorContent = document.getElementById('editor-content')
     const leftPanel = document.querySelector('.left-panel')
+    if (!editorContent || !leftPanel) {
+      console.error('Element not found')
+      return
+    }
     if (editorContent!.clientWidth - leftPanel!.clientWidth > 10) {
       setPanelWidth(editorContent!.clientWidth)
       setStartWidth(leftPanel!.clientWidth)
@@ -118,8 +121,6 @@ export default function EditorSidebar() {
               <button
                 className="mr-4 text-slate-400 hover:text-slate-500"
                 onClick={() => setBlockId(null)}
-                aria-controls="block-form"
-                aria-expanded={blockId ? 'true' : 'false'}
               >
                 <span className="sr-only">Close block</span>
                 <Icon kind="arrowLeft" className="shrink-0 opacity-50" size={6} />
