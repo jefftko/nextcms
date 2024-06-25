@@ -27,7 +27,7 @@ const FileManager = () => {
     formData.append('subDir', currentDir)
 
     try {
-      await axios.post('/api/files/upload', formData)
+      //await axios.post('/api/files/upload', formData)
       fetchFiles()
     } catch (error) {
       console.error('Error uploading file:', error)
@@ -36,7 +36,7 @@ const FileManager = () => {
 
   const handleNewDir = async () => {
     try {
-      await axios.put(`/api/files?dir=${currentDir}&name=${newDir}`)
+      //await axios.put(`/api/files?dir=${currentDir}&name=${newDir}`)
       setNewDir('')
       fetchFiles()
     } catch (error) {
@@ -46,7 +46,7 @@ const FileManager = () => {
 
   const handleDelete = async (name) => {
     try {
-      await axios.delete(`/api/files?dir=${currentDir}&name=${name}`)
+      //await axios.delete(`/api/files?dir=${currentDir}&name=${name}`)
       fetchFiles()
     } catch (error) {
       console.error('Error deleting file:', error)

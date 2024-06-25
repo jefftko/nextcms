@@ -13,10 +13,15 @@ const HeroHomeSchema = () => ({
       },
     },
     subTitle: {
-      kind: 'textField',
+      kind: 'text',
       label: 'SubTitle',
       description: 'The subTitle of the hero section',
       defaultValue: 'SubTitle',
+      additional: {
+        required: true,
+        placeholder: 'SubTitle',
+        type: 'email',
+      },
     },
     //descripiton
     description: {
@@ -24,10 +29,30 @@ const HeroHomeSchema = () => ({
       label: 'Description',
       description: 'The description of the hero section',
     },
+    dateTime: {
+      kind: 'date',
+      label: 'Date',
+      description: 'The date of the hero section',
+      additional: {
+        flatpickrOptions: {
+          dateFormat: 'Y-m-d',
+        },
+      },
+    },
     link: {
       kind: 'link',
       label: 'Link',
       description: 'The links of the hero section',
+    },
+    textArea: {
+      kind: 'textArea',
+      label: 'TextArea',
+      description: 'The textArea of the hero section',
+    },
+    image: {
+      kind: 'image',
+      label: 'Image',
+      description: 'The image of the hero section',
     },
     list: {
       kind: 'list',

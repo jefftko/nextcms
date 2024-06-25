@@ -2,12 +2,18 @@ import TextField from './text-field'
 import RichText from './rich-text'
 import Link from './link'
 import ListField from './list-field'
+import TextArea from './text-area'
+import DatePicker from './date-picker' // 导入 DatePicker 组件
+import ImageUpload from './image-upload'
 
 const components = {
   text: TextField,
   richText: RichText,
   link: Link,
   list: ListField,
+  textArea: TextArea,
+  date: DatePicker, // 添加 DatePicker 组件
+  image: ImageUpload,
 }
 
 export type AdditionalFieldProps = {
@@ -15,6 +21,8 @@ export type AdditionalFieldProps = {
   maxLength?: number
   options?: string[]
   required?: boolean
+  type?: string
+  flatpickrOptions?: object // 添加 flatpickrOptions 属性
 }
 
 export type FieldProps = {
@@ -36,7 +44,7 @@ const BlockField = (props: FieldProps) => {
     <FormField
       label={label}
       name={name}
-      additonal={additional}
+      additional={additional}
       fields={fields}
       value={value}
       onChange={onChange}

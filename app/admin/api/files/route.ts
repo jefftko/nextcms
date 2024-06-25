@@ -40,7 +40,10 @@ export async function POST(req: NextRequest) {
   form.keepExtensions = true
 
   try {
-    const { fields, files } = await new Promise<{ fields: formidable.Fields; files: formidable.Files }>((resolve, reject) => {
+    const { fields, files } = await new Promise<{
+      fields: formidable.Fields
+      files: formidable.Files
+    }>((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
         if (err) reject(err)
         resolve({ fields, files })

@@ -6,7 +6,7 @@ import Accordion from '@/components/admin/accordion'
 import { Icon } from '@/components/icons'
 
 const ListField = ({ label, name, fields, value, onChange }) => {
-  console.log('ListField', fields)
+  //console.log('ListField', fields)
 
   const handleItemChange = (index, fieldName, fieldValue) => {
     const newList = [...value]

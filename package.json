@@ -13,6 +13,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.4",
     "@next/bundle-analyzer": "14.0.3",
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
@@ -21,6 +22,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "contentlayer2": "^0.4.6",
+    "dayjs": "^1.11.11",
     "easymde": "^2.18.0",
     "esbuild": "0.18.11",
     "flatpickr": "^4.6.13",
@@ -38,6 +40,8 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.3",
+    "react-flatpickr": "^3.10.13",
     "react-live": "^4.1.6",
     "react-markdown": "^9.0.1",
     "reading-time": "1.5.0",
@@ -51,6 +55,7 @@
     "remark-gfm": "^4.0.0",
     "remark-github-blockquote-alert": "^1.2.1",
     "remark-math": "^6.0.0",
+    "swiper": "^11.1.4",
     "tailwindcss": "^3.4.3",
     "unist-util-visit": "^5.0.0"
   },
@@ -58,6 +63,7 @@
     "@svgr/webpack": "^8.0.1",
     "@types/mdx": "^2.0.12",
     "@types/react": "^18.2.73",
+    "@types/react-flatpickr": "^3.8.11",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "cross-env": "^7.0.3",
@@ -87,6 +93,5 @@
     "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
       "prettier --write"
     ]
-  },
-  "packageManager": "yarn@3.6.1"
+  }
 }

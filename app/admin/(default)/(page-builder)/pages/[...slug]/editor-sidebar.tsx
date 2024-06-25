@@ -99,7 +99,7 @@ export default function EditorSidebar() {
           }}
         >
           {/* Group header */}
-          <div className="sticky top-0 z-10">
+          {!blockId && ( <div className="sticky top-0 z-10">
             <div className="flex h-16 items-center border-b border-slate-200 bg-white px-5 dark:border-slate-700 dark:bg-slate-900">
               <div className="flex w-full items-center justify-end">
                 {/* Edit button */}
@@ -108,7 +108,7 @@ export default function EditorSidebar() {
                 </button>
               </div>
             </div>
-          </div>
+          </div>)}
           {/* Group body */}
           <div
             id="block-form"
