@@ -1,4 +1,5 @@
 import FileManager from '@/components/admin/file-manager'
+import MediaManager from '@/components/admin/media-manager'
 
 export default async function Media() {
   //@ts-ignore - Disable TypeScript check for the next line
@@ -14,6 +15,8 @@ export default async function Media() {
       </div>
 
       <FileManager />
+      <MediaManager />
+
     </div>
   )
 }
