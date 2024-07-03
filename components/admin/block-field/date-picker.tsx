@@ -29,7 +29,7 @@ const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProp
     mode: moreOptions?.mode || 'range',
     static: true,
     monthSelectorType: 'static',
-    dateFormat:  'M j, Y',
+    dateFormat: 'M j, Y',
     defaultDate: value || [new Date().setDate(new Date().getDate() - 6), new Date()],
     prevArrow:
       '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
@@ -41,7 +41,7 @@ const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProp
     },
   }
 
-  const options = { ...defaultOptions,...moreOptions}
+  const options = { ...defaultOptions, ...moreOptions }
 
   return (
     <div className="mt-2 w-full max-w-xl">

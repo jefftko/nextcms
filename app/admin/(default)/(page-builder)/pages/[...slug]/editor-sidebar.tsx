@@ -99,16 +99,18 @@ export default function EditorSidebar() {
           }}
         >
           {/* Group header */}
-          {!blockId && ( <div className="sticky top-0 z-10">
-            <div className="flex h-16 items-center border-b border-slate-200 bg-white px-5 dark:border-slate-700 dark:bg-slate-900">
-              <div className="flex w-full items-center justify-end">
-                {/* Edit button */}
-                <button className="ml-2 p-1.5" onClick={handleFullScreen}>
-                  {isFullScreen ? <RightExpand /> : <LeftExpand />}
-                </button>
+          {!blockId && (
+            <div className="sticky top-0 z-10">
+              <div className="flex h-16 items-center border-b border-slate-200 bg-white px-5 dark:border-slate-700 dark:bg-slate-900">
+                <div className="flex w-full items-center justify-end">
+                  {/* Edit button */}
+                  <button className="ml-2 p-1.5" onClick={handleFullScreen}>
+                    {isFullScreen ? <RightExpand /> : <LeftExpand />}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>)}
+          )}
           {/* Group body */}
           <div
             id="block-form"

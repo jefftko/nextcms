@@ -44,26 +44,34 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
       </label>
       <div
         {...getRootProps()}
-        className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 cursor-pointer"
+        className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
       >
         <input {...getInputProps()} name={name} id={name} />
         {oldFilePath && <input type="hidden" name="oldFilePath" value={oldFilePath} />}
         <div className="text-center">
           {preview ? (
-            <img src={preview} alt="Preview" className="mx-auto h-24 w-auto max-w-full object-cover" />
+            <img
+              src={preview}
+              alt="Preview"
+              className="mx-auto h-24 w-auto max-w-full object-cover"
+            />
           ) : (
-          <>
-            <svg className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" viewBox="0 0 16 16">
-              <path d="M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z" />
-            </svg>
-          <div className="mt-4 flex text-sm leading-6 text-gray-600">
-            <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-              <span>Upload a file</span>
-            </label>
-            <p className="pl-1">or drag and drop</p>
-          </div>
-          <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-          </>
+            <>
+              <svg
+                className="mx-auto h-12 w-12 text-gray-300"
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+              >
+                <path d="M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z" />
+              </svg>
+              <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                  <span>Upload a file</span>
+                </label>
+                <p className="pl-1">or drag and drop</p>
+              </div>
+              <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+            </>
           )}
         </div>
       </div>
