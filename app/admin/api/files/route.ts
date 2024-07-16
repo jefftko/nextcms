@@ -1,2 +1,2 @@
 import { handlers } from '@/libs/fileHandler'
-export const { GET } = handlers
+export const { GET,POST,DELETE } = handlers

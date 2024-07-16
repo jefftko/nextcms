@@ -1,22 +1,55 @@
-export default function MediaHeader() {
+'use client'
+import { useState } from 'react'
+import ModalAction from '@/components/admin/wrappers/modal-action'
+import { createFolder } from '@/services/fileService'
+import { useMessage } from '@/app/admin/message-provider'
+
+export default function CreateFolder() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [folderName, setFolderName] = useState('')
+  const { setToast } = useMessage()
+
+  const handleCreateFolder = async (event) => {
+    event.preventDefault()
+    
+    try {
+      const response = await createFolder({ directory_name: folderName })
+
+      if (response.status == 'success') {
+          setToast({ message: 'Folder created successfully', type: 'success' })
+      } else {
+         setToast({ message: response.message , type: 'error' })
+      }
+    } catch (error) {
+      console.error('Error creating folder:', error)
+      setToast({ message: 'An error occurred while creating the folder', type: 'error' })
+    } finally {
+      setIsOpen(false)
+      setFolderName('')
+    }
+  }
+
   return (
-    <div className="mb-5 sm:flex sm:items-center sm:justify-between">
-      {/* Title */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 md:text-3xl">
-          Media Manager ✨
-        </h1>
-      </div>
-      {/* Actions */}
-      <div className="grid grid-flow-col justify-start gap-2 sm:auto-cols-max sm:justify-end">
-        <button className="btn btn-primary">Upload</button>
-        <button className="btn bg-indigo-500 text-white hover:bg-indigo-600">
-          <svg className="h-4 w-4 shrink-0 fill-current opacity-50" viewBox="0 0 16 16">
-            <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-          </svg>
-          <span className="ml-2 hidden sm:block">Upload</span>
-        </button>
-      </div>
+    <div>
+      <button className="btn dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-indigo-500" onClick={()=> setIsOpen(true)}>
+        Create Folder
+      </button>
+      <ModalAction isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <div>
+          <h1 className="text-lg font-semibold text-center mb-4">Create Folder</h1>
+          <form onSubmit={handleCreateFolder} className="flex flex-col items-center">
+            <input 
+              type="text" 
+              value={folderName} 
+              onChange={(e) => setFolderName(e.target.value)} 
+              className="form-input mb-4 w-full px-2 py-1 border border-slate-300 rounded-md" 
+              placeholder="Enter folder name"
+              required 
+            />
+            <button type="submit" className="btn bg-indigo-500 hover:bg-indigo-600 text-white">Create</button>
+          </form>
+        </div>
+      </ModalAction>
     </div>
   )
 }

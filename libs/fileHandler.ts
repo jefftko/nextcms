@@ -34,6 +34,21 @@ const handleLocalFiles = async (type: string, filePath: string) => {
   }
 }
 
+const createFolder = async (data) => {
+
+    const { directory_name } = data
+  try {
+    const targetDir = path.join(uploadDir,directory_name  as string)
+    if (fs.existsSync(targetDir)) {
+      return NextResponse.json({ status:'error',message: 'Directory already exists' }, { status: 200 })
+    }
+    fs.mkdirSync(targetDir, { recursive: true })
+    return NextResponse.json({ status:'success',message: 'Directory created successfully' })
+  } catch (err) {
+    return NextResponse.json({ status:'error',message: err.message }, { status: 500 })
+  }
+}
+
 export const handlers = {
   GET: async (req, res) => {
     //const { type, source } = req.url.searchParams;
@@ -73,30 +88,26 @@ export const handlers = {
     }
   },
    POST: async (req: NextRequest) => {
-    const { type, action, filePath } = await req.json()
+    //const { type, action, filePath } = await req.json()
+    const { action,...data } = await req.json()
 
-    if (action === 'addDir') {
-      try {
-        const targetDir = path.join(uploadDir, type as string, filePath as string)
-        if (fs.existsSync(targetDir)) {
-          return NextResponse.json({ error: 'Directory already exists' }, { status: 400 })
-        }
-        fs.mkdirSync(targetDir, { recursive: true })
-        return NextResponse.json({ message: 'Directory created successfully' })
-      } catch (err) {
-        return NextResponse.json({ error: err.message }, { status: 500 })
-      }
+    console.log(action)
+    console.log(data)
+
+    if (action === 'create_folder') {
+        return createFolder(data)
     }
+    
 
     if (action === 'deleteDir') {
       try {
         const targetDir = path.join(uploadDir, type as string, filePath as string)
         if (!fs.existsSync(targetDir)) {
-          return NextResponse.json({ error: 'Directory does not exist' }, { status: 400 })
+          return NextResponse.json({status:'error',error: 'Directory does not exist' }, { status: 400 })
         }
         const files = fs.readdirSync(targetDir)
         if (files.length > 0) {
-          return NextResponse.json({ error: 'Directory is not empty' }, { status: 400 })
+          return NextResponse.json({error: 'Directory is not empty' }, { status: 400 })
         }
         fs.rmdirSync(targetDir)
         return NextResponse.json({ message: 'Directory deleted successfully' })

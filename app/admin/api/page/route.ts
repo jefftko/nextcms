@@ -85,7 +85,7 @@ export async function DELETE(req: NextRequest) {
   } catch (err) {
     console.error(err)
     return NextResponse.json(
-      { status: 'error', error: 'Error deleting MDX file.' },
+      { status: 'error', message: 'Error deleting MDX file.' },
       { status: 500 }
     )
   }
