@@ -72,4 +72,71 @@ export const handlers = {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
   },
+   POST: async (req: NextRequest) => {
+    const { type, action, filePath } = await req.json()
+
+    if (action === 'addDir') {
+      try {
+        const targetDir = path.join(uploadDir, type as string, filePath as string)
+        if (fs.existsSync(targetDir)) {
+          return NextResponse.json({ error: 'Directory already exists' }, { status: 400 })
+        }
+        fs.mkdirSync(targetDir, { recursive: true })
+        return NextResponse.json({ message: 'Directory created successfully' })
+      } catch (err) {
+        return NextResponse.json({ error: err.message }, { status: 500 })
+      }
+    }
+
+    if (action === 'deleteDir') {
+      try {
+        const targetDir = path.join(uploadDir, type as string, filePath as string)
+        if (!fs.existsSync(targetDir)) {
+          return NextResponse.json({ error: 'Directory does not exist' }, { status: 400 })
+        }
+        const files = fs.readdirSync(targetDir)
+        if (files.length > 0) {
+          return NextResponse.json({ error: 'Directory is not empty' }, { status: 400 })
+        }
+        fs.rmdirSync(targetDir)
+        return NextResponse.json({ message: 'Directory deleted successfully' })
+      } catch (err) {
+        return NextResponse.json({ error: err.message }, { status: 500 })
+      }
+    }
+
+    if (action === 'uploadImage') {
+      const form = new formidable.IncomingForm()
+      form.uploadDir = path.join(uploadDir, type as string, filePath as string)
+      form.keepExtensions = true
+
+      return new Promise((resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) {
+            reject(NextResponse.json({ error: err.message }, { status: 500 }))
+          }
+
+          resolve(NextResponse.json({ message: 'Image uploaded successfully' }))
+        })
+      })
+    }
+
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+  },
+  DELETE: async (req: NextRequest) => {
+    const type = req.nextUrl.searchParams.get('type')
+    const filePath = req.nextUrl.searchParams.get('filePath')
+    const fileName = req.nextUrl.searchParams.get('fileName')
+
+    try {
+      const targetFile = path.join(uploadDir, type as string, filePath as string, fileName as string)
+      if (!fs.existsSync(targetFile)) {
+        return NextResponse.json({ error: 'File does not exist' }, { status: 400 })
+      }
+      fs.unlinkSync(targetFile)
+      return NextResponse.json({ message: 'File deleted successfully' })
+    } catch (err) {
+      return NextResponse.json({ error: err.message }, { status: 500 })
+    }
+  }
 }
