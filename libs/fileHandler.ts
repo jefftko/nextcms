@@ -20,7 +20,7 @@ interface Image {
 type FileItem = Directory | Image
 
 
-const uploadDir = path.join(process.cwd(), 'public')
+const uploadDir = path.join(process.cwd(), 'public/uploads')
 
 const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
 
