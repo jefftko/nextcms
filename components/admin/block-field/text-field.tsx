@@ -1,31 +1,26 @@
-/*export default function TextField({ label, name, value, onChange, additional }) {
-  return (
-    <div className="mt-2 w-full max-w-xl">
-      <label className="mb-1 block text-sm font-medium" htmlFor={name}>
-        {label}
-        {additional?.required && <span className="text-rose-500">*</span>}
-      </label>
-      <input
-        id={name}
-        className="form-input w-full"
-        type="text"
-        name={name}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
-  )
-}*/
-
 import React from 'react'
 
-export default function TextField({ label, name, value, onChange, additional }) {
-  const [error, setError] = React.useState(null)
+interface AdditionalProps {
+  required?: boolean
+  type?: string
+  [key: string]: any // This allows any additional props
+}
+
+interface TextFieldProps {
+  label: string
+  name: string
+  value: string
+  onChange: (value: string) => void
+  additional?: AdditionalProps
+}
+
+const TextField: React.FC<TextFieldProps> = ({ label, name, value, onChange, additional }) => {
+  const [error, setError] = React.useState<string | null>(null)
   const { required, type = 'text', ...rest } = additional || {}
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const inputValue = e.target.value
-    let errorMessage = null
+    let errorMessage: string | null = null
 
     if (type === 'email') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -62,3 +57,5 @@ export default function TextField({ label, name, value, onChange, additional }) 
     </div>
   )
 }
+
+export default TextField

@@ -20,7 +20,7 @@ const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProp
   const onReady: Hook = (selectedDates, dateStr, instance) => {
     ;(instance.element as HTMLInputElement).value = dateStr.replace('to', '-')
     //const customClass = additional?.flatpickrOptions?.align ?? ''
-    const customClass = additional?.flatpickrOptions?.align ?? ''
+    const customClass = additional?.align ?? ''
     instance.calendarContainer.classList.add(`flatpickr-${customClass}`)
   }
   const moreOptions = additional?.flatpickrOptions || {}

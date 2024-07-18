@@ -1,8 +1,17 @@
 import React, { useEffect, useRef } from 'react'
 
-const TextArea = (props) => {
-  const { value, onChange, label, name, additional } = props
-  const textAreaRef = useRef(null)
+interface TextAreaProps {
+  value?: string
+  onChange: (value: string) => void
+  label: string
+  name: string
+  additional?: {
+    required?: boolean
+  }
+}
+
+const TextArea: React.FC<TextAreaProps> = ({ value, onChange, label, name, additional }) => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -10,7 +19,7 @@ const TextArea = (props) => {
     }
   }, [value])
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value)
   }
 

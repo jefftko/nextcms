@@ -1,38 +1,37 @@
 'use client'
-import PaginationClassic from '@/components/admin/pagination-classic'
-import { getFiles } from '@/services/fileService'
-import React, { useState, useEffect } from 'react'
-import { FolderIcon, PhotographIcon } from '@heroicons/react/20/solid'
-import { useFlyoutContext } from '@/app/admin/flyout-context'
 
-export default function MediaManager() {
-  const [files, setFiles] = useState([])
-  const [filePath, setFilePath] = useState([])
+import React, { useState, useEffect } from 'react'
+import { FolderIcon } from '@heroicons/react/20/solid'
+import { useFlyoutContext } from '@/app/admin/flyout-context'
+import { useMediaProvider } from '@/app/admin/media-provider'
+import { useRouter } from 'next/navigation'
+
+export default function MediaManager({ data }) {
+  const [files, setFiles] = useState(data)
+  const { filePath } = useMediaProvider()
 
   const { setFlyoutOpen } = useFlyoutContext()
+  const router = useRouter()
 
-  const fetchFiles = async (query) => {
+  /*const fetchFiles = async (query) => {
     const data = await getFiles(query)
     setFiles(data)
-  }
+  }*/
 
   const handleImage = (e) => {
     if (e.type === 'directory') {
       //split with source ,but remove empty string
-      setFilePath(e.source.split('/').filter(Boolean))
+      //setFilePath(e.source.split('/').filter(Boolean))
+      router.push(`/admin/media/${e.source}`)
     } else {
       setFlyoutOpen(true)
     }
   }
 
   const handlePath = (index) => {
-    setFilePath(filePath.slice(0, index + 1))
+    router.push(`/admin/media/${filePath.slice(0, index + 1).join('/')}`)
   }
 
-  useEffect(() => {
-    const query = { type: 'images', source: 'local', filePath: filePath.join('/') }
-    fetchFiles(query)
-  }, [filePath])
   return (
     <div className="relative rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
       <header className="px-5 py-4">
@@ -43,7 +42,7 @@ export default function MediaManager() {
               <a
                 className="text-slate-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-indigo-500"
                 href="#0"
-                onClick={() => setFilePath([])}
+                onClick={() => router.push('/admin/media')}
               >
                 {' '}
                 Media{' '}
@@ -104,7 +103,13 @@ export default function MediaManager() {
       </div>
 
       <div className="px-6 pb-5">
-        <PaginationClassic total={files.length} currentPage={1} perPage={4} />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-center text-sm text-slate-500 dark:text-slate-400 sm:text-left">
+            Showing{' '}
+            <span className="font-medium text-slate-600 dark:text-slate-300">{files.length}</span>{' '}
+            results
+          </div>
+        </div>
       </div>
     </div>
   )

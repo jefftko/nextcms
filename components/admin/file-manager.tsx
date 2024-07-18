@@ -1,9 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-//import axios from 'axios'
 
-const FileManager = () => {
-  const [files, setFiles] = useState([])
+interface FileItem {
+  name: string
+  isDirectory: boolean
+}
+
+const FileManager: React.FC = () => {
+  const [files, setFiles] = useState<FileItem[]>([])
   const [currentDir, setCurrentDir] = useState('')
   const [newDir, setNewDir] = useState('')
 
@@ -20,17 +24,19 @@ const FileManager = () => {
     }
   }
 
-  const handleUpload = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('subDir', currentDir)
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0]
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('subDir', currentDir)
 
-    try {
-      //await axios.post('/api/files/upload', formData)
-      fetchFiles()
-    } catch (error) {
-      console.error('Error uploading file:', error)
+      try {
+        //await axios.post('/api/files/upload', formData)
+        fetchFiles()
+      } catch (error) {
+        console.error('Error uploading file:', error)
+      }
     }
   }
 
@@ -44,7 +50,7 @@ const FileManager = () => {
     }
   }
 
-  const handleDelete = async (name) => {
+  const handleDelete = async (name: string) => {
     try {
       //await axios.delete(`/api/files?dir=${currentDir}&name=${name}`)
       fetchFiles()

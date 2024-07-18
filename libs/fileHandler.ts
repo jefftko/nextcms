@@ -3,29 +3,61 @@ import path from 'path'
 import sizeOf from 'image-size'
 import { type NextRequest, NextResponse } from 'next/server'
 
+interface Directory {
+  title: string
+  source: string
+  type: 'directory'
+}
+
+interface Image {
+  title: string
+  size: string
+  source: string
+  dimensions: string
+  type: 'image'
+}
+
+type FileItem = Directory | Image
+
+
 const uploadDir = path.join(process.cwd(), 'public')
 
 const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
-const handleLocalFiles = async (type: string, filePath: string) => {
+
+export const handleLocalFiles = async (type: string, filePath: string) => {
   try {
     const targetDir = path.join(uploadDir, type, filePath)
 
     if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, { recursive: true })
+      //fs.mkdirSync(targetDir, { recursive: true })
+      return []
     }
 
-    if (type === 'images') {
-      //将非图片文件过滤，保留目录
-      const files = fs.readdirSync(targetDir).filter((file) => {
-        const ext = path.extname(file).toLowerCase()
-        //如果文件是图片，给出图片的详细信息，如果是目录，返回目录信息
-        if (fs.statSync(path.join(targetDir, file)).isDirectory()) {
-          return true
-        }
-        return imageExtensions.includes(ext)
-      })
+    let resData:FileItem[] = []
 
-      return files
+    if (type === 'images') {
+      fs.readdirSync(targetDir).forEach((file) => {
+        // if is directory
+        const ext = path.extname(file).toLowerCase()
+        if (fs.statSync(path.join(uploadDir, type, filePath, file)).isDirectory()) {
+          resData.push({
+            title: file,
+            source: `/${filePath}/${file}`,
+            type: 'directory',
+          })
+        } else if (imageExtensions.includes(ext)) {
+          const ext = path.extname(file).toLowerCase()
+          const dimensions = sizeOf(path.join(uploadDir, type, filePath, file))
+          resData.push({
+            title: file,
+            size: `${(fs.statSync(path.join(uploadDir, type, filePath, file)).size / 1024).toFixed(2)} KB`,
+            source: `/${type}/${filePath}/${file}`,
+            dimensions: `${dimensions.width} x ${dimensions.height}`,
+            type: 'image',
+          })
+        }
+      })
+      return resData
     } else {
       return []
     }
@@ -34,18 +66,24 @@ const handleLocalFiles = async (type: string, filePath: string) => {
   }
 }
 
-const createFolder = async (data) => {
+const createFolder = (data) => {
+  const { directory_name, file_path, type } = data
 
-    const { directory_name } = data
+  console.log(file_path)
   try {
-    const targetDir = path.join(uploadDir,directory_name  as string)
+    const targetDir = path.join(
+      uploadDir,
+      type as string,
+      file_path as string,
+      directory_name as string
+    )
     if (fs.existsSync(targetDir)) {
-      return NextResponse.json({ status:'error',message: 'Directory already exists' }, { status: 200 })
+      return { status: 'error', message: 'Directory already exists'}
     }
     fs.mkdirSync(targetDir, { recursive: true })
-    return NextResponse.json({ status:'success',message: 'Directory created successfully' })
+    return { status: 'success', message: 'Directory created successfully' }
   } catch (err) {
-    return NextResponse.json({ status:'error',message: err.message }, { status: 500 })
+      return { status: 'error', message: err.message }
   }
 }
 
@@ -57,57 +95,33 @@ export const handlers = {
     try {
       let files
       files = await handleLocalFiles(type as string, filePath as string)
-      let resData = []
-      files.forEach((file) => {
-        // if is directory
-        if (
-          fs.statSync(path.join(uploadDir, type as string, filePath as string, file)).isDirectory()
-        ) {
-          resData.push({
-            title: file,
-            source: `/${filePath}/${file}`,
-            type: 'directory',
-          })
-        } else {
-          const ext = path.extname(file).toLowerCase()
-          const dimensions = sizeOf(path.join(uploadDir, type as string, filePath, file))
-          resData.push({
-            title: file,
-            size: `${(fs.statSync(path.join(uploadDir, type as string, filePath, file)).size / 1024).toFixed(2)} KB`,
-            source: `/${type}/${filePath}/${file}`,
-            dimensions: `${dimensions.width} x ${dimensions.height}`,
-            type: 'image',
-          })
-        }
-      })
-
-      return NextResponse.json(resData)
+      return NextResponse.json(files)
     } catch (error) {
       console.log(error.message)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
   },
-   POST: async (req: NextRequest) => {
+  POST: async (req: NextRequest) => {
     //const { type, action, filePath } = await req.json()
-    const { action,...data } = await req.json()
-
-    console.log(action)
-    console.log(data)
+    const { action, ...data } = await req.json()
 
     if (action === 'create_folder') {
-        return createFolder(data)
+      const res = createFolder(data)
+      return NextResponse.json(res)
     }
-    
 
-    if (action === 'deleteDir') {
+   /* if (action === 'deleteDir') {
       try {
         const targetDir = path.join(uploadDir, type as string, filePath as string)
         if (!fs.existsSync(targetDir)) {
-          return NextResponse.json({status:'error',error: 'Directory does not exist' }, { status: 400 })
+          return NextResponse.json(
+            { status: 'error', error: 'Directory does not exist' },
+            { status: 400 }
+          )
         }
         const files = fs.readdirSync(targetDir)
         if (files.length > 0) {
-          return NextResponse.json({error: 'Directory is not empty' }, { status: 400 })
+          return NextResponse.json({ error: 'Directory is not empty' }, { status: 400 })
         }
         fs.rmdirSync(targetDir)
         return NextResponse.json({ message: 'Directory deleted successfully' })
@@ -130,7 +144,7 @@ export const handlers = {
           resolve(NextResponse.json({ message: 'Image uploaded successfully' }))
         })
       })
-    }
+    }*/
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   },
@@ -140,7 +154,12 @@ export const handlers = {
     const fileName = req.nextUrl.searchParams.get('fileName')
 
     try {
-      const targetFile = path.join(uploadDir, type as string, filePath as string, fileName as string)
+      const targetFile = path.join(
+        uploadDir,
+        type as string,
+        filePath as string,
+        fileName as string
+      )
       if (!fs.existsSync(targetFile)) {
         return NextResponse.json({ error: 'File does not exist' }, { status: 400 })
       }
@@ -149,5 +168,5 @@ export const handlers = {
     } catch (err) {
       return NextResponse.json({ error: err.message }, { status: 500 })
     }
-  }
+  },
 }

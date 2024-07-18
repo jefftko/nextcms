@@ -5,34 +5,31 @@ interface ImageUploadProps {
   label: string
   name: string
   value?: string
-  onChange: (file: File, oldFilePath?: string) => void
+  onChange: (file: File) => void
   additional?: {
     required?: boolean
-    oldFilePath?: string
   }
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange, additional }) => {
   const [preview, setPreview] = useState<string | null>(value || null)
-  const [oldFilePath, setOldFilePath] = useState<string | null>(additional?.oldFilePath || null)
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0]
-      onChange(file, oldFilePath)
+      onChange(file)
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result as string)
       }
       reader.readAsDataURL(file)
-      setOldFilePath(null) // Clear old file path once a new file is uploaded
     },
-    [onChange, oldFilePath]
+    [onChange]
   )
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: {'image/*':['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.tiff', '.webp']},
     maxFiles: 1,
   })
 
@@ -47,7 +44,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
         className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
       >
         <input {...getInputProps()} name={name} id={name} />
-        {oldFilePath && <input type="hidden" name="oldFilePath" value={oldFilePath} />}
         <div className="text-center">
           {preview ? (
             <img
