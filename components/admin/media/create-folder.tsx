@@ -23,6 +23,9 @@ export default function CreateFolder() {
 
       if (response.status === 'success') {
         setToast({ message: 'Folder created successfully', type: 'success' })
+        setTimeout(() => {
+        location.reload()
+        }, 1000)
       } else {
         setToast({ message: response.message, type: 'error' })
       }

@@ -73,7 +73,7 @@ export default function PagesTable({ pages, total }: { pages: Pages[]; total: nu
     setLoading(true)
     setIsCopyModalOpen(false)
 
-    const data = await request('/admin/api/file', {
+    const data = await request('/admin/api/page', {
       method: 'POST',
       body: JSON.stringify(postData),
     })
@@ -93,7 +93,7 @@ export default function PagesTable({ pages, total }: { pages: Pages[]; total: nu
     setLoading(true)
     setDeleteModalOpen(false)
     //send page path to delete
-    const data = await request('/admin/api/file', {
+    const data = await request('/admin/api/page', {
       method: 'DELETE',
       body: JSON.stringify({ pagePath: pageData.pagePath }),
     })
@@ -117,7 +117,7 @@ export default function PagesTable({ pages, total }: { pages: Pages[]; total: nu
       return
     }
     setLoading(true)
-    const data = await request('/admin/api/file', {
+    const data = await request('/admin/api/page', {
       method: 'PUT',
       body: JSON.stringify({ ...pageData, isDefault: true }),
     })

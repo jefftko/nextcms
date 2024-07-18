@@ -27,6 +27,9 @@ const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.web
 export const handleLocalFiles = async (type: string, filePath: string) => {
   try {
     const targetDir = path.join(uploadDir, type, filePath)
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true })
+    }
 
     if (!fs.existsSync(targetDir)) {
       //fs.mkdirSync(targetDir, { recursive: true })

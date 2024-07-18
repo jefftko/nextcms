@@ -1,11 +1,7 @@
 'use client'
 import CreateFolder from './create-folder'
-import { useRouter } from 'next/navigation'
 export default function MediaHeader() {
-    const router = useRouter()
     const handleRefresh = () => {
-        console.log(router)
-        router.fastRefresh()
     }
   return (
     <div className="mb-5 sm:flex sm:items-center sm:justify-between">
