@@ -65,7 +65,7 @@ module.exports = () => {
     output: 'standalone',
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     eslint: {
-      dirs: ['app', 'components', 'layouts', 'scripts', 'pages'],
+      dirs: ['app', 'components', 'layouts', 'scripts', 'pages','libs','services','utils'],
     },
     async rewrites() {
       return [
