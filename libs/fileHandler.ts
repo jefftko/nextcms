@@ -19,7 +19,6 @@ interface Image {
 
 type FileItem = Directory | Image
 
-
 const uploadDir = path.join(process.cwd(), 'public/uploads')
 
 const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
@@ -131,7 +130,7 @@ export const handlers = {
       } catch (err) {
         return NextResponse.json({ error: err.message }, { status: 500 })
       }
-    }
+      } */
 
     if (action === 'uploadImage') {
       const form = new formidable.IncomingForm()
@@ -147,7 +146,7 @@ export const handlers = {
           resolve(NextResponse.json({ message: 'Image uploaded successfully' }))
         })
       })
-    }*/
+    }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   },
