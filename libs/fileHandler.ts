@@ -19,6 +19,8 @@ interface Image {
 
 type FileItem = Directory | Image
 
+type ProcessedFiles = Array<[string, File]>;
+
 const uploadDir = path.join(process.cwd(), 'public/uploads')
 
 const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
@@ -53,7 +55,7 @@ export const handleLocalFiles = async (type: string, filePath: string) => {
           resData.push({
             title: file,
             size: `${(fs.statSync(path.join(uploadDir, type, filePath, file)).size / 1024).toFixed(2)} KB`,
-            source: `/${type}/${filePath}/${file}`,
+            source: `/uploads/${type}/${filePath}/${file}`,
             dimensions: `${dimensions.width} x ${dimensions.height}`,
             type: 'image',
           })
@@ -105,9 +107,10 @@ export const handlers = {
   },
   POST: async (req: NextRequest) => {
     //const { type, action, filePath } = await req.json()
-    const { action, ...data } = await req.json()
+    const action = req.nextUrl.searchParams.get('action')
 
     if (action === 'create_folder') {
+      const { ...data } = await req.json()
       const res = createFolder(data)
       return NextResponse.json(res)
     }
@@ -132,20 +135,33 @@ export const handlers = {
       }
       } */
 
-    if (action === 'uploadImage') {
-      const form = new formidable.IncomingForm()
-      form.uploadDir = path.join(uploadDir, type as string, filePath as string)
-      form.keepExtensions = true
 
-      return new Promise((resolve, reject) => {
-        form.parse(req, (err, fields, files) => {
-          if (err) {
-            reject(NextResponse.json({ error: err.message }, { status: 500 }))
-          }
+    if (action === 'upload_image'){
+        const formData = await req.formData()
+  const file = formData.get('file') as File
+  const type = formData.get('type') as string
+  const filePath = formData.get('file_path') as string
 
-          resolve(NextResponse.json({ message: 'Image uploaded successfully' }))
-        })
-      })
+  console.log("form data", formData, file);
+
+  if (!file || !type) {
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+  }
+
+  // 创建目标目录
+  const targetDir = path.join(uploadDir, type, filePath)
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true })
+  }
+
+  // 读取文件内容并保存到目标目录
+  const arrayBuffer = await file.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
+  const targetFilePath = path.join(targetDir, file.name)
+  fs.writeFileSync(targetFilePath, buffer)
+
+  return NextResponse.json({ status: 'success', message: 'File uploaded successfully' })
+
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
