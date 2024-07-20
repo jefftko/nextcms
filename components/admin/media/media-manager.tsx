@@ -49,7 +49,10 @@ export default function MediaManager({ data }) {
               </a>
             </li>
             {filePath.map((item, index) => (
-              <li className="after:px-2 after:text-slate-400 after:content-['/'] last:after:hidden dark:after:text-slate-600" key={index}>
+              <li
+                className="after:px-2 after:text-slate-400 after:content-['/'] last:after:hidden dark:after:text-slate-600"
+                key={index}
+              >
                 <a
                   className="text-slate-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-indigo-500"
                   href="#0"

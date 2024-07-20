@@ -19,7 +19,7 @@ interface Image {
 
 type FileItem = Directory | Image
 
-type ProcessedFiles = Array<[string, File]>;
+type ProcessedFiles = Array<[string, File]>
 
 const uploadDir = path.join(process.cwd(), 'public/uploads')
 
@@ -29,7 +29,7 @@ export const handleLocalFiles = async (type: string, filePath: string) => {
   try {
     const targetDir = path.join(uploadDir, type, filePath)
     if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true })
+      fs.mkdirSync(uploadDir, { recursive: true })
     }
 
     if (!fs.existsSync(targetDir)) {
@@ -37,7 +37,7 @@ export const handleLocalFiles = async (type: string, filePath: string) => {
       return []
     }
 
-    let resData:FileItem[] = []
+    const resData: FileItem[] = []
 
     if (type === 'images') {
       fs.readdirSync(targetDir).forEach((file) => {
@@ -82,12 +82,12 @@ const createFolder = (data) => {
       directory_name as string
     )
     if (fs.existsSync(targetDir)) {
-      return { status: 'error', message: 'Directory already exists'}
+      return { status: 'error', message: 'Directory already exists' }
     }
     fs.mkdirSync(targetDir, { recursive: true })
     return { status: 'success', message: 'Directory created successfully' }
   } catch (err) {
-      return { status: 'error', message: err.message }
+    return { status: 'error', message: err.message }
   }
 }
 
@@ -97,8 +97,7 @@ export const handlers = {
     const type = req.nextUrl.searchParams.get('type')
     const filePath = req.nextUrl.searchParams.get('filePath')
     try {
-      let files
-      files = await handleLocalFiles(type as string, filePath as string)
+      const files = await handleLocalFiles(type as string, filePath as string)
       return NextResponse.json(files)
     } catch (error) {
       console.log(error.message)
@@ -115,7 +114,7 @@ export const handlers = {
       return NextResponse.json(res)
     }
 
-   /* if (action === 'deleteDir') {
+    /* if (action === 'deleteDir') {
       try {
         const targetDir = path.join(uploadDir, type as string, filePath as string)
         if (!fs.existsSync(targetDir)) {
@@ -135,33 +134,31 @@ export const handlers = {
       }
       } */
 
+    if (action === 'upload_image') {
+      const formData = await req.formData()
+      const file = formData.get('file') as File
+      const type = formData.get('type') as string
+      const filePath = formData.get('file_path') as string
 
-    if (action === 'upload_image'){
-        const formData = await req.formData()
-  const file = formData.get('file') as File
-  const type = formData.get('type') as string
-  const filePath = formData.get('file_path') as string
+      console.log('form data', formData, file)
 
-  console.log("form data", formData, file);
+      if (!file || !type) {
+        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      }
 
-  if (!file || !type) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
-  }
+      // 创建目标目录
+      const targetDir = path.join(uploadDir, type, filePath)
+      if (!fs.existsSync(targetDir)) {
+        fs.mkdirSync(targetDir, { recursive: true })
+      }
 
-  // 创建目标目录
-  const targetDir = path.join(uploadDir, type, filePath)
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(targetDir, { recursive: true })
-  }
+      // 读取文件内容并保存到目标目录
+      const arrayBuffer = await file.arrayBuffer()
+      const buffer = Buffer.from(arrayBuffer)
+      const targetFilePath = path.join(targetDir, file.name)
+      fs.writeFileSync(targetFilePath, buffer)
 
-  // 读取文件内容并保存到目标目录
-  const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
-  const targetFilePath = path.join(targetDir, file.name)
-  fs.writeFileSync(targetFilePath, buffer)
-
-  return NextResponse.json({ status: 'success', message: 'File uploaded successfully' })
-
+      return NextResponse.json({ status: 'success', message: 'File uploaded successfully' })
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })

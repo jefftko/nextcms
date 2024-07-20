@@ -3,8 +3,7 @@ import CreateFolder from './create-folder'
 //import Upload from './upload'
 import UploadWithCrop from './upload-with-crop'
 export default function MediaHeader() {
-    const handleRefresh = () => {
-    }
+  const handleRefresh = () => {}
   return (
     <div className="mb-5 sm:flex sm:items-center sm:justify-between">
       {/* Title */}
@@ -17,7 +16,6 @@ export default function MediaHeader() {
       <div className="grid grid-flow-col justify-start gap-2 sm:auto-cols-max sm:justify-end">
         <CreateFolder />
         <UploadWithCrop />
-      
       </div>
     </div>
   )

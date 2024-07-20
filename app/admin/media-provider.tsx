@@ -12,7 +12,7 @@ interface ContextProps {
 const MediaContext = createContext<ContextProps>({
   loading: false,
   setLoading: (): boolean => false,
-  filePath:[],
+  filePath: [],
 })
 
 export default function MediaProvider({

@@ -8,6 +8,8 @@ import type { Pages } from 'contentlayer/generated'
 
 /* Create page */
 
+//typescript-eslint/no-explicit-any off
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function createPage(data: any) {
   const frontMatter = { ...data }
   const mdxContent = matter.stringify('', frontMatter)
@@ -38,7 +40,7 @@ export async function createPage(data: any) {
 }
 
 /* Edit page */
-
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function editPage(data: any) {
   const frontMatter = { ...data }
   const mdxContent = matter.stringify('', frontMatter)
@@ -61,7 +63,7 @@ export async function editPage(data: any) {
 }
 
 /* set default page to non default */
-
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function setPageNotDefault(pagePath) {
   //@ts-ignore
   const posts = allCoreContent(sortPosts(allPages)) as Pages[]
@@ -85,7 +87,7 @@ export async function setPageNotDefault(pagePath) {
 }
 
 /* Delete page */
-
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function deletePage(data: any) {
   //@ts-ignore
   const posts = allCoreContent(sortPosts(allPages)) as Pages[]

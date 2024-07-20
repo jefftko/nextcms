@@ -29,13 +29,13 @@ export const createFolder = async (data) => {
   }
 }
 
-//upload File 
+//upload File
 export const uploadFile = async (file, additionalData = {}) => {
   const formData = new FormData()
   formData.append('file', file)
-  
+
   // 如果有额外的数据，也附加到 FormData 中
-  Object.keys(additionalData).forEach(key => {
+  Object.keys(additionalData).forEach((key) => {
     formData.append(key, additionalData[key])
   })
 

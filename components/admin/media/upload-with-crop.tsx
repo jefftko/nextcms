@@ -7,7 +7,7 @@ import { useMediaProvider } from '@/app/admin/media-provider'
 import { useDropzone } from 'react-dropzone'
 import ReactCrop, { type Crop, type PixelCrop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
-import { ArrowUpOnSquareStackIcon,ArrowUpOnSquareIcon } from '@heroicons/react/24/solid'
+import { ArrowUpOnSquareStackIcon, ArrowUpOnSquareIcon } from '@heroicons/react/24/solid'
 
 export default function Upload() {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,20 +24,16 @@ export default function Upload() {
 
   const aspectArr = [1, '16/9', '4/3', '3/2', '2/3', '3/4', '9/16']
 
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0]
-      originalFileRef.current = file
-      setFileName(file.name)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    },
-    []
-  )
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0]
+    originalFileRef.current = file
+    setFileName(file.name)
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setPreview(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -53,7 +49,10 @@ export default function Upload() {
     setCompletedCrop(crop)
   }
 
-  const getCroppedImage = async (image: HTMLImageElement, crop: PixelCrop): Promise<Blob | null> => {
+  const getCroppedImage = async (
+    image: HTMLImageElement,
+    crop: PixelCrop
+  ): Promise<Blob | null> => {
     if (!crop.width || !crop.height) {
       return null
     }
@@ -95,17 +94,17 @@ export default function Upload() {
     if (completedCrop && imgRef.current) {
       const croppedBlob = await getCroppedImage(imgRef.current, completedCrop)
       handleUpload(croppedBlob, fileName)
-    }else{
-        setToast({ type: 'error', message: 'No image to crop' })
-        }
+    } else {
+      setToast({ type: 'error', message: 'No image to crop' })
+    }
   }
 
   const handleOriginalAndUpload = async () => {
     if (originalFileRef.current) {
       handleUpload(originalFileRef.current, fileName)
-    }else{
-        setToast({ type: 'error', message: 'No image to upload' })
-        }
+    } else {
+      setToast({ type: 'error', message: 'No image to upload' })
+    }
   }
 
   const handleUpload = async (croppedImage: Blob | null, fileName: string | null) => {
@@ -118,12 +117,16 @@ export default function Upload() {
     const fileWithExt = new File([croppedImage], fileName, { type: croppedImage.type })
 
     try {
-      const res = await uploadFile(fileWithExt, { action: 'upload_image', file_path, type: 'images' })
+      const res = await uploadFile(fileWithExt, {
+        action: 'upload_image',
+        file_path,
+        type: 'images',
+      })
       setToast({ type: 'success', message: 'File uploaded successfully' })
       setIsOpen(false)
       setTimeout(() => {
         location.reload()
-      },1000)
+      }, 1000)
     } catch (error) {
       setToast({ type: 'error', message: error.message })
     }
@@ -156,7 +159,10 @@ export default function Upload() {
 
   return (
     <div>
-      <button className="btn bg-indigo-500 text-white hover:bg-indigo-600" onClick={() => setIsOpen(true)}>
+      <button
+        className="btn bg-indigo-500 text-white hover:bg-indigo-600"
+        onClick={() => setIsOpen(true)}
+      >
         <svg className="h-4 w-4 shrink-0 fill-current opacity-50" viewBox="0 0 16 16">
           <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
         </svg>
@@ -167,42 +173,58 @@ export default function Upload() {
           <label className="mb-1 block text-sm font-medium">Image</label>
           {preview ? (
             <>
-               {/* Start */}
-                  <div className="mb-4 flex items-center gap-2">
-                    {aspectArr.map((asp) => (
-            <button key={asp} onClick={() => handleAspectChange(String(asp))} className={`btn ${aspect == asp? 'bg-slate-50 dark:bg-slate-900 hover:bg-slate-50 text-indigo-500':'bg-white dark:bg-slate-800  hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300'}`}>
-                {asp}
-             </button>))}
-                    <button className={`btn ${aspect == undefined ? 'bg-slate-50 dark:bg-slate-900 hover:bg-slate-50 text-indigo-500 ' :'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300'}`} onClick={() => handleAspectChange(undefined)}>Custom</button>
-                  </div>
-                  {/* End */}
+              {/* Start */}
+              <div className="mb-4 flex items-center gap-2">
+                {aspectArr.map((asp) => (
+                  <button
+                    key={asp}
+                    onClick={() => handleAspectChange(String(asp))}
+                    className={`btn ${aspect == asp ? 'bg-slate-50 text-indigo-500 hover:bg-slate-50 dark:bg-slate-900' : 'bg-white text-slate-600  hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'}`}
+                  >
+                    {asp}
+                  </button>
+                ))}
+                <button
+                  className={`btn ${aspect == undefined ? 'bg-slate-50 text-indigo-500 hover:bg-slate-50 dark:bg-slate-900 ' : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'}`}
+                  onClick={() => handleAspectChange(undefined)}
+                >
+                  Custom
+                </button>
+              </div>
+              {/* End */}
               <ReactCrop
                 crop={crop}
                 onChange={(c) => setCrop(c)}
-                onComplete={(c)=> {
-                    onCropComplete(c);
-                    onImageLoaded}
-                }
+                onComplete={(c) => {
+                  onCropComplete(c)
+                  onImageLoaded
+                }}
                 aspect={aspect}
               >
                 <img src={preview} alt="Preview" ref={imgRef} />
               </ReactCrop>
 
               {/* btn group */}
-                <div className="flex flex-wrap items-center justify-center">
+              <div className="flex flex-wrap items-center justify-center">
                 <div className="m-1.5">
                   {/* Start */}
-                  <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white" onClick={handleCropAndUpload}>
-                  <ArrowUpOnSquareStackIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
-                 <span className="ml-2">Upload Cropped Image</span>
+                  <button
+                    className="btn bg-indigo-500 text-white hover:bg-indigo-600"
+                    onClick={handleCropAndUpload}
+                  >
+                    <ArrowUpOnSquareStackIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
+                    <span className="ml-2">Upload Cropped Image</span>
                   </button>
                   {/* End */}
                 </div>
                 <div className="m-1.5">
                   {/* Start */}
-                  <button className="btn dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" onClick={handleOriginalAndUpload}>
-                  <ArrowUpOnSquareIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
-                  <span className="ml-2">Upload Original Image</span>
+                  <button
+                    className="btn border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600"
+                    onClick={handleOriginalAndUpload}
+                  >
+                    <ArrowUpOnSquareIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
+                    <span className="ml-2">Upload Original Image</span>
                   </button>
                   {/* End */}
                 </div>
