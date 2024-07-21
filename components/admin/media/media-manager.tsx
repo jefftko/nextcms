@@ -2,35 +2,14 @@
 
 import React, { useState, useEffect } from 'react'
 import { FolderIcon } from '@heroicons/react/20/solid'
-import { useFlyoutContext } from '@/app/admin/flyout-context'
-import { useMediaProvider } from '@/app/admin/media-provider'
-import { useRouter } from 'next/navigation'
 
-export default function MediaManager({ data }) {
+export default function MediaManager({ data, file_path, onPathChange, onItemChange }) {
   const [files, setFiles] = useState(data)
-  const { filePath } = useMediaProvider()
-
-  const { setFlyoutOpen } = useFlyoutContext()
-  const router = useRouter()
 
   /*const fetchFiles = async (query) => {
     const data = await getFiles(query)
     setFiles(data)
   }*/
-
-  const handleImage = (e) => {
-    if (e.type === 'directory') {
-      //split with source ,but remove empty string
-      //setFilePath(e.source.split('/').filter(Boolean))
-      router.push(`/admin/media/${e.source}`)
-    } else {
-      setFlyoutOpen(true)
-    }
-  }
-
-  const handlePath = (index) => {
-    router.push(`/admin/media/${filePath.slice(0, index + 1).join('/')}`)
-  }
 
   return (
     <div className="relative rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
@@ -42,13 +21,13 @@ export default function MediaManager({ data }) {
               <a
                 className="text-slate-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-indigo-500"
                 href="#0"
-                onClick={() => router.push('/admin/media')}
+                onClick={() => onPathChange(-1)}
               >
                 {' '}
                 Media{' '}
               </a>
             </li>
-            {filePath.map((item, index) => (
+            {file_path?.map((item, index) => (
               <li
                 className="after:px-2 after:text-slate-400 after:content-['/'] last:after:hidden dark:after:text-slate-600"
                 key={index}
@@ -56,7 +35,7 @@ export default function MediaManager({ data }) {
                 <a
                   className="text-slate-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-indigo-500"
                   href="#0"
-                  onClick={() => handlePath(index)}
+                  onClick={() => onPathChange(index)}
                 >
                   {item}
                 </a>
@@ -88,7 +67,7 @@ export default function MediaManager({ data }) {
                   <button
                     type="button"
                     className="absolute inset-0 focus:outline-none"
-                    onClick={() => handleImage(file)}
+                    onClick={() => onItemChange(file)}
                   >
                     <span className="sr-only">View details for {file.title}</span>
                   </button>

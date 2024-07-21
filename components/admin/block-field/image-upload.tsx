@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { useDropzone } from 'react-dropzone'
+import ModalAction from '@/components/admin/wrappers/modal-action'
 
 interface ImageUploadProps {
   label: string
@@ -13,25 +13,7 @@ interface ImageUploadProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange, additional }) => {
   const [preview, setPreview] = useState<string | null>(value || null)
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0]
-      onChange(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    },
-    [onChange]
-  )
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.tiff', '.webp'] },
-    maxFiles: 1,
-  })
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="mt-2 w-full max-w-xl">
@@ -39,12 +21,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
         {label}
         {additional?.required && <span className="text-rose-500">*</span>}
       </label>
-      <div
-        {...getRootProps()}
-        className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
-      >
-        <input {...getInputProps()} name={name} id={name} />
-        <div className="text-center">
+      <div className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+        <div className="text-center" onClick={() => setIsOpen(true)}>
           {preview ? (
             <img
               src={preview}
@@ -62,15 +40,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
               </svg>
               <div className="mt-4 flex text-sm leading-6 text-gray-600">
                 <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                  <span>Upload a file</span>
+                  <span>Choose a file</span>
                 </label>
-                <p className="pl-1">or drag and drop</p>
               </div>
-              <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
             </>
           )}
         </div>
       </div>
+      <ModalAction isOpen={isOpen} setIsOpen={setIsOpen}>
+        asdfasdfasd
+      </ModalAction>
     </div>
   )
 }

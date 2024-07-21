@@ -7,24 +7,21 @@ interface ContextProps {
   setLoading: Dispatch<SetStateAction<boolean>>
   //filePath is an array of strings
   filePath: string[]
+  setFilePath?: Dispatch<SetStateAction<string[]>>
 }
 
 const MediaContext = createContext<ContextProps>({
   loading: false,
   setLoading: (): boolean => false,
   filePath: [],
+  setFilePath: (): string[] => [],
 })
 
-export default function MediaProvider({
-  children,
-  filePath,
-}: {
-  children: React.ReactNode
-  filePath: string[]
-}) {
+export default function MediaProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [filePath, setFilePath] = useState<string[]>([])
   return (
-    <MediaContext.Provider value={{ loading, setLoading, filePath }}>
+    <MediaContext.Provider value={{ loading, setLoading, filePath, setFilePath }}>
       {children}
     </MediaContext.Provider>
   )

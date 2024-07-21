@@ -1,41 +1,64 @@
-const HeroHomeSchema = () => ({
+// TeamSchema.ts
+
+const TeamSchema = () => ({
   name: 'Team',
   thumbnail: '/images/blocks/card.jpg',
   fields: {
     title: {
-      kind: 'textField',
+      kind: 'text',
       label: 'Title',
-      description: 'The title of the hero section',
-      defaultValue: 'Hero Section',
+      description: 'The title of the team section',
+      defaultValue: 'The humans behind the product',
       additional: {
         required: true,
         placeholder: 'Title',
       },
     },
-    subTitle: {
-      kind: 'textField',
-      label: 'SubTitle',
-      description: 'The subTitle of the hero section',
-      defaultValue: 'SubTitle',
+    members: {
+      kind: 'list',
+      label: 'Team Members',
+      description: 'A list of team members',
+      fields: {
+        name: {
+          kind: 'text',
+          label: 'Name',
+          description: 'The name of the team member',
+          defaultValue: 'John Doe',
+        },
+        position: {
+          kind: 'text',
+          label: 'Position',
+          description: 'The position of the team member',
+          defaultValue: 'CEO & Co-founder',
+        },
+        image: {
+          kind: 'image',
+          label: 'Image',
+          description: 'The image of the team member',
+        },
+        description: {
+          kind: 'richText',
+          label: 'Description',
+          description: 'A short description of the team member',
+        },
+        twitter: {
+          kind: 'text',
+          label: 'Twitter',
+          description: 'Twitter URL',
+        },
+        github: {
+          kind: 'text',
+          label: 'GitHub',
+          description: 'GitHub URL',
+        },
+        linkedin: {
+          kind: 'text',
+          label: 'LinkedIn',
+          description: 'LinkedIn URL',
+        },
+      },
     },
-    //descripiton
-    description: {
-      kind: 'richText',
-      label: 'Description',
-      description: 'The description of the hero section',
-    },
-    //链接按钮，最多不超过两个，可以为空，可选择样式
-    /*links: {
-      type: 'links',
-      label: 'Links',
-      description: 'The links of the hero section',
-    },
-    video: {
-      type: 'string',
-      label: 'Video',
-      description: 'The video of the hero section',
-    },*/
   },
 })
 
-export default HeroHomeSchema
+export default TeamSchema

@@ -73,7 +73,7 @@ export default function MediaPanel() {
             <div className="mb-1 text-center font-semibold text-slate-800 dark:text-slate-100">
               Bank Transfer
             </div>
-            <div className="text-center text-sm italic">, 8:56 PM</div>
+            <div className="text-center text-sm italic">, 8:56d PM</div>
           </div>
         </div>
 
