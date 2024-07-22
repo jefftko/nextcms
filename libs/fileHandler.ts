@@ -158,7 +158,11 @@ export const handlers = {
       const targetFilePath = path.join(targetDir, file.name)
       fs.writeFileSync(targetFilePath, buffer)
 
-      return NextResponse.json({ status: 'success', message: 'File uploaded successfully' })
+      return NextResponse.json({
+        status: 'success',
+        message: 'File uploaded successfully',
+        data: { source: `/uploads/${type}/${filePath}/${file.name}` },
+      })
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })

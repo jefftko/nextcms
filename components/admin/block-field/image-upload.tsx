@@ -1,5 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import ModalAction from '@/components/admin/wrappers/modal-action'
+import { getFiles } from '@/services/fileService'
+import MediaManager from '@/components/admin/media/media-manager'
+import { PhotoIcon } from '@heroicons/react/20/solid'
+import CropImagePanel from '@/components/admin/media/crop-image-panel'
 
 interface ImageUploadProps {
   label: string
@@ -11,9 +15,47 @@ interface ImageUploadProps {
   }
 }
 
+const tabs = [
+  { name: 'Images', href: '#' },
+  { name: 'Upload', href: '#' },
+]
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
 const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange, additional }) => {
   const [preview, setPreview] = useState<string | null>(value || null)
   const [isOpen, setIsOpen] = useState(false)
+  const [filePath, setFilePath] = useState([])
+  const [files, setFiles] = useState([])
+  const [tabIndex, setTabIndex] = useState(0)
+
+  const fetchFiles = async (query) => {
+    const data = await getFiles(query)
+    setFiles(data)
+  }
+  const handlePathChange = useCallback((path) => {
+    if (path === -1) {
+      setFilePath([])
+    } else {
+      setFilePath(path?.slice(0, path + 1).join('/'))
+    }
+  }, [])
+  const handleItemChange = useCallback((item) => {
+    if (item.type === 'directory') {
+      //split with source ,but remove empty string
+      setFilePath(item.source.split('/').filter(Boolean))
+    } else {
+      onChange(item.source)
+      setPreview(item.source)
+      setIsOpen(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchFiles({ type: 'images', filePath: filePath?.join('/') })
+  }, [filePath])
 
   return (
     <div className="mt-2 w-full max-w-xl">
@@ -31,16 +73,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
             />
           ) : (
             <>
-              <svg
-                className="mx-auto h-12 w-12 text-gray-300"
-                aria-hidden="true"
-                viewBox="0 0 16 16"
-              >
-                <path d="M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z" />
-              </svg>
+              <PhotoIcon />
+
               <div className="mt-4 flex text-sm leading-6 text-gray-600">
                 <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                  <span>Choose a file</span>
+                  <span>Choose a image</span>
                 </label>
               </div>
             </>
@@ -48,7 +85,37 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
         </div>
       </div>
       <ModalAction isOpen={isOpen} setIsOpen={setIsOpen}>
-        asdfasdfasd
+        <div className="border-b border-gray-200">
+          <nav aria-label="Tabs" className="-mb-px flex space-x-8">
+            {tabs.map((tab, index) => (
+              <a
+                key={tab.name}
+                href={tab.href}
+                onClick={() => setTabIndex(index)}
+                className={classNames(
+                  tabIndex == index
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                  'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium'
+                )}
+              >
+                {tab.name}
+              </a>
+            ))}
+          </nav>
+        </div>
+        <div className="mt-1.5 h-96 overflow-auto">
+          {tabIndex == 0 && (
+            <MediaManager
+              data={files}
+              file_path={filePath}
+              onPathChange={handlePathChange}
+              onItemChange={handleItemChange}
+            />
+          )}
+
+          {tabIndex == 1 && <CropImagePanel filePath={filePath} onItemChange={handleItemChange} />}
+        </div>
       </ModalAction>
     </div>
   )

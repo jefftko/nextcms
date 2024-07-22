@@ -6,10 +6,9 @@ import { FolderIcon } from '@heroicons/react/20/solid'
 export default function MediaManager({ data, file_path, onPathChange, onItemChange }) {
   const [files, setFiles] = useState(data)
 
-  /*const fetchFiles = async (query) => {
-    const data = await getFiles(query)
+  useEffect(() => {
     setFiles(data)
-  }*/
+  }, [data])
 
   return (
     <div className="relative rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
@@ -72,10 +71,10 @@ export default function MediaManager({ data, file_path, onPathChange, onItemChan
                     <span className="sr-only">View details for {file.title}</span>
                   </button>
                 </div>
-                <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
+                <p className="pointer-events-none mt-2 block truncate text-center text-sm font-medium text-gray-900">
                   {file.title}
                 </p>
-                <p className="pointer-events-none block text-sm font-medium text-gray-500">
+                <p className="pointer-events-none block text-center text-sm font-medium text-gray-500">
                   {file.size}
                 </p>
               </li>

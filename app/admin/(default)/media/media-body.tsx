@@ -17,7 +17,6 @@ export default function MediaBody({ files, file_path }: MediaBodyProps) {
   const router = useRouter()
   const { setFlyoutOpen } = useFlyoutContext()
   useEffect(() => {
-    
     if (setFilePath && file_path !== undefined) {
       setFilePath(file_path)
     }
@@ -44,7 +43,12 @@ export default function MediaBody({ files, file_path }: MediaBodyProps) {
   return (
     <>
       <MediaHeader />
-      <MediaManager data={files} file_path={file_path} onPathChange={handlePath} onItemChange={handleImage} />
+      <MediaManager
+        data={files}
+        file_path={file_path}
+        onPathChange={handlePath}
+        onItemChange={handleImage}
+      />
     </>
   )
 }
