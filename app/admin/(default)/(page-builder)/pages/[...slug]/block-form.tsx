@@ -72,6 +72,7 @@ export default function BlockForm() {
               label={field.label}
               additional={field.additional}
               fields={field.fields}
+              defaultValue={field.defaultValue}
               value={blockData[fieldName] || (field.kind === 'list' ? [] : '')}
               onChange={(value) => handleFieldChange(fieldName, value)}
             />

@@ -14,6 +14,12 @@ const TeamSchema = () => ({
         placeholder: 'Title',
       },
     },
+    titleColor: {
+      kind: 'color',
+      label: 'Title Color',
+      description: 'The color of the title',
+      defaultValue: '#000000',
+    },
     members: {
       kind: 'list',
       label: 'Team Members',

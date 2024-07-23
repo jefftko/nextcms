@@ -46,7 +46,7 @@ export const handleLocalFiles = async (type: string, filePath: string) => {
         if (fs.statSync(path.join(uploadDir, type, filePath, file)).isDirectory()) {
           resData.push({
             title: file,
-            source: `/${filePath}/${file}`,
+            source: `/${filePath}${file}`,
             type: 'directory',
           })
         } else if (imageExtensions.includes(ext)) {
@@ -55,7 +55,7 @@ export const handleLocalFiles = async (type: string, filePath: string) => {
           resData.push({
             title: file,
             size: `${(fs.statSync(path.join(uploadDir, type, filePath, file)).size / 1024).toFixed(2)} KB`,
-            source: `/uploads/${type}/${filePath}/${file}`,
+            source: `/uploads/${type}/${filePath}${file}`,
             dimensions: `${dimensions.width} x ${dimensions.height}`,
             type: 'image',
           })
@@ -161,7 +161,7 @@ export const handlers = {
       return NextResponse.json({
         status: 'success',
         message: 'File uploaded successfully',
-        data: { source: `/uploads/${type}/${filePath}/${file.name}` },
+        data: { source: `/uploads/${type}/${filePath}${file.name}` },
       })
     }
 

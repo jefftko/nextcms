@@ -10,7 +10,9 @@ export default function Team({ data }: { data: TeamSectionType }) {
         <div className="py-12 md:py-20">
           {/* Section header */}
           <div className="mx-auto max-w-3xl pb-12 text-center md:pb-20">
-            <h2 className="h2">{data.title}</h2>
+            <h2 className="h2" style={{ color: data?.titleColor }}>
+              {data.title}
+            </h2>
           </div>
 
           {/* Team members */}
