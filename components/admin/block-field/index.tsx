@@ -49,7 +49,7 @@ const BlockField = (props: FieldProps) => {
       name={name}
       additional={additional}
       fields={fields}
-      value={value ? value : defaultValue}
+      value={value || value =="" ? value : defaultValue}
       onChange={onChange}
     />
   )
