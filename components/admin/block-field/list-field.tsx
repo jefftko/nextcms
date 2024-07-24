@@ -4,18 +4,27 @@ import React from 'react'
 import BlockField from './index'
 import Accordion from '@/components/admin/accordion'
 import { Icon } from '@/components/icons'
+import { useCallback } from 'react'
 
 const ListField = ({ label, name, fields, value, onChange }) => {
   //console.log('ListField', fields)
 
-  const handleItemChange = (index, fieldName, fieldValue) => {
+ /* const handleItemChange = (index, fieldName, fieldValue) => {
     const newList = [...value]
     newList[index] = {
       ...newList[index],
       [fieldName]: fieldValue,
     }
     onChange(newList)
-  }
+  }*/
+  const handleItemChange = useCallback((index, fieldName, fieldValue) => {
+    const newList = [...value]
+    newList[index] = {
+      ...newList[index],
+      [fieldName]: fieldValue,
+    }
+    onChange(newList)
+  }, [value, onChange])
 
   const addItem = () => {
     onChange([...value, {}])
@@ -39,12 +48,12 @@ const ListField = ({ label, name, fields, value, onChange }) => {
         <Accordion key={`${label}_${index}`} title={`${label}_${index}`} className="mt-2">
           <div key={index} className="mb-4 p-2">
             <div className="flex flex-wrap justify-between">
-              {Object.keys(fields).map((fieldName) => (
+              {Object.keys(fields).map((fieldName,idx) => (
                 <BlockField
                   key={fieldName}
                   kind={fields[fieldName].kind}
                   label={fields[fieldName].label}
-                  name={`${name}[${index}].${fieldName}`}
+                  name={`${name}[${index}].${fieldName}_${idx}`}
                   value={item[fieldName]}
                   onChange={(fieldValue) => handleItemChange(index, fieldName, fieldValue)}
                   additional={fields[fieldName].additional}
