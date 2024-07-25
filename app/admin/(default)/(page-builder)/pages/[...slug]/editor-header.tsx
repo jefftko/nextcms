@@ -7,6 +7,7 @@ import { usePageData } from '@/app/admin/page-data'
 import { useAppProvider } from '@/app/admin/app-provider'
 import { useMessage } from '@/app/admin/message-provider'
 import { editPage, createPage } from '@/services/pageBuilderService'
+import { redirect } from 'next/navigation'
 
 interface HeaderProps {
   setWidth: (width: string) => void
@@ -71,7 +72,9 @@ export default function EditorHeader({ setWidth }: HeaderProps) {
           setToast({ message: 'Page saved successfully', type: 'success' })
           //if page is new ,redirect to edit page
           if (action === 'create') {
-            window.location.href = `/admin/pages/edit/${pageData.pagePath}`
+            //window.location.href = `/admin/pages/edit/${pageData.pagePath}`
+            window.location.href = `/admin/pages`
+              //redirect(`/admin/pages/edit/${pageData.pagePath}`)
           }
           //reload page
         } else {

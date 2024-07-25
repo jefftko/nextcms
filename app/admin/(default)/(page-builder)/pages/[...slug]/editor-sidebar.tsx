@@ -114,7 +114,7 @@ export default function EditorSidebar() {
           {/* Group body */}
           <div
             id="block-form"
-            className={`absolute top-0 z-10 h-full w-full bg-white transition-transform duration-200 ease-in-out ${blockId ? 'translate-x-0' : '-translate-x-full'}`}
+            className={`absolute top-0 z-20 h-full w-full bg-white transition-transform duration-200 ease-in-out ${blockId ? 'translate-x-0' : '-translate-x-full'}`}
           >
             {/* Block form header */}
             <div className="flex h-16 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 dark:border-slate-700 dark:bg-[#161F32] sm:px-6 md:px-5">
