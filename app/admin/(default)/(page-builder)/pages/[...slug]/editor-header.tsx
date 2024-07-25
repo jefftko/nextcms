@@ -7,7 +7,6 @@ import { usePageData } from '@/app/admin/page-data'
 import { useAppProvider } from '@/app/admin/app-provider'
 import { useMessage } from '@/app/admin/message-provider'
 import { editPage, createPage } from '@/services/pageBuilderService'
-import { redirect } from 'next/navigation'
 
 interface HeaderProps {
   setWidth: (width: string) => void
