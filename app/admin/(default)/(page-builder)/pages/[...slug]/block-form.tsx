@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { usePageData } from '@/app/admin/page-data'
 import type { Pages } from 'contentlayer/generated'
 import BlockField from '@/components/admin/block-field'
@@ -53,12 +53,12 @@ export default function BlockForm() {
     }
   }, [blockData])
 
-  const handleFieldChange = (name, value) => {
+  const handleFieldChange = useCallback((name, value) => {
     setBlockData((prev) => ({
       ...prev,
       [name]: value,
     }))
-  }
+  }, [])
 
   return (
     <div id="BlockForm" className="flex flex-wrap justify-between ">
@@ -73,7 +73,7 @@ export default function BlockForm() {
               additional={field.additional}
               fields={field.fields}
               defaultValue={field.defaultValue}
-              value={blockData[fieldName] || (field.kind === 'list' ? [] : '')}
+              value={blockData[fieldName]}
               onChange={(value) => handleFieldChange(fieldName, value)}
             />
           )

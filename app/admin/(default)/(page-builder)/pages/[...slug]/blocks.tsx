@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef,useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -26,7 +26,7 @@ interface DropCollectedProps {
 // 定义 Block 组件
 const Block = ({ id, title, index, moveCard, deleteBlock }) => {
   const ref = useRef(null)
-  const { setBlockId,pageData,setPageData } = usePageData()
+  const { setBlockId, pageData, setPageData } = usePageData()
   const { setBlockModalOpen } = useBlockData()
 
   const [, drop] = useDrop<DragItem, void, DropCollectedProps>({
@@ -67,9 +67,8 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
       ...pageData,
       blocks: newBlocks,
     })*/
-   deleteBlock(id)
+    deleteBlock(id)
   }
-
 
   return (
     <div
@@ -103,7 +102,10 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
             <Icon kind="edit" className="" size={8} />
           </button>
           {/* Delete button */}
-          <button className="text-slate-400 hover:text-slate-600" onClick={()=> handleBlockDelete(id)}>
+          <button
+            className="text-slate-400 hover:text-slate-600"
+            onClick={() => handleBlockDelete(id)}
+          >
             <span className="sr-only">Delete</span>
             <Icon kind="trash" className="" size={8} />
           </button>
@@ -117,9 +119,8 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
 export default function Blocks() {
   const { pageData, setPageData } = usePageData()
   const { setBlockModalOpen } = useBlockData()
-   const [dangerModalOpen, setDangerModalOpen] = useState<boolean>(false)
-   const [blockId, setBlockId] = useState<string | null>(null)
-
+  const [dangerModalOpen, setDangerModalOpen] = useState<boolean>(false)
+  const [blockId, setBlockId] = useState<string | null>(null)
 
   const moveCard = (dragIndex, hoverIndex) => {
     if (dragIndex !== hoverIndex) {
@@ -136,11 +137,11 @@ export default function Blocks() {
     }
   }
   const handleBlockDelete = (id) => {
-      setDangerModalOpen(true)
-      setBlockId(id)
+    setDangerModalOpen(true)
+    setBlockId(id)
   }
   const onDeleteBlock = (id) => {
-    if(!id || !pageData) return
+    if (!id || !pageData) return
     const blocks = pageData?.blocks
     const newBlocks = blocks.filter((block) => block.id !== id)
     setPageData({
@@ -151,64 +152,78 @@ export default function Blocks() {
   }
 
   return (
-      <>
-    <DndProvider backend={HTML5Backend}>
-      <div className="mx-auto space-y-6">
-        <div className="mt-4">
-          <div className="mb-3 flex w-full items-center justify-between text-xs font-semibold uppercase text-slate-400 dark:text-slate-500">
-            Blocks
-            <button className="shrink-0 p-1.5" onClick={() => setBlockModalOpen(true)}>
-              <Icon kind="plus" size={5} viewBoxSize={24} />
-            </button>
-          </div>
-          <div className="space-y-2">
-            {pageData?.blocks?.map((block, index) => (
-              <Block
-                key={`${block.id}`}
-                id={`${block.id}`}
-                title={block.title}
-                index={index}
-                moveCard={moveCard}
-                deleteBlock={handleBlockDelete}
-              />
-            ))}
+    <>
+      <DndProvider backend={HTML5Backend}>
+        <div className="mx-auto space-y-6">
+          <div className="mt-4">
+            <div className="mb-3 flex w-full items-center justify-between text-xs font-semibold uppercase text-slate-400 dark:text-slate-500">
+              Blocks
+              <button className="shrink-0 p-1.5" onClick={() => setBlockModalOpen(true)}>
+                <Icon kind="plus" size={5} viewBoxSize={24} />
+              </button>
+            </div>
+            <div className="space-y-2">
+              {pageData?.blocks?.map((block, index) => (
+                <Block
+                  key={`${block.id}`}
+                  id={`${block.id}`}
+                  title={block.title}
+                  index={index}
+                  moveCard={moveCard}
+                  deleteBlock={handleBlockDelete}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </DndProvider>
-    {/* Delete Modal */}
-        <div className="m-1.5">
-          {/* Start */}
-          <ModalBlank isOpen={dangerModalOpen} setIsOpen={setDangerModalOpen}>
-            <div className="p-5 flex space-x-4">
-              {/* Icon */}
-              <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-rose-100 dark:bg-rose-500/30">
-                <svg className="w-4 h-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
-                  <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
-                </svg>
+      </DndProvider>
+      {/* Delete Modal */}
+      <div className="m-1.5">
+        {/* Start */}
+        <ModalBlank isOpen={dangerModalOpen} setIsOpen={setDangerModalOpen}>
+          <div className="flex space-x-4 p-5">
+            {/* Icon */}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-500/30">
+              <svg className="h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
+                <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
+              </svg>
+            </div>
+            {/* Content */}
+            <div>
+              {/* Modal header */}
+              <div className="mb-2">
+                <div className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                  Delete this block?
+                </div>
               </div>
-              {/* Content */}
-              <div>
-                {/* Modal header */}
-                <div className="mb-2">
-                  <div className="text-lg font-semibold text-slate-800 dark:text-slate-100">Delete this block?</div>
+              {/* Modal content */}
+              <div className="mb-10 text-sm">
+                <div className="space-y-2">
+                  <p>Are you sure you want to delete this block? This action cannot be undone.</p>
                 </div>
-                {/* Modal content */}
-                <div className="text-sm mb-10">
-                  <div className="space-y-2">
-                    <p>Are you sure you want to delete this block? This action cannot be undone.</p>
-                  </div>
-                </div>
-                {/* Modal footer */}
-                <div className="flex flex-wrap justify-end space-x-2">
-                  <button className="btn-sm border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" onClick={() => { setDangerModalOpen(false) }}>Cancel</button>
-                  <button className="btn-sm bg-rose-500 hover:bg-rose-600 text-white" onClick={() => onDeleteBlock(blockId)}>Yes, Delete it</button>
-                </div>
+              </div>
+              {/* Modal footer */}
+              <div className="flex flex-wrap justify-end space-x-2">
+                <button
+                  className="btn-sm border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600"
+                  onClick={() => {
+                    setDangerModalOpen(false)
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn-sm bg-rose-500 text-white hover:bg-rose-600"
+                  onClick={() => onDeleteBlock(blockId)}
+                >
+                  Yes, Delete it
+                </button>
               </div>
             </div>
-          </ModalBlank>
-          {/* End */}
-        </div>
-        </>
+          </div>
+        </ModalBlank>
+        {/* End */}
+      </div>
+    </>
   )
 }

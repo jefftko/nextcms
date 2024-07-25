@@ -44,10 +44,10 @@ const BlockField = (props: FieldProps) => {
   if (!components[kind]) return null
   const FormField = components[kind]
   //value 为null或者空字符串时，使用defaultValue,如果defaultValue也为空，则使用空字符串
-  let blockValue = ""
-  if (value || value === "") {
+  let blockValue = ''
+  if (value || value === '') {
     blockValue = value
-  } else if (defaultValue || defaultValue === "") {
+  } else if (defaultValue || defaultValue === '') {
     blockValue = defaultValue
   }
   return (

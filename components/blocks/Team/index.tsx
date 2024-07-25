@@ -30,13 +30,15 @@ export default function Team({ data }: { data: TeamSectionType }) {
                   data-aos-delay={index * 150}
                 >
                   <div className="flex flex-col items-center">
-                    <Image
-                      className="mb-4 rounded-full"
-                      src={member.image}
-                      width={120}
-                      height={120}
-                      alt={`Team member ${index + 1}`}
-                    />
+                    {member.image && (
+                      <Image
+                        className="mb-4 rounded-full"
+                        src={member.image}
+                        width={120}
+                        height={120}
+                        alt={`Team member ${index + 1}`}
+                      />
+                    )}
                     <h4 className="mb-1 text-xl font-bold">{member.name}</h4>
                     <div className="mb-2 font-medium text-blue-600">{member.position}</div>
                     <p className="mb-3 text-center text-gray-600">{member.description}</p>

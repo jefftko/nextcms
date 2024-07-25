@@ -5,11 +5,15 @@ import BlockField from './index'
 import Accordion from '@/components/admin/accordion'
 import { Icon } from '@/components/icons'
 import { useCallback } from 'react'
+import { useBlockData } from '@/app/admin/block-data'
+import { useEffect, useState } from 'react'
 
-const ListField = ({ label, name, fields, value, onChange }) => {
+const ListField = ({ label, name, fields, value }) => {
   //console.log('ListField', fields)
+  const [listValue, setListValue] = useState(value || [])
+  const { blockData, setBlockData } = useBlockData()
 
- /* const handleItemChange = (index, fieldName, fieldValue) => {
+  /* const handleItemChange = (index, fieldName, fieldValue) => {
     const newList = [...value]
     newList[index] = {
       ...newList[index],
@@ -17,22 +21,47 @@ const ListField = ({ label, name, fields, value, onChange }) => {
     }
     onChange(newList)
   }*/
+  useEffect(() => {
+    if (blockData[name]) {
+      setListValue(blockData[name])
+    }
+  }, [blockData, name])
+
   const handleItemChange = useCallback((index, fieldName, fieldValue) => {
-    const newList = [...value]
-    newList[index] = {
-      ...newList[index],
+    const newValue = {
+      ...listValue[index],
       [fieldName]: fieldValue,
     }
-    onChange(newList)
-  }, [value, onChange])
+    listValue[index] = newValue
+    setListValue([...listValue])
+    /*setBlockData((prev) => ({
+        ...prev,
+        [name]: newList,
+        }))*/
+  }, [])
+
+  useEffect(() => {
+    setBlockData((prev) => ({
+      ...prev,
+      [name]: listValue,
+    }))
+  }, [listValue])
 
   const addItem = () => {
-    onChange([...value, {}])
+    //onChange([...value, {}])
+    setBlockData((prev) => ({
+      ...prev,
+      [name]: [...value, {}],
+    }))
   }
 
   const removeItem = (index) => {
     const newList = value.filter((_, i) => i !== index)
-    onChange(newList)
+    setBlockData((prev) => ({
+      ...prev,
+      [name]: newList,
+    }))
+    //onChange(newList)
   }
 
   return (
@@ -44,16 +73,16 @@ const ListField = ({ label, name, fields, value, onChange }) => {
           <div className="sr-only">Add Item</div>
         </button>
       </div>
-      {value?.map((item, index) => (
+      {listValue?.map((item, index) => (
         <Accordion key={`${label}_${index}`} title={`${label}_${index}`} className="mt-2">
           <div key={index} className="mb-4 p-2">
             <div className="flex flex-wrap justify-between">
-              {Object.keys(fields).map((fieldName,idx) => (
+              {Object.keys(fields).map((fieldName, idx) => (
                 <BlockField
-                  key={fieldName}
+                  key={`${name}[${index}]_${fieldName}_${idx}`}
                   kind={fields[fieldName].kind}
                   label={fields[fieldName].label}
-                  name={`${name}[${index}].${fieldName}_${idx}`}
+                  name={`${name}[${index}]_${fieldName}_${idx}`}
                   value={item[fieldName]}
                   onChange={(fieldValue) => handleItemChange(index, fieldName, fieldValue)}
                   additional={fields[fieldName].additional}

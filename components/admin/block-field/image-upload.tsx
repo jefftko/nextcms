@@ -47,7 +47,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
       //split with source ,but remove empty string
       setFilePath(item.source.split('/').filter(Boolean))
     } else {
-      onChange(item.source)
+      setTimeout(() => {
+        onChange(item.source)
+      }, 500)
       setPreview(item.source)
       setIsOpen(false)
     }
