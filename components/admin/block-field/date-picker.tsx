@@ -30,7 +30,7 @@ const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProp
     static: true,
     monthSelectorType: 'static',
     //dateFormat: moreOptions?.dateFormat || 'M j, Y',
-    dateFormat: moreOptions?.dateFormat || 'y-m-d',
+    dateFormat: moreOptions?.dateFormat || 'Y-m-d',
     //defaultDate: value || [new Date().setDate(new Date().getDate() - 6), new Date()],
     prevArrow:
       '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
