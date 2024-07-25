@@ -13,5 +13,6 @@ export type TeamMemberType = {
 export type TeamSectionType = {
   title: string
   titleColor?: string
+  date?: string
   members: TeamMemberType[]
 }

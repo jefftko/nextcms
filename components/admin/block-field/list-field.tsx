@@ -8,19 +8,11 @@ import { useCallback } from 'react'
 import { useBlockData } from '@/app/admin/block-data'
 import { useEffect, useState } from 'react'
 
+//value is not used
 const ListField = ({ label, name, fields, value }) => {
-  //console.log('ListField', fields)
   const [listValue, setListValue] = useState(value || [])
   const { blockData, setBlockData } = useBlockData()
 
-  /* const handleItemChange = (index, fieldName, fieldValue) => {
-    const newList = [...value]
-    newList[index] = {
-      ...newList[index],
-      [fieldName]: fieldValue,
-    }
-    onChange(newList)
-  }*/
   useEffect(() => {
     if (blockData[name]) {
       setListValue(blockData[name])
@@ -34,10 +26,6 @@ const ListField = ({ label, name, fields, value }) => {
     }
     listValue[index] = newValue
     setListValue([...listValue])
-    /*setBlockData((prev) => ({
-        ...prev,
-        [name]: newList,
-        }))*/
   }, [])
 
   useEffect(() => {
@@ -48,7 +36,6 @@ const ListField = ({ label, name, fields, value }) => {
   }, [listValue])
 
   const addItem = () => {
-    //onChange([...value, {}])
     setBlockData((prev) => ({
       ...prev,
       [name]: [...value, {}],
@@ -61,7 +48,6 @@ const ListField = ({ label, name, fields, value }) => {
       ...prev,
       [name]: newList,
     }))
-    //onChange(newList)
   }
 
   return (

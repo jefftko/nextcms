@@ -20,6 +20,33 @@ const TeamSchema = () => ({
       description: 'The color of the title',
       defaultValue: '#000000',
     },
+    date: {
+      kind: 'date',
+      label: 'Date',
+      description: 'The date of the team section',
+    },
+    dateRang: {
+      kind: 'date',
+      label: 'Range Date',
+      description: 'The date of the team section',
+      additional: {
+        flatpickrOptions: {
+          mode: 'range',
+          dateFormat: 'Y-m-d',
+        },
+      },
+    },
+    dateMultiple: {
+      kind: 'date',
+      label: 'Multiple Date',
+      description: 'The date of the team section',
+      additional: {
+        flatpickrOptions: {
+          mode: 'multiple',
+          dateFormat: 'Y-m-d',
+        },
+      },
+    },
     members: {
       kind: 'list',
       label: 'Team Members',
