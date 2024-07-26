@@ -37,7 +37,7 @@ export default function ChangeLog({ data }: { data: ChangeLogType }) {
                 aria-hidden="true"
               ></div>
 
-              {data.items.map((item, index) => (
+              {data.items?.map((item, index) => (
                 <article className="group pt-12 first-of-type:pt-0" key={index}>
                   <div className="md:flex">
                     <div className="w-48 shrink-0">
