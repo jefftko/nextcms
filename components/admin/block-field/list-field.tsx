@@ -19,14 +19,17 @@ const ListField = ({ label, name, fields, value }) => {
     }
   }, [blockData, name])
 
-  const handleItemChange = useCallback((index, fieldName, fieldValue) => {
-    const newValue = {
-      ...listValue[index],
-      [fieldName]: fieldValue,
-    }
-    listValue[index] = newValue
-    setListValue([...listValue])
-  }, [listValue])
+  const handleItemChange = useCallback(
+    (index, fieldName, fieldValue) => {
+      const newValue = {
+        ...listValue[index],
+        [fieldName]: fieldValue,
+      }
+      listValue[index] = newValue
+      setListValue([...listValue])
+    },
+    [listValue]
+  )
 
   useEffect(() => {
     setBlockData((prev) => ({
@@ -36,9 +39,11 @@ const ListField = ({ label, name, fields, value }) => {
   }, [listValue])
 
   const addItem = () => {
-      //if has default value , then use it, otherwise use empty object
-      setListValue((prev) => [...prev, Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || '']))])
-   
+    //if has default value , then use it, otherwise use empty object
+    setListValue((prev) => [
+      ...prev,
+      Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])),
+    ])
   }
 
   const removeItem = (index) => {
