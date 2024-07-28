@@ -10,6 +10,9 @@ import { notFound } from 'next/navigation'
 //import ModalBasic from '@/components/admin/modal-basic'
 import { BlockDataProvider } from '@/app/admin/block-data'
 import BlockModal from './block-modal'
+import path from 'path'
+import fs from 'fs'
+import { redirect } from 'next/navigation'
 
 //import PostLayout from '@/layouts/PostLayout'
 //import { Metadata } from 'next'
@@ -48,8 +51,15 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   if (params.slug[0] === 'edit' && params.slug[1]) {
     // @ts-ignore - Disable TypeScript check for the next line
     const sortedCoreContents = allCoreContent(sortPosts(allPages))
-    post = allPages.find((p) => p.slug === params.slug[1]) as Pages
+    //post = allPages.find((p) => p.slug === params.slug[1]) as Pages
+    post = sortedCoreContents.find((p) => p.slug === params.slug[1]) as Pages
     if (!post) {
+        //判断makrdown文件是否存在
+      if(fs.existsSync(path.join(process.cwd(), 'data', 'pages', `${params.slug[1]}.mdx`))){
+          return redirect(`/admin/pages/edit/${params.slug[1]}`)
+      }
+      console.log('post not found')
+   
       return notFound()
     }
     const mainContent = coreContent(post)

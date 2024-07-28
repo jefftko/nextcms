@@ -71,8 +71,8 @@ export default function EditorHeader({ setWidth }: HeaderProps) {
           setToast({ message: 'Page saved successfully', type: 'success' })
           //if page is new ,redirect to edit page
           if (action === 'create') {
-            //window.location.href = `/admin/pages/edit/${pageData.pagePath}`
-            window.location.href = `/admin/pages`
+            window.location.href = `/admin/pages/edit/${pageData.pagePath}`
+            //window.location.href = `/admin/pages`
             //redirect(`/admin/pages/edit/${pageData.pagePath}`)
           }
           //reload page

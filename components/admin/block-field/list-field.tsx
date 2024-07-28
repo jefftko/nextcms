@@ -13,11 +13,11 @@ const ListField = ({ label, name, fields, value }) => {
   const [listValue, setListValue] = useState(value || [])
   const { blockData, setBlockData } = useBlockData()
 
-  useEffect(() => {
+ /* useEffect(() => {
     if (blockData[name]) {
       setListValue(blockData[name])
     }
-  }, [blockData, name])
+  }, [blockData,name])*/
 
   const handleItemChange = useCallback(
     (index, fieldName, fieldValue) => {
@@ -28,7 +28,7 @@ const ListField = ({ label, name, fields, value }) => {
       listValue[index] = newValue
       setListValue([...listValue])
     },
-    [listValue]
+    []
   )
 
   useEffect(() => {
