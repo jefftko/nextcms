@@ -7,10 +7,12 @@ export default function Accordion({
   children,
   title,
   className = '',
+  onItemClick,
 }: {
   children: React.ReactNode
   title: string
   className?: string
+  onItemClick?: (open: boolean) => void
 }) {
   const [open, setOpen] = useState<boolean>(false)
 
@@ -21,7 +23,10 @@ export default function Accordion({
       <button
         className="group mb-1 flex w-full items-center justify-between"
         aria-expanded={open}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open)
+          onItemClick && onItemClick(!open)
+        }}
       >
         <div className="text-sm font-medium text-slate-800 dark:text-slate-100">{title}</div>
         <svg

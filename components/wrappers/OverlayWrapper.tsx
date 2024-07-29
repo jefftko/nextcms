@@ -1,21 +1,22 @@
 // components/OverlayWrapper.js
 'use client'
+import { v4 as uuidv4 } from 'uuid'
 import React from 'react'
 import { useAppProvider } from '@/app/(default)/app-provider'
 
-function OverlayWrapper({ children, id }) {
+function OverlayWrapper({ children, domId }) {
   const { showOverlay } = useAppProvider()
+  const generatedId = domId || uuidv4() // 确保 id 一致
   const handleClick = () => {
     if (showOverlay) {
-      console.log('click', id)
-      window.parent.postMessage({ type: 'editBlock', id }, '*')
+      window.parent.postMessage({ type: 'editBlock', generatedId }, '*')
     }
   }
 
   const handleKeyPress = (e) => {
     if (showOverlay && (e.key === 'Enter' || e.key === ' ')) {
-      console.log('keypress', id)
-      window.parent.postMessage({ type: 'editBlock', id }, '*')
+      console.log('keypress', generatedId)
+      window.parent.postMessage({ type: 'editBlock', generatedId }, '*')
     }
   }
   //console.log('showOverlay',showOverlay)
@@ -24,7 +25,7 @@ function OverlayWrapper({ children, id }) {
       {showOverlay ? (
         <div
           className={`group relative border-4 border-dashed border-transparent hover:border-blue-500`}
-          id={id}
+          id={generatedId}
           onKeyPress={handleKeyPress}
           role="button"
           onClick={handleClick}

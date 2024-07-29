@@ -4,7 +4,7 @@ import OverlayWrapper from '@/components/wrappers/OverlayWrapper'
 export default function Footer() {
   return (
     <footer>
-      <OverlayWrapper id="footer">
+      <OverlayWrapper domId="footer">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           {/* Top area: Blocks */}
           <div className="grid gap-8 border-t border-gray-200 py-8 sm:grid-cols-12 md:py-12">

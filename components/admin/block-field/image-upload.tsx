@@ -4,6 +4,7 @@ import { getFiles } from '@/services/fileService'
 import MediaManager from '@/components/admin/media/media-manager'
 import { PhotoIcon } from '@heroicons/react/20/solid'
 import CropImagePanel from '@/components/admin/media/crop-image-panel'
+import Image from 'next/image'
 
 interface ImageUploadProps {
   label: string
@@ -26,7 +27,7 @@ function classNames(...classes) {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange, additional }) => {
   const [preview, setPreview] = useState<string | null>(value || null)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isMediaOpen, setMediaIsOpen] = useState(false)
   const [filePath, setFilePath] = useState([])
   const [files, setFiles] = useState([])
   const [tabIndex, setTabIndex] = useState(0)
@@ -47,11 +48,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
       //split with source ,but remove empty string
       setFilePath(item.source.split('/').filter(Boolean))
     } else {
+      setMediaIsOpen(false)
       setTimeout(() => {
         onChange(item.source)
       }, 500)
       setPreview(item.source)
-      setIsOpen(false)
     }
   }, [])
 
@@ -66,7 +67,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
         {additional?.required && <span className="text-rose-500">*</span>}
       </label>
       <div className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-        <div className="text-center" onClick={() => setIsOpen(true)}>
+        <div className="text-center" onClick={() => setMediaIsOpen(true)}>
           {preview ? (
             <img
               src={preview}
@@ -86,7 +87,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
           )}
         </div>
       </div>
-      <ModalAction isOpen={isOpen} setIsOpen={setIsOpen}>
+      <ModalAction isOpen={isMediaOpen} setIsOpen={setMediaIsOpen}>
         <div className="border-b border-gray-200">
           <nav aria-label="Tabs" className="-mb-px flex space-x-8">
             {tabs.map((tab, index) => (

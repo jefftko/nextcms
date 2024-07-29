@@ -1,13 +1,13 @@
 // components/admin/atoms/Datepicker.tsx
 'use client'
-
+import React, { useState, useRef, useEffect } from 'react'
 import Flatpickr from 'react-flatpickr'
 import { Hook, Options } from 'flatpickr/dist/types/options'
 
 interface DatepickerProps {
   label: string
   name: string
-  value?: Date[]
+  value?: Date[] | Date | string
   onChange?: (dates: Date[]) => void
   additional?: {
     align?: 'left' | 'right'
@@ -17,12 +17,29 @@ interface DatepickerProps {
 }
 
 const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProps) => {
+  const flatpickrRef = useRef<Flatpickr | null>(null)
   const onReady: Hook = (selectedDates, dateStr, instance) => {
+    //set default value
+    if (value) {
+      instance.setDate(value)
+    }
+
     ;(instance.element as HTMLInputElement).value = dateStr.replace('to', '-')
     //const customClass = additional?.flatpickrOptions?.align ?? ''
     const customClass = additional?.align ?? ''
     instance.calendarContainer.classList.add(`flatpickr-${customClass}`)
   }
+
+  const onClose: Hook = () => {
+    if (flatpickrRef.current) {
+      const inputElement = flatpickrRef.current.flatpickr.input
+      if (inputElement) {
+        inputElement.blur()
+        console.log('date close')
+      }
+    }
+  }
+
   const moreOptions = additional?.flatpickrOptions || {}
 
   const defaultOptions: Options = {
@@ -37,6 +54,7 @@ const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProp
     nextArrow:
       '<svg class="fill-current" width="7" height="11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
     onReady,
+    onClose,
     onChange: (selectedDates) => {
       if (onChange) onChange(selectedDates)
     },
@@ -52,6 +70,7 @@ const Datepicker = ({ label, name, value, onChange, additional }: DatepickerProp
       </label>
       <div className="relative">
         <Flatpickr
+          ref={flatpickrRef}
           className="form-input w-[15.5rem] pl-9 font-medium text-slate-500 hover:text-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-slate-200"
           options={options}
         />

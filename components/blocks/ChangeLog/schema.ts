@@ -19,16 +19,17 @@ const ChangeLogSchema = () => ({
       label: 'Items',
       description: 'A list of team members',
       fields: {
+        date: {
+          kind: 'date',
+          label: 'Date',
+          description: 'The date of the team section',
+          defaultValue: '2021-01-01',
+        },
         name: {
           kind: 'text',
           label: 'Name',
           description: 'The name of the team member',
           defaultValue: 'John Doe',
-        },
-        date: {
-          kind: 'date',
-          label: 'Date',
-          description: 'The date of the team section',
         },
         image: {
           kind: 'image',

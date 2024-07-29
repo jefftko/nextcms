@@ -12,24 +12,36 @@ import { useEffect, useState } from 'react'
 const ListField = ({ label, name, fields, value }) => {
   const [listValue, setListValue] = useState(value || [])
   const { blockData, setBlockData } = useBlockData()
+  const [currentValue, setCurrentValue] = useState({})
+  const [currentIndex, setCurrentIndex] = useState(-1)
 
- /* useEffect(() => {
+  /* useEffect(() => {
     if (blockData[name]) {
       setListValue(blockData[name])
     }
   }, [blockData,name])*/
 
-  const handleItemChange = useCallback(
-    (index, fieldName, fieldValue) => {
-      const newValue = {
-        ...listValue[index],
-        [fieldName]: fieldValue,
-      }
-      listValue[index] = newValue
+  const handleItemChange = useCallback((index, fieldName, fieldValue) => {
+    //console.log('index',index)
+    //console.log('currentIndex',currentIndex)
+    //if (index !== currentIndex) return;
+    setCurrentValue((prev) => ({
+      ...prev,
+      [fieldName]: fieldValue,
+    }))
+  }, [])
+  useEffect(() => {
+    if (currentIndex >= 0) {
+      listValue[currentIndex] = currentValue
       setListValue([...listValue])
-    },
-    []
-  )
+    }
+  }, [currentValue])
+
+  useEffect(() => {
+    if (currentIndex >= 0) {
+      setCurrentValue(listValue[currentIndex])
+    }
+  }, [currentIndex, listValue])
 
   useEffect(() => {
     setBlockData((prev) => ({
@@ -44,6 +56,14 @@ const ListField = ({ label, name, fields, value }) => {
       ...prev,
       Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])),
     ])
+  }
+  const handleItemClick = (e, index) => {
+    if (e) {
+      console.log('clicked', index)
+      console.log(listValue[index])
+      setCurrentValue(listValue[index])
+      setCurrentIndex(index)
+    }
   }
 
   const removeItem = (index) => {
@@ -61,7 +81,12 @@ const ListField = ({ label, name, fields, value }) => {
         </button>
       </div>
       {listValue?.map((item, index) => (
-        <Accordion key={`${label}_${index}`} title={`${label}_${index}`} className="mt-2">
+        <Accordion
+          key={`${label}_${index}`}
+          title={`${label}_${index}`}
+          className="mt-2"
+          onItemClick={(e) => handleItemClick(e, index)}
+        >
           <div key={index} className="mb-4 p-2">
             <div className="flex flex-wrap justify-between">
               {Object.keys(fields).map((fieldName, idx) => (

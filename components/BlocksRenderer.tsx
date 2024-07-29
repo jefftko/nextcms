@@ -11,7 +11,7 @@ export const ContentBlocks = ({ blocks }) => {
         const MDXComponent: React.ElementType | undefined = componentMap[block['type']]
         if (!MDXComponent) return null
         return (
-          <OverlayWrapper key={index} id={`${block.id}`}>
+          <OverlayWrapper key={index} domId={`${block.id}`}>
             <MDXComponent data={block} />
           </OverlayWrapper>
         )
