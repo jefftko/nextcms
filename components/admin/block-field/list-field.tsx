@@ -1,12 +1,59 @@
 // components/admin/block-field/list-field.tsx
 
-import React from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import BlockField from './index'
 import Accordion from '@/components/admin/accordion'
 import { Icon } from '@/components/icons'
-import { useCallback } from 'react'
 import { useBlockData } from '@/app/admin/block-data'
-import { useEffect, useState } from 'react'
+import { useDrag, useDrop, DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
+interface DragItem {
+  id: string
+  index: number
+}
+const ItemTypes = {
+  BLOCK: 'block',
+}
+
+const DraggableItem = ({ id, index, moveItem, children }) => {
+  const ref = useRef(null)
+
+  const [, drop] = useDrop<DragItem>({
+    accept: ItemTypes.BLOCK,
+    hover(item) {
+      if (!ref.current) {
+        return
+      }
+      const dragIndex = item.index
+      const hoverIndex = index
+
+      if (dragIndex === hoverIndex) {
+        return
+      }
+
+      moveItem(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    },
+  })
+
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.BLOCK,
+    item: { id, index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
+
+  drag(drop(ref))
+
+  return (
+    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+      {children}
+    </div>
+  )
+}
+
 
 //value is not used
 const ListField = ({ label, name, fields, value }) => {
@@ -71,7 +118,16 @@ const ListField = ({ label, name, fields, value }) => {
     setListValue(newList)
   }
 
+  const moveItem = (dragIndex, hoverIndex) => {
+    const dragItem = listValue[dragIndex]
+    const newList = [...listValue]
+    newList.splice(dragIndex, 1)
+    newList.splice(hoverIndex, 0, dragItem)
+    setListValue(newList)
+  }
+
   return (
+    <DndProvider backend={HTML5Backend}>
     <div className="mt-4 w-full">
       <div className="sm:flex sm:items-start sm:justify-between">
         <label className="mb-1 block text-sm font-medium">{label}</label>
@@ -81,8 +137,8 @@ const ListField = ({ label, name, fields, value }) => {
         </button>
       </div>
       {listValue?.map((item, index) => (
+        <DraggableItem key={`${label}_${index}`} id={`${label}_${index}`} index={index} moveItem={moveItem}>
         <Accordion
-          key={`${label}_${index}`}
           title={`${label}_${index}`}
           className="mt-2"
           onItemClick={(e) => handleItemClick(e, index)}
@@ -110,8 +166,10 @@ const ListField = ({ label, name, fields, value }) => {
             </div>
           </div>
         </Accordion>
+        </DraggableItem>
       ))}
     </div>
+    </DndProvider>
   )
 }
 
