@@ -1,12 +1,12 @@
 // components/OverlayWrapper.js
 'use client'
-import { v4 as uuidv4 } from 'uuid'
 import React from 'react'
 import { useAppProvider } from '@/app/(default)/app-provider'
 
 function OverlayWrapper({ children, domId }) {
   const { showOverlay } = useAppProvider()
-  const generatedId = domId || uuidv4() // 确保 id 一致
+  // 生成唯一 id
+  const generatedId = domId || Math.random().toString(36).substring(7)
   const handleClick = () => {
     if (showOverlay) {
       window.parent.postMessage({ type: 'editBlock', generatedId }, '*')
