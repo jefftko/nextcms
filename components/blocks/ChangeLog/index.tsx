@@ -43,18 +43,18 @@ export default function ChangeLog({ data }: { data: ChangeLogType }) {
                     <div className="w-48 shrink-0">
                       <time className="mb-3 inline-flex items-center bg-gradient-to-r from-purple-500 to-purple-200 bg-clip-text text-sm text-transparent before:h-1.5 before:w-1.5 before:rounded-full before:bg-purple-500 before:ring-4 before:ring-purple-500/30 md:leading-8">
                         <span className="ml-[1.625rem] md:ml-5">
-                          {item.date ? formatDate(item.date) : '-'}
+                          {item?.date ? formatDate(item.date) : '-'}
                         </span>
                       </time>
                     </div>
                     <div className="ml-8 grow border-b pb-12 [border-image:linear-gradient(to_right,theme(colors.slate.700/.3),theme(colors.slate.700),theme(colors.slate.700/.3))1] group-last-of-type:border-none group-last-of-type:pb-0 md:ml-0">
                       <header>
                         <h2 className="bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60 bg-clip-text pb-6 text-2xl font-bold leading-8 text-transparent">
-                          {item.name}
+                          {item?.name}
                         </h2>
                       </header>
                       <figure className="mb-8 rounded-3xl bg-gradient-to-b from-slate-300/20 to-transparent p-px">
-                        {item.image && (
+                        {item?.image && (
                           <Image
                             className="w-full rounded-[inherit]"
                             src={item.image}
@@ -65,7 +65,7 @@ export default function ChangeLog({ data }: { data: ChangeLogType }) {
                         )}
                       </figure>
                       <div className="prose max-w-none text-slate-400 prose-p:leading-relaxed prose-a:text-purple-500 prose-a:no-underline hover:prose-a:underline prose-strong:font-medium prose-strong:text-slate-50">
-                        <Markdown>{item.description}</Markdown>
+                        <Markdown>{item?.description}</Markdown>
                       </div>
                     </div>
                   </div>

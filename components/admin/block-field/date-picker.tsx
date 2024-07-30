@@ -7,7 +7,7 @@ import { Hook, Options } from 'flatpickr/dist/types/options'
 interface DatepickerProps {
   label: string
   name: string
-  value?: Date[] | Date | string
+  value?: Date[] | Date | string | undefined | null
   onChange?: (dates: Date[]) => void
   additional?: {
     align?: 'left' | 'right'
