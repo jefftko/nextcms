@@ -25,6 +25,34 @@ const TeamSchema = () => ({
       label: 'Date',
       description: 'The date of the team section',
     },
+    select: {
+      kind: 'select',
+      label: 'Select',
+      description: 'The select of the team section',
+      additional: {
+        required: true,
+        placeholder: 'Select',
+        options: [
+          { value: 'us', label: 'United States' },
+          { value: 'ca', label: 'Canada' },
+          { value: 'uk', label: 'United Kingdom' },
+        ],
+      },
+    },
+    menu: {
+      kind: 'menu',
+      label: 'Menu',
+      description: 'The menu of the team section',
+      additional: {
+        required: true,
+        placeholder: 'Menu',
+        options: [
+          { value: 'us', label: 'United States' },
+          { value: 'ca', label: 'Canada' },
+          { value: 'uk', label: 'United Kingdom' },
+        ],
+      },
+    },
     dateRang: {
       kind: 'date',
       label: 'Range Date',

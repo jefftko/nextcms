@@ -1,21 +1,23 @@
 import TextField from './text-field'
 import RichText from './rich-text'
-import Link from './link'
 import ListField from './list-field'
 import TextArea from './text-area'
 import DatePicker from './date-picker' // 导入 DatePicker 组件
 import ImageUpload from './image-upload'
 import ColorPicker from './color-picker' // 导入 ColorPicker 组件
+import MenuField from './menu-field'
+import SelectField from './select-field'
 
 const components = {
   text: TextField,
   richText: RichText,
-  link: Link,
   list: ListField,
   textArea: TextArea,
   date: DatePicker, // 添加 DatePicker 组件
   image: ImageUpload,
   color: ColorPicker, // 添加 ColorPicker 组件
+  menu: MenuField,
+  select: SelectField,
 }
 
 export type AdditionalFieldProps = {

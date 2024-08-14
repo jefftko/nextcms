@@ -40,7 +40,7 @@ export default function EditorBody() {
         console.log('editBlock', event.data)
         setBlockId(null)
         setTimeout(() => {
-          setBlockId(event.data.id)
+          setBlockId(event.data.generatedId)
         }, 200)
       }
     }

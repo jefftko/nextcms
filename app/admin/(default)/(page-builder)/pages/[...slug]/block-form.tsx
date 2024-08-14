@@ -25,6 +25,7 @@ export default function BlockForm() {
 
     if (pageData) {
       //remove index from blockId
+      console.log('blockForm', blockId)
       const block = pageData.blocks.find((block) => block.id === blockId)
       if (block) {
         setBlockData(block)

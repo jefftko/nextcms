@@ -127,44 +127,50 @@ const ListField = ({ label, name, fields, value }) => {
             <div className="sr-only">Add Item</div>
           </button>
         </div>
-        {listValue?.map((item, index) => (
-            (item  && Object.keys(item).length > 0) && (
-          <DraggableItem key={`${label}_${index}`} id={`${label}_${index}`} index={index} moveItem={moveItem}>
-            <Accordion
-              title={`${label}_${index}_${item['name'] || item['title'] || item['label'] || item['id'] || index}`}
-              className="mt-2"
-              onItemClick={(e) => handleItemClick(e, index)}
-            >
-              <div key={index} className="mb-4 p-2">
-                <div className="flex flex-wrap justify-between">
-                  {Object.keys(fields).map((fieldName, idx) => (
-                      <BlockField
-                        key={`${name}[${index}]_${fieldName}_${idx}`}
-                        kind={fields[fieldName].kind}
-                        label={fields[fieldName].label}
-                        name={`${name}[${index}]_${fieldName}_${idx}`}
-                        value={item[fieldName] || ''}
-                        onChange={(fieldValue) => handleItemChange(index, fieldName, fieldValue)}
-                        additional={fields[fieldName].additional}
-                      />
-                  ))}
-                  <button
-                    className="btn mt-4 w-full border-slate-200 text-rose-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
-                    onClick={() => removeItem(index)}
-                  >
-                    <Icon kind="trash" size={5} viewBoxSize={24} />
-                    <span className="ml-2">Remove Item</span>
-                  </button>
-                </div>
-              </div>
-            </Accordion>
-          </DraggableItem>
+        {listValue?.map(
+          (item, index) =>
+            item &&
+            Object.keys(item).length > 0 && (
+              <DraggableItem
+                key={`${label}_${index}`}
+                id={`${label}_${index}`}
+                index={index}
+                moveItem={moveItem}
+              >
+                <Accordion
+                  title={`${label}_${index}_${item['name'] || item['title'] || item['label'] || item['id'] || index}`}
+                  className="mt-2"
+                  onItemClick={(e) => handleItemClick(e, index)}
+                >
+                  <div key={index} className="mb-4 p-2">
+                    <div className="flex flex-wrap justify-between">
+                      {Object.keys(fields).map((fieldName, idx) => (
+                        <BlockField
+                          key={`${name}[${index}]_${fieldName}_${idx}`}
+                          kind={fields[fieldName].kind}
+                          label={fields[fieldName].label}
+                          name={`${name}[${index}]_${fieldName}_${idx}`}
+                          value={item[fieldName] || ''}
+                          onChange={(fieldValue) => handleItemChange(index, fieldName, fieldValue)}
+                          additional={fields[fieldName].additional}
+                        />
+                      ))}
+                      <button
+                        className="btn mt-4 w-full border-slate-200 text-rose-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
+                        onClick={() => removeItem(index)}
+                      >
+                        <Icon kind="trash" size={5} viewBoxSize={24} />
+                        <span className="ml-2">Remove Item</span>
+                      </button>
+                    </div>
+                  </div>
+                </Accordion>
+              </DraggableItem>
             )
-        ))}
+        )}
       </div>
     </DndProvider>
   )
 }
 
 export default ListField
-
