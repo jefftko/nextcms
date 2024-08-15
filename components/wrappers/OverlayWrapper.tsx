@@ -1,22 +1,22 @@
 // components/OverlayWrapper.js
 'use client'
 import React from 'react'
-import { useAppProvider } from '@/app/(default)/app-provider'
+import { useAppProvider } from '@/app/app-provider'
 
-function OverlayWrapper({ children, domId }) {
+function OverlayWrapper({ children, domId, type = 'common' }) {
   const { showOverlay } = useAppProvider()
   // 生成唯一 id
   const generatedId = domId || Math.random().toString(36).substring(7)
   const handleClick = () => {
     if (showOverlay) {
-      window.parent.postMessage({ type: 'editBlock', generatedId }, '*')
+      window.parent.postMessage({ type: 'editBlock', generatedId, domType: type }, '*')
     }
   }
 
   const handleKeyPress = (e) => {
     if (showOverlay && (e.key === 'Enter' || e.key === ' ')) {
       console.log('keypress', generatedId)
-      window.parent.postMessage({ type: 'editBlock', generatedId }, '*')
+      window.parent.postMessage({ type: 'editBlock', generatedId, domType: type }, '*')
     }
   }
   //console.log('showOverlay',showOverlay)

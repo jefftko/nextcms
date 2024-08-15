@@ -29,7 +29,7 @@ export default function Header({ data }: { data: HeaderType }) {
     <header
       className={`fixed z-30 w-full transition duration-300 ease-in-out md:bg-opacity-90 ${!top ? 'bg-white shadow-lg backdrop-blur-sm' : ''}`}
     >
-      <OverlayWrapper domId="header">
+      <OverlayWrapper domId="Header" type="common">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="flex h-16 items-center justify-between md:h-20">
             {/* Site branding */}

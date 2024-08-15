@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { ContentBlocks } from '@/components/BlocksRenderer'
 import Layout, { layouts } from '@/layouts/index'
-import { useAppProvider } from '@/app/(default)/app-provider'
+import { useAppProvider } from '@/app/app-provider'
 import Loading from '@/components/ui/Loading'
 
 export default function EditorBody() {

@@ -1,5 +1,5 @@
 {
-  "header": {
+  "Header": {
     "logo": {
       "src": "https://tinacms-template.s3.us-west-1.amazonaws.com/logo_aimx.png",
       "alt": "aimx",
@@ -49,17 +49,12 @@
       }
     ]
   },
-  "footer": {
+  "Footer": {
     "color": "default",
     "social": {
       "facebook": "/",
       "twitter": "/",
       "instagram": "/"
     }
-  },
-  "theme": {
-    "color": "blue",
-    "font": "sans",
-    "darkMode": "system"
   }
 }

@@ -2,6 +2,7 @@
 import EditorHeader from './editor-header'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePageData } from '@/app/admin/page-data'
+import { useAppProvider } from '@/app/admin/app-provider'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
 
 export default function EditorBody() {
@@ -11,6 +12,7 @@ export default function EditorBody() {
   const { pageData, blockId, setBlockId } = usePageData()
   const [currentOrigin, setCurrentOrigin] = useState<string>('')
   const { flyoutOpen, setFlyoutOpen } = useFlyoutContext()
+  const { commonId, setCommonId } = useAppProvider()
 
   const sendMessageToIframe = (data, origin) => {
     const iframeWindow = iframeRef.current?.contentWindow
@@ -38,10 +40,19 @@ export default function EditorBody() {
       //Block edit form
       if (event.data.type === 'editBlock') {
         console.log('editBlock', event.data)
-        setBlockId(null)
-        setTimeout(() => {
-          setBlockId(event.data.generatedId)
-        }, 200)
+        if (event.data.domType === 'common') {
+          setCommonId(null)
+          setBlockId(null)
+          setTimeout(() => {
+            setCommonId(event.data.generatedId)
+          }, 200)
+        } else {
+          setCommonId(null)
+          setBlockId(null)
+          setTimeout(() => {
+            setBlockId(event.data.generatedId)
+          }, 200)
+        }
       }
     }
     if (currentOrigin !== '') {

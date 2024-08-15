@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
 import { usePageData } from '@/app/admin/page-data'
+import { useAppProvider } from '@/app/admin/app-provider'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Blocks from './blocks'
@@ -12,10 +13,12 @@ import { Icon } from '@/components/icons'
 import { LeftExpand, RightExpand } from '@/components/admin/atoms/icons'
 //import BlockForm from './block-form'
 const BlockForm = dynamic(() => import('./block-form'), { ssr: false })
+const CommonForm = dynamic(() => import('./common-form'), { ssr: false })
 
 export default function EditorSidebar() {
   const { flyoutOpen, setFlyoutOpen } = useFlyoutContext()
   const { pageData, setPageData, setBlockId, blockId } = usePageData()
+  const { commonId, setCommonId } = useAppProvider()
   const [panelWidth, setPanelWidth] = useState(320)
   const [startX, setStartX] = useState(0)
   const [startWidth, setStartWidth] = useState(0)
@@ -133,6 +136,30 @@ export default function EditorSidebar() {
               <BlockForm />
             </div>
           </div>
+
+          {/* Common form */}
+          <div
+            id="common-form"
+            className={`absolute top-0 z-20 h-full w-full bg-white transition-transform duration-200 ease-in-out ${commonId ? 'translate-x-0' : '-translate-x-full'}`}
+          >
+            {/* Block form header */}
+            <div className="flex h-16 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 dark:border-slate-700 dark:bg-[#161F32] sm:px-6 md:px-5">
+              {/* disable linting for this line */}
+              {/* eslint-disable-next-line */}
+              <button
+                className="mr-4 text-slate-400 hover:text-slate-500"
+                onClick={() => setCommonId(null)}
+              >
+                <span className="sr-only">Close Common Block</span>
+                <Icon kind="arrowLeft" className="shrink-0 opacity-50" size={6} />
+              </button>
+            </div>
+            {/* Block form body */}
+            <div className="px-5 py-4">
+              <CommonForm />
+            </div>
+          </div>
+          {/* Common form */}
 
           <div className="flex flex-wrap justify-around px-5 py-4">
             {/* form */}

@@ -6,7 +6,7 @@ import { SearchProvider, SearchConfig } from 'pliny/search'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
-import AppProvider from './app-provider'
+import AppProvider from '@/app/app-provider'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
