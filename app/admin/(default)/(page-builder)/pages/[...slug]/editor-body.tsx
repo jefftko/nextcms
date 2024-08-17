@@ -12,7 +12,7 @@ export default function EditorBody() {
   const { pageData, blockId, setBlockId } = usePageData()
   const [currentOrigin, setCurrentOrigin] = useState<string>('')
   const { flyoutOpen, setFlyoutOpen } = useFlyoutContext()
-  const { commonId, setCommonId } = useAppProvider()
+  const { commonId, setCommonId, commonData } = useAppProvider()
 
   const sendMessageToIframe = (data, origin) => {
     const iframeWindow = iframeRef.current?.contentWindow
@@ -72,6 +72,11 @@ export default function EditorBody() {
     sendMessageToIframe({ type: 'highlight', blockId }, currentOrigin)
     //console.log('blockId', blockId)
   }, [blockId])
+
+  useEffect(() => {
+    //send common data to iframe
+    sendMessageToIframe({ type: 'globalData', commonData }, currentOrigin)
+  }, [commonData])
 
   return (
     <div

@@ -27,25 +27,28 @@ export default function CommonForm() {
     }
   }, [commonId])
 
-  const handleFieldChange = useCallback((name, value) => {
-
-    if (!commonId) {
+  const handleFieldChange = useCallback(
+    (name, value) => {
+      if (!commonId) {
         return
-        }
-    setCommonData((prev) => {
-      return {
-        ...prev,
-        [commonId]: {
-          ...prev[commonId],
-          [name]: value,
-        },
       }
-    })
-  }, [])
+      setCommonData((prev) => {
+        return {
+          ...prev,
+          [commonId]: {
+            ...prev[commonId],
+            [name]: value,
+          },
+        }
+      })
+    },
+    [commonId]
+  )
 
   return (
     <div id="CommonForm" className="flex flex-wrap justify-between ">
-      {formSchema && commonId &&
+      {formSchema &&
+        commonId &&
         Object.entries(formSchema.fields).map(([fieldName, field]) => {
           return (
             <BlockField

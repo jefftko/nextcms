@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
 import Image from 'next/image'
 import { Icon } from '@/components/icons'
@@ -14,10 +14,21 @@ interface HeaderProps {
 
 export default function EditorHeader({ setWidth }: HeaderProps) {
   const { flyoutOpen, setFlyoutOpen } = useFlyoutContext()
-  const { sidebarOpen, setSidebarOpen } = useAppProvider()
+  const { sidebarOpen, setSidebarOpen, commonData, commonId } = useAppProvider()
   const [isMobile, setIsMobile] = useState(false)
   const { pageData, action } = usePageData()
   const { setToast } = useMessage()
+  const [editCommon, setEditCommon] = useState(false)
+
+  //当commonData 或 commonId 改变时更新editCommon
+
+  useEffect(() => {
+    if (commonData && commonId) {
+      setEditCommon(true)
+    } else {
+      setEditCommon(false)
+    }
+  }, [commonData, commonId])
 
   //const { title,pageName,status,blocks,layout,key,description } = pageData??{}
   //remove other data from pageData
@@ -35,6 +46,7 @@ export default function EditorHeader({ setWidth }: HeaderProps) {
       key: pageData?.key,
       description: pageData?.description,
       date: pageData?.date,
+      globalData: editCommon ? commonData : null,
     }
     /*fetch('/admin/api/file', {
       method: 'POST',

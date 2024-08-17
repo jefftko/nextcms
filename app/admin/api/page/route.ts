@@ -6,6 +6,7 @@ import { allPages } from 'contentlayer/generated'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import type { Pages } from 'contentlayer/generated'
 import { createPage, editPage, deletePage, setPageNotDefault } from '@/utils/pageActions'
+import { editGlobal } from '@/utils/globalActions'
 
 const handler = async (req: NextRequest) => {
   const data = await req.json()
@@ -32,7 +33,10 @@ const handler = async (req: NextRequest) => {
     return NextResponse.json({ status:"error",error: 'Error saving MDX file.' }, { status: 500 })
   }*/
   try {
-    const res = await createPage(data)
+    //filter globalData from data
+    const { globalData, ...pageData } = data
+    await editGlobal(globalData)
+    const res = await createPage(pageData)
     return NextResponse.json(res, { status: 200 })
   } catch (err) {
     console.error(err)
@@ -50,7 +54,10 @@ export async function PUT(req: NextRequest) {
     if (data.isDefault) {
       await setPageNotDefault(data.pagePath)
     }
-    const res = await editPage(data)
+    const { globalData, ...pageData } = data
+    console.log(globalData['nav'])
+    await editGlobal(globalData)
+    const res = await editPage(pageData)
     return NextResponse.json(res, { status: 200 })
   } catch (err) {
     console.error(err)

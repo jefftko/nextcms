@@ -10,7 +10,7 @@ export default function EditorBody() {
   //const currentOrigin = window.location.origin
   const [currentOrigin, setCurrentOrigin] = useState<string>('')
   const [layout, setLayout] = useState('layoutDefault')
-  const { setShowOverlay } = useAppProvider()
+  const { setShowOverlay, globalData, setGlobalData } = useAppProvider()
 
   useEffect(() => {
     // set showOverlay to true
@@ -25,7 +25,7 @@ export default function EditorBody() {
         return
       }
       //console.log('Message received from parent:', event.data.blocks);
-      const { type, blockId, blocks, layout } = event.data
+      const { type, blockId, blocks, layout, commonData } = event.data
 
       if (type === 'highlight' && blockId) {
         console.log('highlight', blockId)
@@ -37,6 +37,10 @@ export default function EditorBody() {
             blockElement.classList.remove('highlight')
           }, 2000)
         }
+      }
+
+      if (commonData && commonData !== undefined && type === 'globalData') {
+        setGlobalData(commonData)
       }
 
       if (blocks) {
@@ -68,7 +72,7 @@ export default function EditorBody() {
     <>
       <Layout layout={layout as keyof typeof layouts}>
         {/*blocks.length === 0 ? (<Loading />):(<ContentBlocks blocks={blocks} />)*/}
-        <ContentBlocks blocks={blocks} />
+        {blocks.length === 0 ? <Loading /> : <ContentBlocks blocks={blocks} />}
       </Layout>
     </>
   )

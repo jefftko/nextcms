@@ -1,3 +1,4 @@
+'use client'
 import Loading from '@/components/ui/Loading'
 
 import Header from '@/components/common/Header'

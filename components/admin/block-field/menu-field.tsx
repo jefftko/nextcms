@@ -9,7 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 interface MenuItem {
   id: string
   label: string
-  url: string
+  href: string
   children?: MenuItem[]
 }
 
@@ -76,7 +76,7 @@ const MenuField = ({ label, name, value, onChange }) => {
   const addItem = () => {
     setMenuItems((prev) => [
       ...prev,
-      { id: `menu_item_${prev.length}`, label: '', url: '', children: [] },
+      { id: `menu_item_${prev.length}`, label: '', href: '', children: [] },
     ])
   }
 
@@ -90,7 +90,7 @@ const MenuField = ({ label, name, value, onChange }) => {
     const newItems = [...menuItems]
     newItems[index].children = [
       ...(newItems[index].children || []),
-      { id: `sub_menu_item_${newItems[index].children?.length || 0}`, label: '', url: '' },
+      { id: `sub_menu_item_${newItems[index].children?.length || 0}`, label: '', href: '' },
     ]
     setMenuItems(newItems)
     onChange(newItems)
@@ -137,8 +137,8 @@ const MenuField = ({ label, name, value, onChange }) => {
                     <input
                       type="text"
                       className="form-input mt-1 block w-full"
-                      value={item.url}
-                      onChange={(e) => handleItemChange(index, 'url', e.target.value)}
+                      value={item.href}
+                      onChange={(e) => handleItemChange(index, 'href', e.target.value)}
                     />
                   </div>
                   <button
