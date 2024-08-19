@@ -7,7 +7,19 @@ import { useItemSelection } from '@/components/utils/use-item-selection'
 import { useMessage } from '@/app/admin/message-provider'
 import { useAppProvider } from '@/app/admin/app-provider'
 
-const tableTitles = ['Name', 'Email', 'Role', 'Status', 'Action']
+const tableTitles = ['Name','UserName', 'Email', 'Role', 'Status', 'Action']
+
+
+const statusColor = (status: string): string => {
+  switch (status) {
+    case 'active':
+      return 'bg-emerald-100 dark:bg-emerald-400/30 text-emerald-600 dark:text-emerald-400'
+    case 'inactive':
+      return 'bg-rose-100 dark:bg-rose-500/30 text-rose-500 dark:text-rose-400'
+    default:
+      return 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+  }
+}
 
 export default function UsersTable({ users, total, pageNumber }) {
   const { selectedItems, handleCheckboxChange } = useItemSelection(users)
@@ -28,6 +40,7 @@ export default function UsersTable({ users, total, pageNumber }) {
   }
 
   return (
+      <>
     <div className="relative rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
       <header className="px-5 py-4">
         <h2 className="font-semibold text-slate-800 dark:text-slate-100">
@@ -54,10 +67,13 @@ export default function UsersTable({ users, total, pageNumber }) {
               {users.map((user, idx) => (
                 <tr key={user.id}>
                   <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">{user.name}</td>
+                  <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">{user.username}</td>
                   <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">{user.email}</td>
                   <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">{user.role}</td>
                   <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">
+                  <div className={`inline-flex rounded-full px-2.5 py-0.5 text-center font-medium ${statusColor(user.status)}`}>
                     {user.status}
+                  </div>
                   </td>
                   <td className="w-px whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">
                     <div className="space-x-1">
@@ -80,12 +96,7 @@ export default function UsersTable({ users, total, pageNumber }) {
         </div>
       </div>
 
-      {/* Pagination */}
-      <div className="m-4">
-        <PaginationClassic {...pagination} />
-      </div>
-
-      {/* 删除用户的确认模态框 */}
+           {/* 删除用户的确认模态框 */}
       <ModalBlank isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen}>
         <div className="flex space-x-4 p-5">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-500/30">
@@ -120,5 +131,12 @@ export default function UsersTable({ users, total, pageNumber }) {
         </div>
       </ModalBlank>
     </div>
+     {/* Pagination */}
+      <div className="mt-4">
+        <PaginationClassic {...pagination} />
+      </div>
+    </>
+
+
   )
 }
