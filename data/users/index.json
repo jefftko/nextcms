@@ -7,5 +7,15 @@
     "status": "active",
     "role": "superadmin",
     "password": "$2a$10$ZgR4.XW14u3RbFsb5uPGLONFicgOAz9e6WkL5upzxb1kuAbBQiCkK"
+  },
+  {
+    "name": "test",
+    "username": "test",
+    "email": "test@asdf",
+    "poassword": "",
+    "role": "admin",
+    "status": "active",
+    "password": "$2b$10$8Y0mSoGj6va/EpH3ndUl2unofE7QXrS3mTMDp8sQSAIdJkVDNzD2C",
+    "id": "cf2g0pgco"
   }
 ]
