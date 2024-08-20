@@ -11,6 +11,7 @@ interface MenuItem {
   label: string
   href: string
   children?: MenuItem[]
+  isEditing?: boolean
 }
 
 interface DragItem {
@@ -22,7 +23,7 @@ const ItemTypes = {
   MENU: 'menu',
 }
 
-const DraggableItem = ({ id, index, moveItem, children }) => {
+const DraggableItem = ({ id, index, moveItem, children, isEditing }) => {
   const ref = React.useRef(null)
 
   const [, drop] = useDrop<DragItem>({
@@ -46,6 +47,7 @@ const DraggableItem = ({ id, index, moveItem, children }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.MENU,
     item: { id, index },
+    canDrag: !isEditing, // 禁用拖拽功能
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -104,6 +106,17 @@ const MenuField = ({ label, name, value, onChange }) => {
     setMenuItems(newList)
   }
 
+  const handleAccordionClick = (index) => {
+    setMenuItems((prevItems) =>
+      prevItems.map((item, i) => {
+        if (i === index) {
+          return { ...item, isEditing: !item.isEditing }
+        }
+        return item
+      })
+    )
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="mt-4 w-full">
@@ -115,11 +128,17 @@ const MenuField = ({ label, name, value, onChange }) => {
           </button>
         </div>
         {menuItems.map((item, index) => (
-          <DraggableItem key={item.id} id={item.id} index={index} moveItem={moveItem}>
+          <DraggableItem
+            key={item.id}
+            id={item.id}
+            index={index}
+            moveItem={moveItem}
+            isEditing={item.isEditing}
+          >
             <Accordion
               title={item.label || `Menu Item ${index + 1}`}
               className="mt-2"
-              onItemClick={() => {}}
+              onItemClick={() => handleAccordionClick(index)}
             >
               <div key={index} className="mb-4 p-2">
                 <div className="flex flex-wrap justify-between">

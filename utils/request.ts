@@ -24,7 +24,9 @@ async function request(url, options = {}) {
     }
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      //throw new Error(`HTTP error! status: ${response.status}`)
+      // return message from data
+      throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`)
     }
 
     if (response.ok) {

@@ -55,8 +55,9 @@ export async function PUT(req: NextRequest) {
       await setPageNotDefault(data.pagePath)
     }
     const { globalData, ...pageData } = data
-    console.log(globalData['nav'])
-    await editGlobal(globalData)
+    if (globalData) {
+      await editGlobal(globalData)
+    }
     const res = await editPage(pageData)
     return NextResponse.json(res, { status: 200 })
   } catch (err) {
