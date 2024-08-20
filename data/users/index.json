@@ -17,5 +17,86 @@
     "status": "active",
     "password": "$2b$10$8Y0mSoGj6va/EpH3ndUl2unofE7QXrS3mTMDp8sQSAIdJkVDNzD2C",
     "id": "cf2g0pgco"
+  },
+  {
+    "name": "asdf",
+    "username": "asdf",
+    "email": "asdf",
+    "password": "$2b$10$/mxAlaP1r4rxeLGmfhui2uoDP8gOD8eRpWg0BxjSakjx72wv0pnie",
+    "role": "admin",
+    "status": "inactive",
+    "id": "w6xbcwe4h"
+  },
+  {
+    "name": "adf",
+    "username": "asdfasdfa",
+    "email": "asdf",
+    "password": "$2b$10$kryG1dMAxM0jLp5LRdbiheYuK4.epwJVvn/RsoIyrclmyyT73vFrO",
+    "role": "admin",
+    "status": "inactive",
+    "id": "sf03rv8ov"
+  },
+  {
+    "name": "test3",
+    "username": "test34",
+    "email": "test34",
+    "password": "$2b$10$rbH8ZVVOYabqF/MRj.Whu.H3wiLKu.0lVVD25oHJUTjADmuWNtNTS",
+    "role": "admin",
+    "status": "active",
+    "id": "na0o0vc0b"
+  },
+  {
+    "name": "test35",
+    "username": "test35",
+    "email": "test35",
+    "password": "$2b$10$CJdTk4ZaWoRPifPXZfgVLu38onFM5M.qtiEboSoLk22P82lxdOcYO",
+    "role": "admin",
+    "status": "active",
+    "id": "737ac090h"
+  },
+  {
+    "name": "asdf",
+    "username": "test36",
+    "email": "test35",
+    "password": "$2b$10$E7dZFqn/ocFZbhchE6V5be5vh5.CngH0FXl3/sutEpFxZ6rz4IF7G",
+    "role": "admin",
+    "status": "active",
+    "id": "tgxl2bhm7"
+  },
+  {
+    "name": "adf",
+    "username": "test37",
+    "email": "test37",
+    "password": "$2b$10$2hfKgsYCrFhEJGgze.c23eNFM9YITKrvC.YhHgw4EMvFz1z4mlAoK",
+    "role": "admin",
+    "status": "inactive",
+    "id": "vxk7zmhaz"
+  },
+  {
+    "name": "asdftest35",
+    "username": "test39",
+    "email": "test39",
+    "password": "$2b$10$ad4nVckeLJDXGegEe3W.3.z1ak10TpyIqO2EekfZsDkV2ql8JW82i",
+    "role": "admin",
+    "status": "active",
+    "id": "c1dlct59o"
+  },
+  {
+    "name": "test39",
+    "username": "test40",
+    "email": "test39",
+    "password": "$2b$10$qftuq.Bio11xZuXOIjXwU.ugV46ps3RCjVTYHmHA4fvPqPE2KOT6O",
+    "role": "admin",
+    "status": "active",
+    "id": "bnism50jz"
+  },
+  {
+    "name": "test41",
+    "username": "test41",
+    "email": "test41",
+    "password": "$2b$10$jYZt0UGcKaF5IAUYur3DferLP.DTsoTZeH6e/416cpyJ.XRWbU1Oa",
+    "role": "admin",
+    "status": "active",
+    "id": "kjlsv6wu7"
   }
 ]
