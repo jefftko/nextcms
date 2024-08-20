@@ -73,30 +73,12 @@
     "id": "vxk7zmhaz"
   },
   {
-    "name": "asdftest35",
-    "username": "test39",
-    "email": "test39",
-    "password": "$2b$10$ad4nVckeLJDXGegEe3W.3.z1ak10TpyIqO2EekfZsDkV2ql8JW82i",
+    "name": "adf",
+    "username": "test12",
+    "email": "adf",
+    "password": "$2b$10$92z1qWU77m0jnEc1v53Hie7iAiSt4usT5ICa0/NcEPBV0RC9nDqMO",
     "role": "admin",
     "status": "active",
-    "id": "c1dlct59o"
-  },
-  {
-    "name": "test39",
-    "username": "test40",
-    "email": "test39",
-    "password": "$2b$10$qftuq.Bio11xZuXOIjXwU.ugV46ps3RCjVTYHmHA4fvPqPE2KOT6O",
-    "role": "admin",
-    "status": "active",
-    "id": "bnism50jz"
-  },
-  {
-    "name": "test41",
-    "username": "test41",
-    "email": "test41",
-    "password": "$2b$10$jYZt0UGcKaF5IAUYur3DferLP.DTsoTZeH6e/416cpyJ.XRWbU1Oa",
-    "role": "admin",
-    "status": "active",
-    "id": "kjlsv6wu7"
+    "id": "vbvsz0v92"
   }
 ]

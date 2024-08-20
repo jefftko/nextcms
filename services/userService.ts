@@ -52,14 +52,15 @@ export const saveUser = async (data) => {
 }
 
 // 删除用户
-export const deleteUser = async (userId) => {
+export const deleteUser = async (id) => {
   const method = 'DELETE'
   try {
-    const resData = await request(`${endpoint}/${userId}`, {
+    const resData = await request(endpoint, {
       method,
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ id }),
     })
     return resData
   } catch (error) {

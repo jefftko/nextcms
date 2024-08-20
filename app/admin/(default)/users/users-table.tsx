@@ -1,14 +1,13 @@
 'use client'
 import React, { useState } from 'react'
-import ModalBasic from '@/components/admin/modal-basic'
 import ModalBlank from '@/components/admin/modal-blank'
 import PaginationClassic from '@/components/admin/pagination-classic'
 import { useItemSelection } from '@/components/utils/use-item-selection'
 import { useMessage } from '@/app/admin/message-provider'
 import { useAppProvider } from '@/app/admin/app-provider'
 import { Icon } from '@/components/icons'
-import { saveUser, deleteUser } from '@/services/userService'
-
+import { deleteUser, saveUser } from '@/services/userService'
+import UserModal from './user-modal'
 
 const tableTitles = ['Name', 'UserName', 'Email', 'Role', 'Status', 'Action']
 
@@ -23,6 +22,16 @@ const statusColor = (status: string): string => {
   }
 }
 
+const defaultUser = {
+  id: '',
+  name: '',
+  username: '',
+  email: '',
+  password: '',
+  role: 'admin',
+  status: 'active',
+}
+
 export default function UsersTable({ users, total, pageNumber }) {
   const { selectedItems, handleCheckboxChange } = useItemSelection(users)
   const { setToast } = useMessage()
@@ -32,45 +41,51 @@ export default function UsersTable({ users, total, pageNumber }) {
   const [currentUser, setCurrentUser] = useState(null)
 
   const onDelete = (userId) => {
-  setCurrentUser(users.find(user => user.id === userId))
-  setDeleteModalOpen(true)
-}
-
-const handleUserDelete = async () => {
-  setLoading(true)
-  setDeleteModalOpen(false)
-  // 模拟删除用户的 API 调用
-  try {
-    const res = await deleteUser(currentUser.id)
-    setLoading(false)
-    if(res.status == 'success') {
-    setToast({ message: 'User deleted successfully', type: 'success' })
-    }else{
-    setToast({ message: res.message, type: 'error' })
-    }
-  }catch (error) {
-    setLoading(false)
-    setToast({ message:error.message, type: 'error' })
+    setCurrentUser(users.find(user => user.id === userId))
+    setDeleteModalOpen(true)
   }
-}
 
+  const handleUserDelete = async () => {
+    setLoading(true)
+    setDeleteModalOpen(false)
+    if (!currentUser) return
+    try {
+      const res = await deleteUser(currentUser['id'])
+      setLoading(false)
+      if(res.status === 'success') {
+        setToast({ message: 'User deleted successfully', type: 'success' })
+      } else {
+        setToast({ message: res.message, type: 'error' })
+      }
+    } catch (error) {
+      setLoading(false)
+      setToast({ message: error.message, type: 'error' })
+    }
+  }
 
- const onEdit = (userId) => {
-  setCurrentUser(users.find(user => user.id === userId))
-  setEditModalOpen(true)
-}
+  const onEdit = (userId) => {
+    setCurrentUser(users.find(user => user.id === userId))
+    setEditModalOpen(true)
+  }
 
- const handleUserEdit = async (updatedUser) => {
-  setLoading(true)
-  setEditModalOpen(false)
-  // 模拟保存用户的 API 调用
-  await new Promise((resolve) => setTimeout(resolve, 1000)) // 模拟 API 请求延迟
-  setLoading(false)
-  setToast({ message: 'User updated successfully', type: 'success' })
-  // 在这里更新用户列表，例如重新获取用户数据
-}
+  const handleUserSave = async (user) => {
+    setLoading(true)
+    setEditModalOpen(false)
+    try {
+      const res = await saveUser(user)
+      setLoading(false)
+      if(res.status === 'success') {
+        setToast({ message: 'User saved successfully', type: 'success' })
+      } else {
+        setToast({ message: res.message, type: 'error' })
+      }
+    } catch (error) {
+      setLoading(false)
+      setToast({ message: error.message, type: 'error' })
+    }
+  }
 
- //add page path for user page
+  // Pagination configuration
   const pagination = {
     currentPage: pageNumber,
     pagePathname: 'users',
@@ -104,7 +119,7 @@ const handleUserDelete = async () => {
               </thead>
 
               <tbody className="text-sm">
-                {users.map((user, idx) => (
+                {users.map((user) => (
                   <tr key={user.id}>
                     <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">
                       {user.name}
@@ -128,23 +143,22 @@ const handleUserDelete = async () => {
                       </div>
                     </td>
                     <td className="w-px whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">
-                        <div className="space-x-1">
+                      <div className="space-x-1">
                         <button
-  className="rounded-full text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400"
-  onClick={() => onEdit(user.id)}
->
-  <span className="sr-only">Edit</span>
-  <Icon kind="edit" size={6} />
-</button>
-<button
-  className="rounded-full text-rose-500 hover:text-rose-600"
-  onClick={() => onDelete(user.id)}
->
-  <span className="sr-only">Delete</span>
-  <Icon kind="trash" size={6} />
-</button>
-           
-          </div>
+                          className="rounded-full text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400"
+                          onClick={() => onEdit(user.id)}
+                        >
+                          <span className="sr-only">Edit</span>
+                          <Icon kind="edit" size={6} />
+                        </button>
+                        <button
+                          className="rounded-full text-rose-500 hover:text-rose-600"
+                          onClick={() => onDelete(user.id)}
+                        >
+                          <span className="sr-only">Delete</span>
+                          <Icon kind="trash" size={6} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -154,94 +168,48 @@ const handleUserDelete = async () => {
         </div>
 
         {/* 删除用户的确认模态框 */}
-       <ModalBlank isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen}>
-  <div className="flex space-x-4 p-5">
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-500/30">
-      <svg className="h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
-        <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
-      </svg>
-    </div>
-    <div>
-      <div className="mb-2">
-        <div className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-          Delete User
-        </div>
-      </div>
-      <div className="mb-10 text-sm">
-        <p>Are you sure you want to delete this user?</p>
-      </div>
-      <div className="flex flex-wrap justify-end space-x-2">
-        <button
-          className="btn-sm border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600"
-          onClick={() => setDeleteModalOpen(false)}
-        >
-          Cancel
-        </button>
-        <button
-          className="btn-sm bg-rose-500 text-white hover:bg-rose-600"
-          onClick={handleUserDelete}
-        >
-          Yes, Delete it
-        </button>
-      </div>
-    </div>
-  </div>
-</ModalBlank> 
- {/* 编辑用户的模态框 */}
+        <ModalBlank isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen}>
+          <div className="flex space-x-4 p-5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-500/30">
+              <svg className="h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
+                <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
+              </svg>
+            </div>
+            <div>
+              <div className="mb-2">
+                <div className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                  Delete User
+                </div>
+              </div>
+              <div className="mb-10 text-sm">
+                <p>Are you sure you want to delete this user?</p>
+              </div>
+              <div className="flex flex-wrap justify-end space-x-2">
+                <button
+                  className="btn-sm border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600"
+                  onClick={() => setDeleteModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn-sm bg-rose-500 text-white hover:bg-rose-600"
+                  onClick={handleUserDelete}
+                >
+                  Yes, Delete it
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalBlank>
 
- <ModalBasic isOpen={editModalOpen} setIsOpen={setEditModalOpen} title="Edit User">
-  <div className="px-5 py-4">
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium">Name</label>
-        <input
-          type="text"
-          className="form-input mt-1 block w-full"
-          value={currentUser?.name || ''}
-          onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
+        {/* 编辑用户的模态框 */}
+        <UserModal
+           isOpen={editModalOpen}
+           setIsOpen={setEditModalOpen}
+           initialUser={currentUser || defaultUser } // 如果 currentUser 是 null，传递一个空对象
+           onSave={handleUserSave}
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium">Email</label>
-        <input
-          type="email"
-          className="form-input mt-1 block w-full"
-          value={currentUser?.email || ''}
-          onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })}
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium">Role</label>
-        <input
-          type="text"
-          className="form-input mt-1 block w-full"
-          value={currentUser?.role || ''}
-          onChange={(e) => setCurrentUser({ ...currentUser, role: e.target.value })}
-        />
-      </div>
-    </div>
-  </div>
-  <div className="border-t border-slate-200 px-5 py-4 dark:border-slate-700">
-    <div className="flex flex-wrap justify-end space-x-2">
-      <button
-        className="btn-sm border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600"
-        onClick={() => setEditModalOpen(false)}
-      >
-        Cancel
-      </button>
-      <button
-        className="btn-sm bg-indigo-500 text-white hover:bg-indigo-600"
-        onClick={() => handleUserEdit(currentUser)}
-      >
-        Save
-      </button>
-    </div>
-  </div>
-</ModalBasic>
-
-
-
-</div>
 
       {/* Pagination */}
       <div className="mt-4">
@@ -250,3 +218,4 @@ const handleUserDelete = async () => {
     </>
   )
 }
+
