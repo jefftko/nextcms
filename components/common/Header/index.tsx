@@ -42,7 +42,7 @@ export default function Header({ data }: { data: HeaderType }) {
               {/* Desktop menu links */}
               <ul className="flex grow flex-wrap items-center justify-end">
                 {data?.nav.map((item, i) =>
-                  item.children ? (
+                  item.children && item.children.length > 0 ? (
                     <Dropdown title={item.label} key={`menu-top-${i}`}>
                       {/* 2nd level: hover */}
                       {item.children.map((child, idx) => (
