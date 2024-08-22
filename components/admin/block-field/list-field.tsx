@@ -88,6 +88,11 @@ const ListField = ({ label, name, fields, value }) => {
   }, [listValue])
 
   const addItem = () => {
+    // if prev is empty or length is 1 and value is {} then replace it with new object
+    if (listValue.length === 1 && Object.keys(listValue[0]).length === 0) {
+      setListValue([Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || '']))])
+      return
+    }
     setListValue((prev) => [
       ...prev,
       Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])),
@@ -105,8 +110,13 @@ const ListField = ({ label, name, fields, value }) => {
     const newList = listValue.filter((_, i) => i !== index)
     // delete index item
     console.log('newList', newList)
-
-    setListValue([...newList])
+    // Filter out any potential null or undefined values
+    const cleanedList = newList.filter(item => item !== null && item !== undefined)
+    if (cleanedList.length === 0) {
+      setListValue([{}])
+      return
+    }
+    setListValue([...cleanedList])
   }
 
   const moveItem = (dragIndex, hoverIndex) => {
