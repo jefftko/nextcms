@@ -8,7 +8,12 @@ interface PaginationProps {
   pagePathname?: string
 }
 
-export default function PaginationClassic({ total, currentPage, perPage, pagePathname }: PaginationProps) {
+export default function PaginationClassic({
+  total,
+  currentPage,
+  perPage,
+  pagePathname,
+}: PaginationProps) {
   const pathname = usePathname()
   const basePath = pathname?.split('/')[1]
   const prevPage = currentPage - 1 > 0
@@ -43,7 +48,7 @@ export default function PaginationClassic({ total, currentPage, perPage, pagePat
             {nextPage && (
               <a
                 className="btn border-slate-200 bg-white text-indigo-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
-                href={`/${basePath}/${pagePathname?pagePathname:'pages/page'}/${currentPage + 1}`}
+                href={`/${basePath}/${pagePathname ? pagePathname : 'pages/page'}/${currentPage + 1}`}
               >
                 Next -&gt;
               </a>

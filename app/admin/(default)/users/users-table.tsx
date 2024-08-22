@@ -41,7 +41,7 @@ export default function UsersTable({ users, total, pageNumber }) {
   const [currentUser, setCurrentUser] = useState(null)
 
   const onDelete = (userId) => {
-    setCurrentUser(users.find(user => user.id === userId))
+    setCurrentUser(users.find((user) => user.id === userId))
     setDeleteModalOpen(true)
   }
 
@@ -52,7 +52,7 @@ export default function UsersTable({ users, total, pageNumber }) {
     try {
       const res = await deleteUser(currentUser['id'])
       setLoading(false)
-      if(res.status === 'success') {
+      if (res.status === 'success') {
         setToast({ message: 'User deleted successfully', type: 'success' })
       } else {
         setToast({ message: res.message, type: 'error' })
@@ -64,7 +64,7 @@ export default function UsersTable({ users, total, pageNumber }) {
   }
 
   const onEdit = (userId) => {
-    setCurrentUser(users.find(user => user.id === userId))
+    setCurrentUser(users.find((user) => user.id === userId))
     setEditModalOpen(true)
   }
 
@@ -74,7 +74,7 @@ export default function UsersTable({ users, total, pageNumber }) {
     try {
       const res = await saveUser(user)
       setLoading(false)
-      if(res.status === 'success') {
+      if (res.status === 'success') {
         setToast({ message: 'User saved successfully', type: 'success' })
       } else {
         setToast({ message: res.message, type: 'error' })
@@ -204,10 +204,10 @@ export default function UsersTable({ users, total, pageNumber }) {
 
         {/* 编辑用户的模态框 */}
         <UserModal
-           isOpen={editModalOpen}
-           setIsOpen={setEditModalOpen}
-           initialUser={currentUser || defaultUser } // 如果 currentUser 是 null，传递一个空对象
-           onSave={handleUserSave}
+          isOpen={editModalOpen}
+          setIsOpen={setEditModalOpen}
+          initialUser={currentUser || defaultUser} // 如果 currentUser 是 null，传递一个空对象
+          onSave={handleUserSave}
         />
       </div>
 
@@ -218,4 +218,3 @@ export default function UsersTable({ users, total, pageNumber }) {
     </>
   )
 }
-

@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import UserModal from './user-modal'
-import { createUser} from '@/services/userService'
+import { createUser } from '@/services/userService'
 import { useAppProvider } from '@/app/admin/app-provider'
 import { useMessage } from '@/app/admin/message-provider'
 
@@ -15,7 +15,7 @@ export default function PageHeader() {
   const handleUserSave = async (user) => {
     setLoading(true)
     let res
-      // Creating new user
+    // Creating new user
     res = await createUser(user)
     setLoading(false)
 
@@ -82,4 +82,3 @@ export default function PageHeader() {
     </>
   )
 }
-

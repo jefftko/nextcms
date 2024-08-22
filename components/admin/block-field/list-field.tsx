@@ -66,6 +66,15 @@ const ListField = ({ label, name, fields, value }) => {
       [fieldName]: fieldValue,
     }))
   }, [])
+  //remove null or undefined values
+  useEffect(() => {
+    const cleanedList = listValue.filter((item) => item !== null && item !== undefined)
+    if (cleanedList.length === 0) {
+      setListValue([])
+      return
+    }
+    setListValue([...cleanedList])
+  }, [])
 
   useEffect(() => {
     if (currentIndex >= 0) {
@@ -107,12 +116,7 @@ const ListField = ({ label, name, fields, value }) => {
     // delete index item
     console.log('newList', newList)
     // Filter out any potential null or undefined values
-    const cleanedList = newList.filter(item => item !== null && item !== undefined)
-    if (cleanedList.length === 0) {
-      setListValue([{}])
-      return
-    }
-    setListValue([...cleanedList])
+    setListValue([...newList])
   }
 
   const moveItem = (dragIndex, hoverIndex) => {

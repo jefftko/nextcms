@@ -26,12 +26,7 @@ interface UserModalProps {
   }) => void
 }
 
-const UserModal: React.FC<UserModalProps> = ({
-  isOpen,
-  setIsOpen,
-  initialUser,
-  onSave,
-}) => {
+const UserModal: React.FC<UserModalProps> = ({ isOpen, setIsOpen, initialUser, onSave }) => {
   const [user, setUser] = useState(
     initialUser || {
       id: '',
@@ -164,4 +159,3 @@ const UserModal: React.FC<UserModalProps> = ({
 }
 
 export default UserModal
-

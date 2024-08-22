@@ -6,11 +6,9 @@ import React from 'react'
 
 const POSTS_PER_PAGE = 10
 
-
 export default async function UsersPage({ params }) {
-
-   // 从 URL 参数中获取页码
-  const pageNumber = parseInt(params.pageNumber || '1', 10) 
+  // 从 URL 参数中获取页码
+  const pageNumber = parseInt(params.pageNumber || '1', 10)
   const totalUsers = usersData.length // 用户总数
   const start = (pageNumber - 1) * POSTS_PER_PAGE // 计算开始位置
   const end = start + POSTS_PER_PAGE // 计算结束位置
