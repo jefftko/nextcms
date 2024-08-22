@@ -89,10 +89,6 @@ const ListField = ({ label, name, fields, value }) => {
 
   const addItem = () => {
     // if prev is empty or length is 1 and value is {} then replace it with new object
-    if (listValue.length === 1 && Object.keys(listValue[0]).length === 0) {
-      setListValue([Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || '']))])
-      return
-    }
     setListValue((prev) => [
       ...prev,
       Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])),
