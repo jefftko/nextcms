@@ -40,6 +40,7 @@ const DraggableItem = ({ id, index, moveItem, children }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.BLOCK,
     item: { id, index },
+    canDrag: !isEditing, // Disable drag
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
