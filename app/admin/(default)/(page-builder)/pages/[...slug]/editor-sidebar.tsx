@@ -96,7 +96,7 @@ export default function EditorSidebar() {
         className={`absolute bottom-0 top-16 z-20 -mr-px w-full transition-transform duration-200 ease-in-out md:static  md:bottom-auto md:top-auto md:w-auto md:translate-x-0`}
       >
         <div
-          className={`left-panel no-scrollbar sticky top-16 h-[calc(100dvh)] shrink-0 overflow-y-auto overflow-x-hidden border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 `}
+          className={`left-panel no-scrollbar sticky top-16 h-[calc(100dvh)] shrink-0 overflow-hidden border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 `}
           style={{
             width: `${screen == 'sm' || screen == undefined ? window.innerWidth : panelWidth}px`,
           }}
@@ -132,7 +132,7 @@ export default function EditorSidebar() {
               </button>
             </div>
             {/* Block form body */}
-            <div className="px-5 py-4">
+            <div className="max-h-[calc(100dvh-64px)] overflow-y-auto px-5 py-4">
               <BlockForm />
             </div>
           </div>
@@ -155,13 +155,13 @@ export default function EditorSidebar() {
               </button>
             </div>
             {/* Block form body */}
-            <div className="px-5 py-4">
+            <div className="max-h-[calc(100dvh-64px)] overflow-y-auto px-5 py-4">
               <CommonForm />
             </div>
           </div>
           {/* Common form */}
 
-          <div className="flex flex-wrap justify-around px-5 py-4">
+          <div className="flex flex-wrap justify-start px-5 py-4">
             {/* form */}
             <div className="w-full max-w-xl">
               <BasicForm />

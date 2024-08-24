@@ -9,29 +9,18 @@
     "nav": [
       {
         "href": "",
-        "label": "Home 1"
+        "label": "Home 132",
+        "isEditing": false
       },
       {
         "href": "about",
-        "label": "About23"
+        "label": "Aboutadfd",
+        "isEditing": false
       },
       {
         "href": "posts",
-        "label": "博客"
-      },
-      {
-        "href": "#",
-        "label": "子菜单",
-        "children": [
-          {
-            "href": "https://tinacms.org",
-            "label": "TinaCMS"
-          },
-          {
-            "href": "https://nextjs.org",
-            "label": "Next.js"
-          }
-        ]
+        "label": "博客3",
+        "isEditing": true
       },
       {
         "href": "#",
@@ -45,7 +34,23 @@
             "href": "https://nextjs.org",
             "label": "Next.js"
           }
-        ]
+        ],
+        "isEditing": false
+      },
+      {
+        "href": "#",
+        "label": "子菜单32",
+        "children": [
+          {
+            "href": "https://tinacms.org",
+            "label": "TinaCMS"
+          },
+          {
+            "href": "https://nextjs.org",
+            "label": "Next.js"
+          }
+        ],
+        "isEditing": false
       }
     ]
   },

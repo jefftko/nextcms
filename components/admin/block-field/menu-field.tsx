@@ -112,7 +112,7 @@ const MenuField = ({ label, name, value, onChange }) => {
         if (i === index) {
           return { ...item, isEditing: !item.isEditing }
         }
-        return item
+        return { ...item, isEditing: false }
       })
     )
   }
@@ -138,6 +138,7 @@ const MenuField = ({ label, name, value, onChange }) => {
             <Accordion
               title={item.label || `Menu Item ${index + 1}`}
               className="mt-2"
+              isEditing={item.isEditing}
               onItemClick={() => handleAccordionClick(index)}
             >
               <div key={index} className="mb-4 p-2">

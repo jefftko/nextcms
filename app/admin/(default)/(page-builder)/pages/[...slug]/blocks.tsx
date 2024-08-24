@@ -73,7 +73,7 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
   return (
     <div
       ref={ref}
-      className={`mt-2 rounded-sm border border-slate-200 bg-white p-4 shadow-lg ${isDragging ? 'opacity-50' : 'opacity-100'}`}
+      className={`mt-2 rounded-sm border border-slate-200 bg-white px-4 py-2 shadow-lg ${isDragging ? 'opacity-50' : 'opacity-100'}`}
     >
       <div className="sm:flex sm:items-start sm:justify-between">
         {/* Left side */}
@@ -90,7 +90,9 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
                 <path d="M0 1h12v2H0V1Zm0 4h12v2H0V5Zm0 4h12v2H0V9Z" fillRule="evenodd" />
               </svg>
             </button>
-            <span className="ml-2 font-medium text-slate-800 dark:text-slate-100">{title}</span>
+            <span className="ml-2 w-40 truncate text-base font-medium text-slate-800 dark:text-slate-100">
+              {title}
+            </span>
           </div>
         </div>
 
@@ -99,7 +101,7 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
           {/* Edit button */}
           <button className="text-slate-400 hover:text-slate-600" onClick={() => setBlockId(id)}>
             <span className="sr-only">Edit</span>
-            <Icon kind="edit" className="" size={8} />
+            <Icon kind="edit" className="" size={6} />
           </button>
           {/* Delete button */}
           <button
@@ -107,7 +109,7 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
             onClick={() => handleBlockDelete(id)}
           >
             <span className="sr-only">Delete</span>
-            <Icon kind="trash" className="" size={8} />
+            <Icon kind="trash" className="" size={6} />
           </button>
         </div>
       </div>
@@ -162,7 +164,7 @@ export default function Blocks() {
                 <Icon kind="plus" size={5} viewBoxSize={24} />
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="max-h-[420px] space-y-2 overflow-y-auto">
               {pageData?.blocks?.map((block, index) => (
                 <Block
                   key={`${block.id}`}

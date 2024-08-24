@@ -16,7 +16,7 @@ const ItemTypes = {
   BLOCK: 'block',
 }
 
-const DraggableItem = ({ id, index, moveItem, children }) => {
+const DraggableItem = ({ id, index, moveItem, children, isEditing }) => {
   const ref = useRef(null)
 
   const [, drop] = useDrop<DragItem>({
@@ -40,6 +40,7 @@ const DraggableItem = ({ id, index, moveItem, children }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.BLOCK,
     item: { id, index },
+    canDrag: !isEditing, // 禁用拖拽功能
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -57,10 +58,9 @@ const DraggableItem = ({ id, index, moveItem, children }) => {
 const ListField = ({ label, name, fields, value }) => {
   const [listValue, setListValue] = useState(value || [])
   const { blockData, setBlockData } = useBlockData()
-  const [currentValue, setCurrentValue] = useState({})
-  const [currentIndex, setCurrentIndex] = useState(-1)
+  const [currentValue, setCurrentValue] = useState({ id: null })
 
-  const handleItemChange = useCallback((index, fieldName, fieldValue) => {
+  const handleItemChange = useCallback((id, fieldName, fieldValue) => {
     setCurrentValue((prev) => ({
       ...prev,
       [fieldName]: fieldValue,
@@ -77,45 +77,88 @@ const ListField = ({ label, name, fields, value }) => {
   }, [])
 
   useEffect(() => {
-    if (currentIndex >= 0) {
-      listValue[currentIndex] = currentValue
-      setListValue([...listValue])
+    if (Object.keys(currentValue).length === 0) {
+      return
     }
+    setListValue((prev) =>
+      prev.map((item) => {
+        if (item.id === currentValue.id) {
+          return { ...item, ...currentValue }
+        }
+        return item
+      })
+    )
   }, [currentValue])
 
   useEffect(() => {
-    if (currentIndex >= 0) {
-      setCurrentValue(listValue[currentIndex])
+    if (listValue.length === 0) {
+      //remove name
+      setBlockData((prev) => {
+        const { [name]: _, ...rest } = prev
+        return rest
+      })
+    } else {
+      setBlockData((prev) => ({
+        ...prev,
+        [name]: listValue,
+      }))
     }
-  }, [currentIndex, listValue])
-
-  useEffect(() => {
-    setBlockData((prev) => ({
-      ...prev,
-      [name]: listValue,
-    }))
   }, [listValue])
 
   const addItem = () => {
-    // if prev is empty or length is 1 and value is {} then replace it with new object
+    //if field kind includes list, remove it
     setListValue((prev) => [
       ...prev,
-      Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])),
+      {
+        ...Object.fromEntries(
+          Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])
+        ),
+        id: Math.random().toString(36).substring(7),
+        isEditing: false,
+      },
     ])
   }
 
-  const handleItemClick = (e, index) => {
-    if (e) {
-      setCurrentValue(listValue[index])
-      setCurrentIndex(index)
-    }
+  /*const handleItemClick = (e, id) => {
+      console.log('id', id)
+      console.log(e)
+      setListValue((prev) =>
+                   prev.map((item) => {
+                       if (item.id === id) {
+                           if(e){
+                               setCurrentValue(item)
+                           }else{
+                               //setCurrentValue({})
+                           }
+                           console.log('item', item)
+                           return { ...item, isEditing: e }
+                       }
+                       return {...item, isEditing: false}
+                   }))
+     
+  }*/
+
+  const handleItemClick = (e, id) => {
+    listValue.map((item) => {
+      if (item.id === id) {
+        if (e) {
+          setCurrentValue(item)
+        } else {
+          setCurrentValue({ id: null })
+        }
+      }
+    })
   }
 
-  const removeItem = (index) => {
-    const newList = listValue.filter((_, i) => i !== index)
+  const removeItem = (id) => {
+    const newList = listValue.filter((item) => item.id !== id)
     // delete index item
     console.log('newList', newList)
     // Filter out any potential null or undefined values
+    if (newList.length === 0) {
+      setListValue([])
+      return
+    }
     setListValue([...newList])
   }
 
@@ -142,32 +185,38 @@ const ListField = ({ label, name, fields, value }) => {
             item &&
             Object.keys(item).length > 0 && (
               <DraggableItem
-                key={`${label}_${index}`}
-                id={`${label}_${index}`}
+                key={`${label}_${item.id || index}`}
+                id={`${label}_${item.id || index}`}
                 index={index}
                 moveItem={moveItem}
+                isEditing={currentValue.id}
               >
                 <Accordion
-                  title={`${label}_${index}_${item['name'] || item['title'] || item['label'] || item['id'] || index}`}
-                  className="mt-2"
-                  onItemClick={(e) => handleItemClick(e, index)}
+                  title={`${item.id || index}_${item['name'] || item['title'] || item['label'] || item['id'] || index}`}
+                  className="mt-2 truncate "
+                  isEditing={currentValue.id === item.id}
+                  onItemClick={(e) => handleItemClick(e, item.id)}
                 >
                   <div key={index} className="mb-4 p-2">
                     <div className="flex flex-wrap justify-between">
                       {Object.keys(fields).map((fieldName, idx) => (
                         <BlockField
                           key={`${name}[${index}]_${fieldName}_${idx}`}
-                          kind={fields[fieldName].kind}
+                          kind={fields[fieldName].kind == 'list' ? 'text' : fields[fieldName].kind}
                           label={fields[fieldName].label}
                           name={`${name}[${index}]_${fieldName}_${idx}`}
-                          value={item[fieldName] || ''}
-                          onChange={(fieldValue) => handleItemChange(index, fieldName, fieldValue)}
+                          value={
+                            currentValue.id === item.id ? currentValue[fieldName] : item[fieldName]
+                          }
+                          onChange={(fieldValue) =>
+                            handleItemChange(item.id, fieldName, fieldValue)
+                          }
                           additional={fields[fieldName].additional}
                         />
                       ))}
                       <button
                         className="btn mt-4 w-full border-slate-200 text-rose-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
-                        onClick={() => removeItem(index)}
+                        onClick={() => removeItem(item.id)}
                       >
                         <Icon kind="trash" size={5} viewBoxSize={24} />
                         <span className="ml-2">Remove Item</span>
