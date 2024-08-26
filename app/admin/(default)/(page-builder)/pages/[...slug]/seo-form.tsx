@@ -6,10 +6,13 @@ import type { Pages } from 'contentlayer/generated'
 
 export default function SeoForm() {
   const { pageData, setPageData } = usePageData()
+  const [isEditing, setIsEditing] = useState(false)
 
   return (
     <div className="relative mt-4">
-      <Accordion title="SEO Settings">
+      <Accordion title="SEO Settings"
+       isEditing={isEditing}
+      onItemClick={() => setIsEditing(!isEditing)}>
         {/* key */}
         <div className="relative mt-4">
           <label

@@ -188,7 +188,7 @@ const ListField = ({ label, name, fields, value }) => {
                 isEditing={currentValue.id}
               >
                 <Accordion
-                  title={`${item.id || index}_${item['name'] || item['title'] || item['label'] || item['id'] || index}`}
+                  title={`${item['name'] || item['title'] || item['label'] || item['id'] || index}`}
                   className="mt-2 truncate "
                   isEditing={currentValue.id === item.id}
                   onItemClick={(e) => handleItemClick(e, item.id)}
