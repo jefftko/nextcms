@@ -73,6 +73,7 @@ const ListField = ({ label, name, fields, value }) => {
       setListValue([])
       return
     }
+    console.log('cleanedList', cleanedList)
     setListValue([...cleanedList])
   }, [])
 
@@ -104,6 +105,13 @@ const ListField = ({ label, name, fields, value }) => {
     }))
   }
   }, [listValue])
+
+  //退出时listValue为空
+  useEffect(() => {
+    return () => {
+      setListValue([])
+    }
+  }, [])
 
   const addItem = () => {
     //if field kind includes list, remove it

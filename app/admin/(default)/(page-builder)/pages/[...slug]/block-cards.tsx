@@ -20,6 +20,8 @@ export default function BlockCards({ schemas }) {
     })
     if (!pageData) return
 
+    //console.log('newBlock', newBlock)
+
     setPageData({
       ...pageData,
       blocks: [...pageData.blocks, newBlock],
