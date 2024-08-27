@@ -55,7 +55,7 @@ const DraggableItem = ({ id, index, moveItem, children, isEditing }) => {
   )
 }
 
-const ListField = ({ label, name, fields, value }) => {
+const ListField = ({ label, name, fields, value,onChange }) => {
   const [listValue, setListValue] = useState(value || [])
   const { blockData, setBlockData } = useBlockData()
   const [currentValue, setCurrentValue] = useState({id:null})
@@ -73,7 +73,7 @@ const ListField = ({ label, name, fields, value }) => {
       setListValue([])
       return
     }
-    console.log('cleanedList', cleanedList)
+    //console.log('cleanedList', cleanedList)
     setListValue([...cleanedList])
   }, [])
 
@@ -92,7 +92,7 @@ const ListField = ({ label, name, fields, value }) => {
   }, [currentValue])
 
   useEffect(() => {
-  if (listValue.length === 0) {
+ /* if (listValue.length === 0) {
       //remove name
       setBlockData((prev) => {
         const { [name]: _, ...rest } = prev
@@ -103,7 +103,8 @@ const ListField = ({ label, name, fields, value }) => {
       ...prev,
       [name]: listValue,
     }))
-  }
+  }*/
+    onChange(listValue)
   }, [listValue])
 
   //退出时listValue为空

@@ -10,71 +10,51 @@ interface FormSchema {
   fields: Record<string, FieldProps>
 }
 
-export default function BlockForm() {
+export default function BlockForm({blockType}) {
   const [formSchema, setFormSchema] = useState<FormSchema | null>(null)
   const { blockData, setBlockData } = useBlockData()
   const { pageData, blockId, setPageData } = usePageData()
-  const updateTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
-    async function loadSchema(blockType: string) {
+
+   async function loadSchema(blockType: string) {
       const schema = await import(`@/components/blocks/${blockType}/schema`)
       //console.log(schema.default())
       setFormSchema(schema.default())
     }
 
-    if (pageData) {
-      //remove index from blockId
-      console.log('blockForm', blockId)
-      const block = pageData.blocks.find((block) => block.id === blockId)
-      if (block) {
-        setBlockData(block)
-        loadSchema(block.type)
-      }
-    }
-  }, [pageData, blockId])
+    
+    useEffect(() => {
+        if(blockType){
+        loadSchema(blockType)
+        }
+    }, [blockId,blockType])
 
-  useEffect(() => {
-    if (blockData) {
-      if (updateTimeout.current) {
-        clearTimeout(updateTimeout.current)
-      }
-      updateTimeout.current = setTimeout(() => {
-        //@ts-ignore
-        setPageData((prev) => {
-          const newBlocks = prev.blocks.map((block) => {
-            if (block.id === blockId) {
-              return blockData
-            }
-            return block
-          })
-          return { ...prev, blocks: newBlocks }
-        })
-      }, 200)
-    }
-  }, [blockData])
+
 
   const handleFieldChange = useCallback((name, value) => {
     setBlockData((prev) => ({
       ...prev,
       [name]: value,
     }))
+  
   }, [])
 
+
+
   return (
-    <div id="BlockForm" className="flex flex-wrap justify-between ">
+    <div id={`BlockForm-${blockId}`} className="flex flex-wrap justify-between ">
       {formSchema &&
         Object.entries(formSchema.fields).map(([fieldName, field]) => {
           return (
             <BlockField
-              key={fieldName}
+              key={`${blockId}-${fieldName}`}
               kind={field.kind}
               name={fieldName}
               label={field.label}
               additional={field.additional}
               fields={field.fields}
               defaultValue={field.defaultValue}
-              value={blockData[fieldName]}
+              value={blockData?.[fieldName]}
               onChange={(value) => handleFieldChange(fieldName, value)}
             />
           )

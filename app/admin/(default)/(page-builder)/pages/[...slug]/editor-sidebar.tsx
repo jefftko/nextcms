@@ -1,8 +1,9 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
 import { usePageData } from '@/app/admin/page-data'
 import { useAppProvider } from '@/app/admin/app-provider'
+import { useBlockData } from '@/app/admin/block-data'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Blocks from './blocks'
@@ -18,6 +19,7 @@ const CommonForm = dynamic(() => import('./common-form'), { ssr: false })
 export default function EditorSidebar() {
   const { flyoutOpen, setFlyoutOpen } = useFlyoutContext()
   const { pageData, setPageData, setBlockId, blockId } = usePageData()
+  const { blockData, setBlockData } = useBlockData()
   const { commonId, setCommonId } = useAppProvider()
   const [panelWidth, setPanelWidth] = useState(320)
   const [startX, setStartX] = useState(0)
@@ -26,6 +28,9 @@ export default function EditorSidebar() {
   const [isResizing, setIsResizing] = useState(false)
   const [screen, setScreen] = useState('md')
   const [isFullScreen, setIsFullScreen] = useState(false)
+  const updateTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pageDataRef = useRef(pageData) // Store pageData in a ref
+  const [blockType, setBlockType] = useState(null)
 
   const startResizing = (e) => {
     setStartX(e.clientX)
@@ -89,6 +94,59 @@ export default function EditorSidebar() {
     }
   }, [])
 
+
+  useEffect(() => {
+    pageDataRef.current = pageData
+  }, [pageData])
+
+ // Update pageDataRef whenever pageData changes
+  useEffect(() => {
+    pageDataRef.current = pageData
+    console.log('pageDataRef', pageData)
+  }, [pageData])
+
+ useEffect(() => {
+    if(blockId == null) return
+      //remove index from blockId
+      console.log('blockForm', blockId)
+      const block = pageDataRef.current?.blocks.find((block) => block.id === blockId)
+      if (block) {
+        setBlockData(block)
+       if(block.type != blockType){
+        setBlockType(block.type)
+        }
+      }else{
+        console.log('block not found')
+      }
+  }, [blockId])
+
+
+
+
+ useEffect(() => {
+      console.log('blockData', blockData)
+    if (blockData) {
+     if (updateTimeout.current) {
+        clearTimeout(updateTimeout.current)
+      }
+      updateTimeout.current = setTimeout(() => {
+        //@ts-ignore
+        setPageData((prev) => {
+          const newBlocks = prev.blocks.map((block) => {
+            if (block.id === blockId) {
+              return blockData
+            }
+            return block
+          })
+          return { ...prev, blocks: newBlocks }
+        })
+      }, 200)
+       
+    }
+  }, [blockData])
+
+
+
   return (
     <>
       <div
@@ -125,7 +183,11 @@ export default function EditorSidebar() {
               {/* eslint-disable-next-line */}
               <button
                 className="mr-4 text-slate-400 hover:text-slate-500"
-                onClick={() => setBlockId(null)}
+                onClick={() => {
+                    setBlockId(null)
+                    setBlockData(null)
+                }
+                }
               >
                 <span className="sr-only">Close block</span>
                 <Icon kind="arrowLeft" className="shrink-0 opacity-50" size={6} />
@@ -133,7 +195,7 @@ export default function EditorSidebar() {
             </div>
             {/* Block form body */}
             <div className="max-h-[calc(100dvh-64px)] overflow-y-auto px-5 py-4">
-              <BlockForm />
+              <BlockForm  blockType={blockType}/>
             </div>
           </div>
 

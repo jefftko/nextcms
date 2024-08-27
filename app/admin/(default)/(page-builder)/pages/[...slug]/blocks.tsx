@@ -24,10 +24,10 @@ interface DropCollectedProps {
 }
 
 // 定义 Block 组件
-const Block = ({ id, title, index, moveCard, deleteBlock }) => {
+const Block = ({ id, title, index, moveCard, deleteBlock,setBlock }) => {
   const ref = useRef(null)
-  const { setBlockId, pageData, setPageData } = usePageData()
-  const { setBlockModalOpen } = useBlockData()
+  //const { setBlockId, pageData, setPageData } = usePageData()
+  //const { setBlockModalOpen, setBlockData,blockData } = useBlockData()
 
   const [, drop] = useDrop<DragItem, void, DropCollectedProps>({
     accept: ItemTypes.BLOCK,
@@ -99,7 +99,11 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
         {/* Right side for edit and delete icons */}
         <div className="flex items-center">
           {/* Edit button */}
-          <button className="text-slate-400 hover:text-slate-600" onClick={() => setBlockId(id)}>
+          <button className="text-slate-400 hover:text-slate-600" onClick={() => {
+              //setBlockData
+              setBlock(id)
+          }
+          }>
             <span className="sr-only">Edit</span>
             <Icon kind="edit" className="" size={6} />
           </button>
@@ -119,10 +123,10 @@ const Block = ({ id, title, index, moveCard, deleteBlock }) => {
 
 // Blocks 组件
 export default function Blocks() {
-  const { pageData, setPageData } = usePageData()
-  const { setBlockModalOpen } = useBlockData()
+  const { pageData, setPageData,setBlockId } = usePageData()
+  const { setBlockModalOpen,setBlockData } = useBlockData()
   const [dangerModalOpen, setDangerModalOpen] = useState<boolean>(false)
-  const [blockId, setBlockId] = useState<string | null>(null)
+  const [bid, setBid] = useState<string | null>(null)
 
   const moveCard = (dragIndex, hoverIndex) => {
     if (dragIndex !== hoverIndex) {
@@ -140,7 +144,7 @@ export default function Blocks() {
   }
   const handleBlockDelete = (id) => {
     setDangerModalOpen(true)
-    setBlockId(id)
+    setBid(id)
   }
   const onDeleteBlock = (id) => {
     if (!id || !pageData) return
@@ -151,6 +155,14 @@ export default function Blocks() {
       blocks: newBlocks,
     })
     setDangerModalOpen(false)
+  }
+
+  const handleSetBlock = (id) => {
+    const block = pageData?.blocks.find((block) => block.id === id)
+     if (block) {
+        setBlockData(block)
+        setBlockId(id)
+     }
   }
 
   return (
@@ -173,6 +185,7 @@ export default function Blocks() {
                   index={index}
                   moveCard={moveCard}
                   deleteBlock={handleBlockDelete}
+                  setBlock={handleSetBlock}
                 />
               ))}
             </div>
@@ -216,7 +229,7 @@ export default function Blocks() {
                 </button>
                 <button
                   className="btn-sm bg-rose-500 text-white hover:bg-rose-600"
-                  onClick={() => onDeleteBlock(blockId)}
+                  onClick={() => onDeleteBlock(bid)}
                 >
                   Yes, Delete it
                 </button>
