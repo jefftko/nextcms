@@ -24,7 +24,7 @@ interface DropCollectedProps {
 }
 
 // 定义 Block 组件
-const Block = ({ id, title, index, moveCard, deleteBlock,setBlock }) => {
+const Block = ({ id, title, index, moveCard, deleteBlock, setBlock }) => {
   const ref = useRef(null)
   //const { setBlockId, pageData, setPageData } = usePageData()
   //const { setBlockModalOpen, setBlockData,blockData } = useBlockData()
@@ -99,11 +99,13 @@ const Block = ({ id, title, index, moveCard, deleteBlock,setBlock }) => {
         {/* Right side for edit and delete icons */}
         <div className="flex items-center">
           {/* Edit button */}
-          <button className="text-slate-400 hover:text-slate-600" onClick={() => {
+          <button
+            className="text-slate-400 hover:text-slate-600"
+            onClick={() => {
               //setBlockData
               setBlock(id)
-          }
-          }>
+            }}
+          >
             <span className="sr-only">Edit</span>
             <Icon kind="edit" className="" size={6} />
           </button>
@@ -123,8 +125,8 @@ const Block = ({ id, title, index, moveCard, deleteBlock,setBlock }) => {
 
 // Blocks 组件
 export default function Blocks() {
-  const { pageData, setPageData,setBlockId } = usePageData()
-  const { setBlockModalOpen,setBlockData } = useBlockData()
+  const { pageData, setPageData, setBlockId } = usePageData()
+  const { setBlockModalOpen, setBlockData } = useBlockData()
   const [dangerModalOpen, setDangerModalOpen] = useState<boolean>(false)
   const [bid, setBid] = useState<string | null>(null)
 
@@ -159,10 +161,10 @@ export default function Blocks() {
 
   const handleSetBlock = (id) => {
     const block = pageData?.blocks.find((block) => block.id === id)
-     if (block) {
-        setBlockData(block)
-        setBlockId(id)
-     }
+    if (block) {
+      setBlockData(block)
+      setBlockId(id)
+    }
   }
 
   return (

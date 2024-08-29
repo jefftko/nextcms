@@ -55,10 +55,10 @@ const DraggableItem = ({ id, index, moveItem, children, isEditing }) => {
   )
 }
 
-const ListField = ({ label, name, fields, value,onChange }) => {
+const ListField = ({ label, name, fields, value, onChange }) => {
   const [listValue, setListValue] = useState(value || [])
   const { blockData, setBlockData } = useBlockData()
-  const [currentValue, setCurrentValue] = useState({id:null})
+  const [currentValue, setCurrentValue] = useState({ id: null })
 
   const handleItemChange = useCallback((id, fieldName, fieldValue) => {
     setCurrentValue((prev) => ({
@@ -77,22 +77,22 @@ const ListField = ({ label, name, fields, value,onChange }) => {
     setListValue([...cleanedList])
   }, [])
 
- useEffect(() => {
-     if (Object.keys(currentValue).length === 0) {
-         return
-     }
-     setListValue((prev) =>
-        prev.map((item) => {
-            if (item.id === currentValue.id) {
-            return { ...item, ...currentValue }
-            }
-            return item
-        })
+  useEffect(() => {
+    if (Object.keys(currentValue).length === 0) {
+      return
+    }
+    setListValue((prev) =>
+      prev.map((item) => {
+        if (item.id === currentValue.id) {
+          return { ...item, ...currentValue }
+        }
+        return item
+      })
     )
   }, [currentValue])
 
   useEffect(() => {
- /* if (listValue.length === 0) {
+    /* if (listValue.length === 0) {
       //remove name
       setBlockData((prev) => {
         const { [name]: _, ...rest } = prev
@@ -118,7 +118,13 @@ const ListField = ({ label, name, fields, value,onChange }) => {
     //if field kind includes list, remove it
     setListValue((prev) => [
       ...prev,
-      {...Object.fromEntries(Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])),id: Math.random().toString(36).substring(7),isEditing:false}
+      {
+        ...Object.fromEntries(
+          Object.keys(fields).map((key) => [key, fields[key].defaultValue || ''])
+        ),
+        id: Math.random().toString(36).substring(7),
+        isEditing: false,
+      },
     ])
   }
 
@@ -141,19 +147,17 @@ const ListField = ({ label, name, fields, value,onChange }) => {
      
   }*/
 
- const handleItemClick = (e, id) => {
-     listValue.map((item) => {
-         if (item.id === id) {
-             if(e){
-                 setCurrentValue(item)
-             }else{
-                 setCurrentValue({id:null})
-             }
-         }
-     })
-    
+  const handleItemClick = (e, id) => {
+    listValue.map((item) => {
+      if (item.id === id) {
+        if (e) {
+          setCurrentValue(item)
+        } else {
+          setCurrentValue({ id: null })
+        }
+      }
+    })
   }
-
 
   const removeItem = (id) => {
     const newList = listValue.filter((item) => item.id !== id)
@@ -210,8 +214,12 @@ const ListField = ({ label, name, fields, value,onChange }) => {
                           kind={fields[fieldName].kind == 'list' ? 'text' : fields[fieldName].kind}
                           label={fields[fieldName].label}
                           name={`${name}[${index}]_${fieldName}_${idx}`}
-                          value={currentValue.id === item.id?currentValue[fieldName]:item[fieldName]}
-                          onChange={(fieldValue) => handleItemChange(item.id, fieldName, fieldValue)}
+                          value={
+                            currentValue.id === item.id ? currentValue[fieldName] : item[fieldName]
+                          }
+                          onChange={(fieldValue) =>
+                            handleItemChange(item.id, fieldName, fieldValue)
+                          }
                           additional={fields[fieldName].additional}
                         />
                       ))}

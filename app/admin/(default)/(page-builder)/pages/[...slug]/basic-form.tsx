@@ -30,11 +30,12 @@ export default function BasicForm() {
 
   return (
     <div className="relative mt-4">
-      <Accordion title="Basic Settings" 
-      isEditing={isEditing}
-      onItemClick={() => setIsEditing(!isEditing)}>
-       
-      {/* alias for url path */}
+      <Accordion
+        title="Basic Settings"
+        isEditing={isEditing}
+        onItemClick={() => setIsEditing(!isEditing)}
+      >
+        {/* alias for url path */}
         <div className="relative mt-2">
           <div className="flex items-center justify-between">
             <label className="mb-1 ml-2 block text-xs font-medium" htmlFor="pagePath">

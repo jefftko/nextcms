@@ -10,9 +10,11 @@ export default function SeoForm() {
 
   return (
     <div className="relative mt-4">
-      <Accordion title="SEO Settings"
-       isEditing={isEditing}
-      onItemClick={() => setIsEditing(!isEditing)}>
+      <Accordion
+        title="SEO Settings"
+        isEditing={isEditing}
+        onItemClick={() => setIsEditing(!isEditing)}
+      >
         {/* key */}
         <div className="relative mt-4">
           <label

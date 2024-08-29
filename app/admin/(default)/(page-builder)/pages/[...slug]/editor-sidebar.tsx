@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
 import { usePageData } from '@/app/admin/page-data'
 import { useAppProvider } from '@/app/admin/app-provider'
@@ -94,39 +94,35 @@ export default function EditorSidebar() {
     }
   }, [])
 
-
   useEffect(() => {
     pageDataRef.current = pageData
   }, [pageData])
 
- // Update pageDataRef whenever pageData changes
+  // Update pageDataRef whenever pageData changes
   useEffect(() => {
     pageDataRef.current = pageData
     console.log('pageDataRef', pageData)
   }, [pageData])
 
- useEffect(() => {
-    if(blockId == null) return
-      //remove index from blockId
-      console.log('blockForm', blockId)
-      const block = pageDataRef.current?.blocks.find((block) => block.id === blockId)
-      if (block) {
-        setBlockData(block)
-       if(block.type != blockType){
+  useEffect(() => {
+    if (blockId == null) return
+    //remove index from blockId
+    console.log('blockForm', blockId)
+    const block = pageDataRef.current?.blocks.find((block) => block.id === blockId)
+    if (block) {
+      setBlockData(block)
+      if (block.type != blockType) {
         setBlockType(block.type)
-        }
-      }else{
-        console.log('block not found')
       }
+    } else {
+      console.log('block not found')
+    }
   }, [blockId])
 
-
-
-
- useEffect(() => {
-      console.log('blockData', blockData)
+  useEffect(() => {
+    console.log('blockData', blockData)
     if (blockData) {
-     if (updateTimeout.current) {
+      if (updateTimeout.current) {
         clearTimeout(updateTimeout.current)
       }
       updateTimeout.current = setTimeout(() => {
@@ -141,11 +137,8 @@ export default function EditorSidebar() {
           return { ...prev, blocks: newBlocks }
         })
       }, 200)
-       
     }
   }, [blockData])
-
-
 
   return (
     <>
@@ -184,10 +177,9 @@ export default function EditorSidebar() {
               <button
                 className="mr-4 text-slate-400 hover:text-slate-500"
                 onClick={() => {
-                    setBlockId(null)
-                    setBlockData(null)
-                }
-                }
+                  setBlockId(null)
+                  setBlockData(null)
+                }}
               >
                 <span className="sr-only">Close block</span>
                 <Icon kind="arrowLeft" className="shrink-0 opacity-50" size={6} />
@@ -195,7 +187,7 @@ export default function EditorSidebar() {
             </div>
             {/* Block form body */}
             <div className="max-h-[calc(100dvh-64px)] overflow-y-auto px-5 py-4">
-              <BlockForm  blockType={blockType}/>
+              <BlockForm blockType={blockType} />
             </div>
           </div>
 

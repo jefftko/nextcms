@@ -10,36 +10,29 @@ interface FormSchema {
   fields: Record<string, FieldProps>
 }
 
-export default function BlockForm({blockType}) {
+export default function BlockForm({ blockType }) {
   const [formSchema, setFormSchema] = useState<FormSchema | null>(null)
   const { blockData, setBlockData } = useBlockData()
   const { pageData, blockId, setPageData } = usePageData()
 
+  async function loadSchema(blockType: string) {
+    const schema = await import(`@/components/blocks/${blockType}/schema`)
+    //console.log(schema.default())
+    setFormSchema(schema.default())
+  }
 
-   async function loadSchema(blockType: string) {
-      const schema = await import(`@/components/blocks/${blockType}/schema`)
-      //console.log(schema.default())
-      setFormSchema(schema.default())
+  useEffect(() => {
+    if (blockType) {
+      loadSchema(blockType)
     }
-
-    
-    useEffect(() => {
-        if(blockType){
-        loadSchema(blockType)
-        }
-    }, [blockId,blockType])
-
-
+  }, [blockId, blockType])
 
   const handleFieldChange = useCallback((name, value) => {
     setBlockData((prev) => ({
       ...prev,
       [name]: value,
     }))
-  
   }, [])
-
-
 
   return (
     <div id={`BlockForm-${blockId}`} className="flex flex-wrap justify-between ">
