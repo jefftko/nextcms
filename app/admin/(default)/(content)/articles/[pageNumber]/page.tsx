@@ -2,15 +2,15 @@ import { SelectedItemsProvider } from '@/app/admin/selected-items-context'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allContents } from 'contentlayer/generated'
 import type { Content } from 'contentlayer/generated'
-import ArticlesContent from './articles-content'
+import ArticlesContent from '../articles-content'
 import { auth } from 'auth'
 import { redirect } from 'next/navigation'
 
 
-export default async function Articles({
-  searchParams,
+export default async function ArticlesPage({
+  params,
 }: {
-  searchParams: { page?: string }
+  params: { pageNumber: string }
 }) {
   try {
     const session = await auth()
@@ -18,7 +18,7 @@ export default async function Articles({
       redirect('/admin/signin')
     }
 
-    const pageNumber = parseInt(searchParams.page || '1', 10)
+    const pageNumber = parseInt(params.pageNumber, 10)
     //@ts-ignore - Disable TypeScript check for the next line
     const articles = allCoreContent(sortPosts(allContents)) as Content[]
 

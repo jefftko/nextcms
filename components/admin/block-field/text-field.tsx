@@ -28,7 +28,7 @@ const TextField: React.FC<TextFieldProps> = ({ label, name, value, onChange, add
         errorMessage = 'Invalid email format'
       }
     } else if (type === 'number') {
-      const numberRegex = /^[0-9]*$/
+      const numberRegex = /^-?\d*\.?\d+$/
       if (!numberRegex.test(inputValue)) {
         errorMessage = 'Invalid number format'
       }

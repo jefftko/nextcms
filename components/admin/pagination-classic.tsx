@@ -33,7 +33,7 @@ export default function PaginationClassic({
             {prevPage && (
               <a
                 className="btn border-slate-200 bg-white text-indigo-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
-                href={`/${basePath}/pages/page/${currentPage - 1}`}
+                href={`/${basePath}/${pagePathname ? pagePathname : 'pages/page'}/${currentPage - 1}`}
               >
                 &lt;- Previous
               </a>

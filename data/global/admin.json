@@ -31,16 +31,12 @@
       "icon": "article",
       "children": [
         {
-          "href": "/admin/categories",
-          "label": "Categories"
-        },
-        {
-          "href": "/admin/tags",
-          "label": "Tags"
-        },
-        {
           "href": "/admin/articles",
           "label": "Articles"
+        },
+        {
+          "href": "/admin/categories",
+          "label": "Categories"
         }
       ]
     },

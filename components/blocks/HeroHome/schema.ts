@@ -20,7 +20,7 @@ const HeroHomeSchema = () => ({
       additional: {
         required: true,
         placeholder: 'SubTitle',
-        type: 'email',
+        type: 'number',
       },
     },
     //descripiton
