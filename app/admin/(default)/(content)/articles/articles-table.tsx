@@ -8,31 +8,28 @@ import ModalBlank from '@/components/admin/modal-blank'
 import { useMessage } from '@/app/admin/message-provider'
 import { useAppProvider } from '@/app/admin/app-provider'
 import type { Content } from 'contentlayer/generated'
+import { deleteContent } from '@/utils/contentActions'
+import { data } from 'autoprefixer'
 
 export default function ArticlesTable({ articles, total }: { articles: Content[]; total: number }) {
-  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false)
-  const [copyArticle, setCopyArticle] = useState<Content | null>(null)
   const { setToast } = useMessage()
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const { setLoading } = useAppProvider()
   const router = useRouter()
+  const [copyArticle, setCopyArticle] = useState<Content | null>(null)
 
-  const handleArticleCopy = async (articleData) => {
-    // Implement copy logic here
-    setLoading(true)
-    setIsCopyModalOpen(false)
-    // API call to copy article
-    setLoading(false)
-    setToast({ message: 'Article copied successfully', type: 'success' })
-  }
-
-  const handleArticleDelete = async () => {
+  const handleArticleDelete = async (articleData) => {
     // Implement delete logic here
     setLoading(true)
     setDeleteModalOpen(false)
     // API call to delete article
+    const res = await deleteContent(articleData.slug)
     setLoading(false)
-    setToast({ message: 'Article deleted successfully', type: 'success' })
+    if(res && res.status == 'success'){
+      setToast({message:res?.message,type:'success'})
+    }else{
+      setToast({message:res?.message,type: 'error'})
+    }
   }
 
   return (
@@ -68,15 +65,10 @@ export default function ArticlesTable({ articles, total }: { articles: Content[]
                   <ArticlesTableItem
                     key={article.slug}
                     article={article}
-                    handleCopy={() => {
-                      setCopyArticle(article)
-                      setIsCopyModalOpen(true)
-                    }}
                     handleDelete={() => {
                       setCopyArticle(article)
                       setDeleteModalOpen(true)
                     }}
-                    handleEdit={() => router.push(`/admin/articles/edit/${article.slug}`)}
                   />
                 ))}
               </tbody>
@@ -85,30 +77,7 @@ export default function ArticlesTable({ articles, total }: { articles: Content[]
         </div>
       </div>
 
-      {/* Copy Modal */}
-      <ModalBasic
-        isOpen={isCopyModalOpen}
-        setIsOpen={setIsCopyModalOpen} 
-        title="Copy Article"
-      >
-        <div className="p-5">
-          <div className="mb-5">Are you sure you want to copy this article?</div>
-          <div className="flex flex-wrap justify-end space-x-2">
-            <button
-              className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600"
-              onClick={() => setIsCopyModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white"
-              onClick={() => handleArticleCopy(copyArticle)}
-            >
-              Copy
-            </button>
-          </div>
-        </div>
-      </ModalBasic>
+      
 
       {/* Delete Modal */}
       <ModalBlank
@@ -139,7 +108,7 @@ export default function ArticlesTable({ articles, total }: { articles: Content[]
               </button>
               <button
                 className="btn-sm bg-rose-500 hover:bg-rose-600 text-white"
-                onClick={handleArticleDelete}
+                onClick={()=>handleArticleDelete(copyArticle)}
               >
                 Delete
               </button>
