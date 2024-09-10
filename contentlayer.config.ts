@@ -1,5 +1,5 @@
 import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
-import { writeFileSync } from 'fs'
+import { writeFileSync, existsSync, readFileSync } from 'fs'
 import readingTime from 'reading-time'
 //import GithubSlugger from 'github-slugger'
 import { slug } from 'github-slugger'
@@ -100,6 +100,33 @@ function createSearchIndex(allBlogs) {
   }
 }
 
+function createCategoryData(allContents) {
+  let categoryData = {}
+  //load orginal from json,if not exist,create it
+  if (existsSync('./app/category-data.json')) {
+    categoryData = JSON.parse(readFileSync('./app/category-data.json', 'utf8'))
+  } else {
+    categoryData = {
+      uncategorized: {
+        name: 'Uncategorized',
+        description: 'Default category for uncategorized content',
+        layout: 'default',
+      },
+    }
+  }
+  allContents.forEach((content) => {
+    const category = content.category || 'uncategorized'
+    if (!categoryData[category]) {
+      categoryData[category] = {
+        name: category.charAt(0).toUpperCase() + category.slice(1),
+        description: `Category for ${category} content`,
+        layout: 'default',
+      }
+    }
+  })
+  writeFileSync('./app/category-data.json', JSON.stringify(categoryData, null, 2))
+}
+
 export const Content = defineDocumentType(() => ({
   name: 'Content',
   filePathPattern: 'content/**/*.mdx',
@@ -116,6 +143,7 @@ export const Content = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    category: { type: 'string', default: 'uncategorized' },
   },
   computedFields: {
     ...computedFields,
@@ -180,5 +208,6 @@ export default makeSource({
     const { allContents } = await importData()
     createTagCount(allContents)
     createSearchIndex(allContents)
+    createCategoryData(allContents)
   },
 })

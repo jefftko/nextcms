@@ -6,12 +6,7 @@ import ArticlesContent from './articles-content'
 import { auth } from 'auth'
 import { redirect } from 'next/navigation'
 
-
-export default async function Articles({
-  searchParams,
-}: {
-  searchParams: { page?: string }
-}) {
+export default async function Articles({ searchParams }: { searchParams: { page?: string } }) {
   try {
     const session = await auth()
     if (!session) {

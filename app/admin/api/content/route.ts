@@ -9,7 +9,7 @@ import { createContent, editContent, deleteContent } from '@/utils/contentAction
 
 const handler = async (req: NextRequest) => {
   const data = await req.json()
-  
+
   try {
     const res = await createContent(data)
     return NextResponse.json(res, { status: 200 })

@@ -1,0 +1,7 @@
+{
+  "uncategorized": {
+    "name": "Uncategorized",
+    "description": "Category for uncategorized content",
+    "layout": "default"
+  }
+}

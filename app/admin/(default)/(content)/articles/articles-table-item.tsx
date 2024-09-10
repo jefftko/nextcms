@@ -20,10 +20,7 @@ const statusColor = (status: string): string => {
   }
 }
 
-export default function ArticlesTableItem({
-  article,
-  handleDelete,
-}: ArticlesTableItemProps) {
+export default function ArticlesTableItem({ article, handleDelete }: ArticlesTableItemProps) {
   const router = useRouter()
 
   return (
@@ -35,7 +32,9 @@ export default function ArticlesTableItem({
         <div className="text-left">{article.slug}</div>
       </td>
       <td className="whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">
-        <div className={`inline-flex rounded-full px-2.5 py-0.5 text-center font-medium ${statusColor(article.draft ? 'draft' : 'published')}`}>
+        <div
+          className={`inline-flex rounded-full px-2.5 py-0.5 text-center font-medium ${statusColor(article.draft ? 'draft' : 'published')}`}
+        >
           {article.draft ? 'Draft' : 'Published'}
         </div>
       </td>
@@ -47,20 +46,15 @@ export default function ArticlesTableItem({
       </td>
       <td className="w-px whitespace-nowrap px-2 py-3 first:pl-5 last:pr-5">
         <div className="space-x-1">
-
-        <button
-              className="rounded-full text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400"
-              onClick={() => router.push(`/admin/content/edit/${article.slug}`)}
-            >
-              <span className="sr-only">Edit</span>
-              <Icon kind="edit" size={6} />
-            </button>
-
-      
           <button
-            className="rounded-full text-rose-500 hover:text-rose-600"
-            onClick={handleDelete}
+            className="rounded-full text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400"
+            onClick={() => router.push(`/admin/content/edit/${article.slug}`)}
           >
+            <span className="sr-only">Edit</span>
+            <Icon kind="edit" size={6} />
+          </button>
+
+          <button className="rounded-full text-rose-500 hover:text-rose-600" onClick={handleDelete}>
             <span className="sr-only">Delete</span>
             <Icon kind="trash" size={6} />
           </button>

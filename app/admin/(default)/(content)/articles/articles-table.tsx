@@ -25,10 +25,10 @@ export default function ArticlesTable({ articles, total }: { articles: Content[]
     // API call to delete article
     const res = await deleteContent(articleData.slug)
     setLoading(false)
-    if(res && res.status == 'success'){
-      setToast({message:res?.message,type:'success'})
-    }else{
-      setToast({message:res?.message,type: 'error'})
+    if (res && res.status == 'success') {
+      setToast({ message: res?.message, type: 'success' })
+    } else {
+      setToast({ message: res?.message, type: 'error' })
     }
   }
 
@@ -77,16 +77,11 @@ export default function ArticlesTable({ articles, total }: { articles: Content[]
         </div>
       </div>
 
-      
-
       {/* Delete Modal */}
-      <ModalBlank
-        isOpen={deleteModalOpen}
-        setIsOpen={setDeleteModalOpen}
-      >
-        <div className="p-5 flex space-x-4">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-rose-100">
-            <svg className="w-4 h-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
+      <ModalBlank isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen}>
+        <div className="flex space-x-4 p-5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100">
+            <svg className="h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
               <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
             </svg>
           </div>
@@ -94,21 +89,21 @@ export default function ArticlesTable({ articles, total }: { articles: Content[]
             <div className="mb-2">
               <div className="text-lg font-semibold text-slate-800">Delete Article</div>
             </div>
-            <div className="text-sm mb-10">
+            <div className="mb-10 text-sm">
               <div className="space-y-2">
                 <p>Are you sure you want to delete this article?</p>
               </div>
             </div>
             <div className="flex flex-wrap justify-end space-x-2">
               <button
-                className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600"
+                className="btn-sm border-slate-200 text-slate-600 hover:border-slate-300"
                 onClick={() => setDeleteModalOpen(false)}
               >
                 Cancel
               </button>
               <button
-                className="btn-sm bg-rose-500 hover:bg-rose-600 text-white"
-                onClick={()=>handleArticleDelete(copyArticle)}
+                className="btn-sm bg-rose-500 text-white hover:bg-rose-600"
+                onClick={() => handleArticleDelete(copyArticle)}
               >
                 Delete
               </button>

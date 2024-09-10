@@ -10,8 +10,6 @@ import { useAppProvider } from '@/app/admin/app-provider'
 import type { Content } from 'contentlayer/generated'
 const ARTICLES_PER_PAGE = 10
 
-
-
 interface ListLayoutProps {
   articles: Content[]
   title: string

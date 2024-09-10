@@ -78,11 +78,11 @@ export default function ListLayoutWithTags({
 
   return (
     <LayoutDefault>
-      <div>
-        <div className="pb-6 pt-6">
-          <h1 className="md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl">
-            {title}
-          </h1>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="pb-12 pt-32 md:pb-20 md:pt-40">
+          <div className="max-w-3xl pb-12 text-center md:pb-20 md:text-left">
+            <h1 className="h1 mb-4">{title}</h1>
+          </div>
         </div>
         <div className="flex sm:space-x-24">
           <div className="hidden h-full max-h-screen min-w-[280px] max-w-[280px] flex-wrap overflow-auto rounded bg-gray-50 pt-5 shadow-md dark:bg-gray-900/70 dark:shadow-gray-800/40 sm:flex">
