@@ -31,11 +31,11 @@
       "icon": "article",
       "children": [
         {
-          "href": "/admin/articles",
+          "href": "/admin/content/articles",
           "label": "Articles"
         },
         {
-          "href": "/admin/categories",
+          "href": "/admin/content/categories",
           "label": "Categories"
         }
       ]

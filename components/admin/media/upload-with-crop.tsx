@@ -12,7 +12,7 @@ import { ArrowUpOnSquareStackIcon, ArrowUpOnSquareIcon } from '@heroicons/react/
 export default function Upload() {
   const [isOpen, setIsOpen] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
-  const [crop, setCrop] = useState<Crop>({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
+  const [crop, setCrop] = useState<Crop | undefined>(undefined) // 将初始值设置为 undefined
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null)
   const { setToast } = useMessage()
   const [fileName, setFileName] = useState<string | null>(null)
@@ -22,7 +22,60 @@ export default function Upload() {
   const imgRef = useRef<HTMLImageElement | null>(null)
   const originalFileRef = useRef<File | null>(null)
 
-  const aspectArr = [1, '16/9', '4/3', '3/2', '2/3', '3/4', '9/16']
+  const aspectOptions = [
+    { value: '1', label: '1:1' },
+    { value: '16/9', label: '16:9' },
+    { value: '4/3', label: '4:3' },
+    { value: '3/2', label: '3:2' },
+    { value: '2/3', label: '2:3' },
+    { value: '3/4', label: '3:4' },
+    { value: '9/16', label: '9:16' },
+    { value: 'custom', label: 'Custom' },
+    { value: 'original', label: 'Original' },
+  ]
+
+  const [selectedAspect, setSelectedAspect] = useState('1')
+  const [customAspect, setCustomAspect] = useState('')
+
+  const handleAspectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    setSelectedAspect(value)
+    if (value === 'original') {
+      setAspect(undefined)
+      setCrop(undefined) // 这里可以设置为 undefined
+    } else if (value !== 'custom') {
+      const newAspect = eval(value)
+      setAspect(newAspect)
+      updateCrop(newAspect)
+    } else {
+      setAspect(undefined)
+      setCrop({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
+    }
+  }
+
+  const handleCustomAspectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setCustomAspect(value)
+    const [width, height] = value.split(':').map(Number)
+    if (width && height && width > 0 && height > 0) {
+      const newAspect = width / height
+      setAspect(newAspect)
+      updateCrop(newAspect)
+    } else {
+      setAspect(undefined)
+      setCrop({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
+    }
+  }
+
+  const updateCrop = (newAspect: number) => {
+    setCrop((prevCrop) => ({
+      unit: '%',
+      width: 50,
+      height: 50 / newAspect,
+      x: 25,
+      y: (100 - 50 / newAspect) / 2,
+    }))
+  }
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -132,28 +185,17 @@ export default function Upload() {
     }
   }
 
-  const handleAspectChange = (aspectStr: string | undefined) => {
-    const newAspect = aspectStr ? eval(aspectStr) : undefined
-    setAspect(newAspect)
-    if (newAspect) {
-      setCrop((prevCrop) => ({
-        unit: '%',
-        width: 50,
-        height: 50 / newAspect,
-        x: 25,
-        y: (100 - 50 / newAspect) / 2,
-      }))
-    } else {
-      setCrop({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
-    }
-  }
-
   useEffect(() => {
     if (aspect) {
-      setCrop((prevCrop) => ({
-        ...prevCrop,
-        height: prevCrop.width / aspect,
-      }))
+      setCrop((prevCrop) => {
+        if (prevCrop) {
+          return {
+            ...prevCrop,
+            height: prevCrop.width / aspect,
+          }
+        }
+        return undefined
+      })
     }
   }, [aspect])
 
@@ -173,25 +215,28 @@ export default function Upload() {
           <label className="mb-1 block text-sm font-medium">Image</label>
           {preview ? (
             <>
-              {/* Start */}
               <div className="mb-4 flex items-center gap-2">
-                {aspectArr.map((asp) => (
-                  <button
-                    key={asp}
-                    onClick={() => handleAspectChange(String(asp))}
-                    className={`btn ${aspect == asp ? 'bg-slate-50 text-indigo-500 hover:bg-slate-50 dark:bg-slate-900' : 'bg-white text-slate-600  hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'}`}
-                  >
-                    {asp}
-                  </button>
-                ))}
-                <button
-                  className={`btn ${aspect == undefined ? 'bg-slate-50 text-indigo-500 hover:bg-slate-50 dark:bg-slate-900 ' : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'}`}
-                  onClick={() => handleAspectChange(undefined)}
+                <select
+                  value={selectedAspect}
+                  onChange={handleAspectChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  Custom
-                </button>
+                  {aspectOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {selectedAspect === 'custom' && (
+                  <input
+                    type="text"
+                    value={customAspect}
+                    onChange={handleCustomAspectChange}
+                    placeholder="宽:高 (例如 16:9)"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                )}
               </div>
-              {/* End */}
               <ReactCrop
                 crop={crop}
                 onChange={(c) => setCrop(c)}
@@ -205,29 +250,22 @@ export default function Upload() {
               </ReactCrop>
 
               {/* btn group */}
-              <div className="flex flex-wrap items-center justify-center">
-                <div className="m-1.5">
-                  {/* Start */}
-                  <button
-                    className="btn bg-indigo-500 text-white hover:bg-indigo-600"
-                    onClick={handleCropAndUpload}
-                  >
-                    <ArrowUpOnSquareStackIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
-                    <span className="ml-2">Upload Cropped Image</span>
-                  </button>
-                  {/* End */}
-                </div>
-                <div className="m-1.5">
-                  {/* Start */}
-                  <button
-                    className="btn border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600"
-                    onClick={handleOriginalAndUpload}
-                  >
-                    <ArrowUpOnSquareIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
-                    <span className="ml-2">Upload Original Image</span>
-                  </button>
-                  {/* End */}
-                </div>
+              <div className="mt-4 flex justify-center">
+                <button
+                  className="btn bg-indigo-500 text-white hover:bg-indigo-600"
+                  onClick={() => {
+                    if (selectedAspect === 'original') {
+                      handleOriginalAndUpload()
+                    } else {
+                      handleCropAndUpload()
+                    }
+                  }}
+                >
+                  <ArrowUpOnSquareStackIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
+                  <span className="ml-2">
+                    {selectedAspect === 'original' ? '上传原图' : '上传裁剪后的图片'}
+                  </span>
+                </button>
               </div>
             </>
           ) : (

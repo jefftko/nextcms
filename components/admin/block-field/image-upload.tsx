@@ -13,6 +13,7 @@ interface ImageUploadProps {
   onChange: (file: File) => void
   additional?: {
     required?: boolean
+    aspectRatio?: number
   }
 }
 
@@ -31,11 +32,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
   const [filePath, setFilePath] = useState([])
   const [files, setFiles] = useState([])
   const [tabIndex, setTabIndex] = useState(0)
+  const [defaultAspectRatio, setDefaultAspectRatio] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (additional?.aspectRatio) {
+      setDefaultAspectRatio(additional.aspectRatio)
+    }
+  }, [additional?.aspectRatio])
 
   const fetchFiles = async (query) => {
     const data = await getFiles(query)
     setFiles(data)
   }
+
   const handlePathChange = useCallback((path) => {
     if (path === -1) {
       setFilePath([])
@@ -43,9 +52,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
       setFilePath(path?.slice(0, path + 1).join('/'))
     }
   }, [])
+
   const handleItemChange = useCallback((item) => {
     if (item.type === 'directory') {
-      //split with source ,but remove empty string
       setFilePath(item.source.split('/').filter(Boolean))
     } else {
       setMediaIsOpen(false)
@@ -77,7 +86,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
           ) : (
             <>
               <PhotoIcon />
-
               <div className="mt-4 flex text-sm leading-6 text-gray-600">
                 <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                   <span>Choose a image</span>
@@ -117,7 +125,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ label, name, value, onChange,
             />
           )}
 
-          {tabIndex == 1 && <CropImagePanel filePath={filePath} onItemChange={handleItemChange} />}
+          {tabIndex == 1 && (
+            <CropImagePanel
+              filePath={filePath}
+              onItemChange={handleItemChange}
+              defaultAspectRatio={defaultAspectRatio}
+            />
+          )}
         </div>
       </ModalAction>
     </div>

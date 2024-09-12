@@ -1,16 +1,15 @@
 'use client'
 import { useState, useCallback, useRef, useEffect } from 'react'
-import ModalAction from '@/components/admin/wrappers/modal-action'
 import { uploadFile } from '@/services/fileService'
 import { useMessage } from '@/app/admin/message-provider'
 import { useDropzone } from 'react-dropzone'
 import ReactCrop, { type Crop, type PixelCrop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
-import { ArrowUpOnSquareStackIcon, ArrowUpOnSquareIcon } from '@heroicons/react/24/solid'
+import { ArrowUpOnSquareStackIcon } from '@heroicons/react/24/solid'
 
-export default function CropImagePanel({ filePath, onItemChange }) {
+export default function CropImagePanel({ filePath, onItemChange, defaultAspectRatio }) {
   const [preview, setPreview] = useState<string | null>(null)
-  const [crop, setCrop] = useState<Crop>({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
+  const [crop, setCrop] = useState<Crop | undefined>(undefined) // 将初始值设置为 undefined
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null)
   const { setToast } = useMessage()
   const [fileName, setFileName] = useState<string | null>(null)
@@ -19,7 +18,73 @@ export default function CropImagePanel({ filePath, onItemChange }) {
   const imgRef = useRef<HTMLImageElement | null>(null)
   const originalFileRef = useRef<File | null>(null)
 
-  const aspectArr = [1, '16/9', '4/3', '3/2', '2/3', '3/4', '9/16']
+  const aspectOptions = [
+    ...(defaultAspectRatio ? [{ value: defaultAspectRatio, label: 'Default' }] : [  { value: '1', label: '1:1' },
+      { value: '16/9', label: '16:9' },
+      { value: '4/3', label: '4:3' },
+      { value: '3/2', label: '3:2' },
+      { value: '2/3', label: '2:3' },
+      { value: '3/4', label: '3:4' },
+      { value: '9/16', label: '9:16' },
+      { value: 'custom', label: 'Custom' }]),
+    { value: 'original', label: 'Original' },
+  ]
+
+  //const [selectedAspect, setSelectedAspect] = useState('1')
+  const [selectedAspect,setSelectedAspect] = useState(defaultAspectRatio ? defaultAspectRatio : 'original')
+  const [customAspect, setCustomAspect] = useState('')
+
+  useEffect(() => {
+    console.log('defaultAspectRatio', defaultAspectRatio)
+
+    if (defaultAspectRatio) {
+    setAspect(eval(defaultAspectRatio))
+    updateCrop(eval(defaultAspectRatio))
+    }
+    }, [defaultAspectRatio])
+
+  const handleAspectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    setSelectedAspect(value)
+    if (value === 'original') {
+      setAspect(undefined)
+      setCrop(undefined) // 这里可以设置为 undefined
+    } else if (value == defaultAspectRatio) {
+      setAspect(eval(defaultAspectRatio))
+      updateCrop(eval(defaultAspectRatio))
+    } else if (value !== 'custom') {
+      const newAspect = eval(value)
+      setAspect(newAspect)
+      updateCrop(newAspect)
+    } else {
+      setAspect(undefined)
+      setCrop({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
+    }
+  }
+
+  const handleCustomAspectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setCustomAspect(value)
+    const [width, height] = value.split(':').map(Number)
+    if (width && height && width > 0 && height > 0) {
+      const newAspect = width / height
+      setAspect(newAspect)
+      updateCrop(newAspect)
+    } else {
+      setAspect(undefined)
+      setCrop({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
+    }
+  }
+
+  const updateCrop = (newAspect: number) => {
+    setCrop((prevCrop) => ({
+      unit: '%',
+      width: 50,
+      height: 50 / newAspect,
+      x: 25,
+      y: (100 - 50 / newAspect) / 2,
+    }))
+  }
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -126,120 +191,112 @@ export default function CropImagePanel({ filePath, onItemChange }) {
     }
   }
 
-  const handleAspectChange = (aspectStr: string | undefined) => {
-    const newAspect = aspectStr ? eval(aspectStr) : undefined
-    setAspect(newAspect)
-    if (newAspect) {
-      setCrop((prevCrop) => ({
-        unit: '%',
-        width: 50,
-        height: 50 / newAspect,
-        x: 25,
-        y: (100 - 50 / newAspect) / 2,
-      }))
-    } else {
-      setCrop({ unit: '%', x: 25, y: 25, width: 50, height: 50 })
-    }
-  }
-
   useEffect(() => {
     if (aspect) {
-      setCrop((prevCrop) => ({
-        ...prevCrop,
-        height: prevCrop.width / aspect,
-      }))
+      setCrop((prevCrop) => {
+        if (prevCrop) {
+          return {
+            ...prevCrop,
+            height: prevCrop.width / aspect,
+          }
+        }
+        // 如果 prevCrop 为 undefined，返回一个新的 Crop 对象
+        return {
+          unit: '%',
+          width: 50,
+          height: 50 / aspect,
+          x: 25,
+          y: (100 - 50 / aspect) / 2,
+        }
+      })
+    } else {
+      // 如果没有 aspect，设置 crop 为 undefined
+      setCrop(undefined)
     }
   }, [aspect])
 
   return (
-    <div>
-      <div className="mt-2 w-full max-w-xl">
-        {preview ? (
-          <>
-            {/* Start */}
-            <div className="mb-4 flex items-center gap-2">
-              {aspectArr.map((asp) => (
-                <button
-                  key={asp}
-                  onClick={() => handleAspectChange(String(asp))}
-                  className={`btn ${aspect == asp ? 'bg-slate-50 text-indigo-500 hover:bg-slate-50 dark:bg-slate-900' : 'bg-white text-slate-600  hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'}`}
-                >
-                  {asp}
-                </button>
+    <div className="mt-2 w-full max-w-xl">
+      {preview ? (
+        <>
+          <div className="mb-4 flex items-center gap-2">
+            <select
+              value={selectedAspect}
+              onChange={handleAspectChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              {aspectOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
-              <button
-                className={`btn ${aspect == undefined ? 'bg-slate-50 text-indigo-500 hover:bg-slate-50 dark:bg-slate-900 ' : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'}`}
-                onClick={() => handleAspectChange(undefined)}
-              >
-                Custom
-              </button>
-            </div>
-            {/* End */}
-            <ReactCrop
-              crop={crop}
-              onChange={(c) => setCrop(c)}
-              onComplete={(c) => {
-                onCropComplete(c)
-                onImageLoaded
-              }}
-              aspect={aspect}
-            >
-              <img src={preview} alt="Preview" ref={imgRef} />
-            </ReactCrop>
+            </select>
+            {selectedAspect === 'custom' && (
+              <input
+                type="text"
+                value={customAspect}
+                onChange={handleCustomAspectChange}
+                placeholder="宽:高 (例如 16:9)"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            )}
+          </div>
+          <ReactCrop
+            crop={crop} // 这里的 crop 现在是 Crop | undefined
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => {
+              onCropComplete(c)
+              onImageLoaded
+            }}
+            aspect={aspect}
+          >
+            <img src={preview} alt="Preview" ref={imgRef} />
+          </ReactCrop>
 
-            {/* btn group */}
-            <div className="flex flex-wrap items-center justify-center">
-              <div className="m-1.5">
-                {/* Start */}
-                <button
-                  className="btn bg-indigo-500 text-white hover:bg-indigo-600"
-                  onClick={handleCropAndUpload}
-                >
-                  <ArrowUpOnSquareStackIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
-                  <span className="ml-2">Upload Cropped Image</span>
-                </button>
-                {/* End */}
-              </div>
-              <div className="m-1.5">
-                {/* Start */}
-                <button
-                  className="btn border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600"
-                  onClick={handleOriginalAndUpload}
-                >
-                  <ArrowUpOnSquareIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
-                  <span className="ml-2">Upload Original Image</span>
-                </button>
-                {/* End */}
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div
-              {...getRootProps()}
-              className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+          <div className="mt-4 flex justify-center">
+            <button
+              className="btn bg-indigo-500 text-white hover:bg-indigo-600"
+              onClick={() => {
+                if (selectedAspect === 'original') {
+                  handleOriginalAndUpload()
+                } else {
+                  handleCropAndUpload()
+                }
+              }}
             >
-              <input {...getInputProps()} />
-              <div className="text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-300"
-                  aria-hidden="true"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z" />
-                </svg>
-                <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                  <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                    <span>Upload a file</span>
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
-                </div>
-                <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+              <ArrowUpOnSquareStackIcon className="h-4 w-4 shrink-0 fill-current opacity-50" />
+              <span className="ml-2">
+                {selectedAspect === 'original' ? '上传原图' : '上传裁剪后的图片'}
+              </span>
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            {...getRootProps()}
+            className="mt-2 flex cursor-pointer justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+          >
+            <input {...getInputProps()} />
+            <div className="text-center">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-300"
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+              >
+                <path d="M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z" />
+              </svg>
+              <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                  <span>Upload a file</span>
+                </label>
+                <p className="pl-1">or drag and drop</p>
               </div>
+              <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

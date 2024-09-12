@@ -93,3 +93,78 @@ export async function deleteContent(data: string) {
     return { status: 'error', message: 'Error deleting MDX file.' }
   }
 }
+
+/* get category data */
+export async function getCategoryData() {
+  const categoryDataPath = path.join(process.cwd(), 'app/category-data.json')
+  const rawData = fs.readFileSync(categoryDataPath, 'utf8')
+  return JSON.parse(rawData)
+}
+
+/* 添加或编辑分类 */
+export async function addOrEditCategory(categoryData: Record<string, any>) {
+  try {
+    const categoryDataPath = path.join(process.cwd(), 'app/category-data.json')
+    const data = await getCategoryData()
+    if(categoryData.type === 'add'){
+      //if slug is exists, return error
+      if(data[categoryData.slug]){
+        return { status: 'error', message: '分类已存在。' }
+      }else{
+        data[categoryData.slug] = {
+          name: categoryData.name,
+          description: categoryData.description,
+          layout: categoryData.layout,
+        }
+      }
+    }else{
+      //remove slug
+      if(categoryData.oldSlug && categoryData.oldSlug !== categoryData.slug){
+        if(data[categoryData.slug]){
+          return { status: 'error', message: '分类已存在。' }
+        }
+        delete data[categoryData.oldSlug]
+      }
+      data[categoryData.slug] = {
+        name: categoryData.name,
+        description: categoryData.description,
+        layout: categoryData.layout,
+      }
+    }
+    fs.writeFileSync(categoryDataPath, JSON.stringify(data, null, 2), 'utf8')
+    if(categoryData.type === 'add'){  
+      return { status: 'success', message: '分类成功保存。' }
+    }else{
+      return { status: 'success', message: '分类成功更新。' }
+    }
+  } catch (err) {
+    console.error(err)
+    return { status: 'error', message: '保存分类时出错。' }
+  }
+}
+
+/* 删除分类 */
+export async function deleteCategory(slug: string) {
+  try {
+    const categoryDataPath = path.join(process.cwd(), 'app/category-data.json')
+    
+    // 读取现有的分类数据
+    const rawData = fs.readFileSync(categoryDataPath, 'utf8')
+    const categoryData = JSON.parse(rawData)
+
+    // 删除指定的分类
+    if (categoryData[slug]) {
+      delete categoryData[slug]
+      
+      // 写入更新后的分类数据
+      fs.writeFileSync(categoryDataPath, JSON.stringify(categoryData, null, 2), 'utf8')
+      
+      return { status: 'success', message: '分类成功删除。' }
+    } else {
+      return { status: 'error', message: '未找到指定的分类。' }
+    }
+  } catch (err) {
+    console.error(err)
+    return { status: 'error', message: '删除分类时出错。' }
+  }
+}

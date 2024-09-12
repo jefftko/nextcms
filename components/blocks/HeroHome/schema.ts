@@ -53,6 +53,9 @@ const HeroHomeSchema = () => ({
       kind: 'image',
       label: 'Image',
       description: 'The image of the hero section',
+      additional: {
+        aspectRatio: '16/9',
+      },
     },
     list: {
       kind: 'list',

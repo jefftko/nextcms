@@ -27,6 +27,7 @@ export type AdditionalFieldProps = {
   required?: boolean
   type?: string
   flatpickrOptions?: object // 添加 flatpickrOptions 属性
+  aspectRatio?: number
 }
 
 export type FieldProps = {

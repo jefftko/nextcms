@@ -23,6 +23,7 @@ export default function BasicForm() {
       .replace(/\s+/g, '-') // Correct: No change needed
       .replace(/[^\w-]+/g, '') // Remove unnecessary escape
       .replace(/--+/g, '-') // Remove unnecessary escape
+      .replace(/__+/g,'_')
     setPageData({ ...(pageData as Pages), pagePath: newPath })
   }
 
