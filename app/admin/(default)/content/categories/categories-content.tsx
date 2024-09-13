@@ -7,13 +7,17 @@ import LoadingSpinner from '@/components/admin/loading-spinner'
 import { useAppProvider } from '@/app/admin/app-provider'
 import ModalBasic from '@/components/admin/modal-basic'
 import { useMessage } from '@/app/admin/message-provider'
-import { addOrEditCategory, deleteCategory, getCategoryData } from '@/utils/contentActions'
+import { addOrEditCategory, deleteCategory, getCategoryData, getLayoutList } from '@/utils/contentActions'
 
 interface Category {
   slug: string;
   name: string;
   description?: string;
-  layout?: string;
+  layout?: {
+    name: string;
+    value: string;
+  };
+  count?: number;
 }
 
 function CategoryForm({ category, onSave, onCancel }) {
@@ -21,8 +25,17 @@ function CategoryForm({ category, onSave, onCancel }) {
     name: '',
     slug: '',
     description: '',
-    layout: 'default',
+    layout: 'LayoutDefault',
   })
+  const [layoutList, setLayoutList] = useState<{name: string, value: string}[]>([])
+
+  useEffect(() => {
+    const fetchLayoutList = async () => {
+      const layouts = await getLayoutList()
+      setLayoutList(layouts)
+    }
+    fetchLayoutList()
+  }, [])
 
   useEffect(() => {
     if (category) {
@@ -103,14 +116,17 @@ function CategoryForm({ category, onSave, onCancel }) {
         <label htmlFor="layout" className="block text-sm font-medium text-gray-700">
           Layout
         </label>
-        <input
-          type="text"
+        <select
           name="layout"
           id="layout"
           value={formData.layout}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
+        >
+          {layoutList.map((layout) => (
+            <option key={layout.value} value={layout.value}>{layout.name}</option>
+          ))}
+        </select>
       </div>
       <div className="px-5 py-4 border-t border-slate-200 dark:border-slate-700">
               <div className="flex flex-wrap justify-end space-x-2">

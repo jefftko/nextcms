@@ -103,27 +103,42 @@ function createSearchIndex(allBlogs) {
 function createCategoryData(allContents) {
   let categoryData = {}
   //load orginal from json,if not exist,create it
-  if (existsSync('./app/category-data.json')) {
-    categoryData = JSON.parse(readFileSync('./app/category-data.json', 'utf8'))
-  } else {
-    categoryData = {
-      uncategorized: {
-        name: 'Uncategorized',
-        description: 'Default category for uncategorized content',
-        layout: 'default',
-      },
-    }
-  }
   allContents.forEach((content) => {
     const category = content.category || 'uncategorized'
     if (!categoryData[category]) {
       categoryData[category] = {
         name: category.charAt(0).toUpperCase() + category.slice(1),
-        description: `Category for ${category} content`,
-        layout: 'default',
+        description: `Category: ${category}`,
+        layout: 'layoutDefault',
+        slug: category,
+        count: 1
       }
+    } else {
+      categoryData[category].count++
     }
   })
+  // 检查JSON文件是否存在
+  const jsonFilePath = './app/category-data.json';
+  let jsonData = {};
+  
+  if (existsSync(jsonFilePath)) {
+    // 如果文件存在，读取并解析JSON数据
+    const fileContent = readFileSync(jsonFilePath, 'utf8');
+    jsonData = JSON.parse(fileContent);
+  }
+  // 合并categoryData到jsonData
+  Object.keys(categoryData).forEach(category => {
+    if (jsonData[category]) {
+      // 如果类别已存在，更新计数
+      jsonData[category].count = categoryData[category].count;
+    } else {
+      // 如果类别不存在，添加新类别
+      jsonData[category] = categoryData[category];
+    }
+  });
+  
+  // 更新categoryData为合并后的数据
+  categoryData = jsonData;
   writeFileSync('./app/category-data.json', JSON.stringify(categoryData, null, 2))
 }
 

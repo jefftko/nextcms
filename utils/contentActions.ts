@@ -93,12 +93,37 @@ export async function deleteContent(data: string) {
     return { status: 'error', message: 'Error deleting MDX file.' }
   }
 }
+/* get layout list from layout folder */
+export async function getLayoutList() {
+  const layoutPath = path.join(process.cwd(), 'layouts')
+  const rawData = fs.readdirSync(layoutPath)
+  //remove .tsx and .ts
+  const layoutList = rawData
+    .filter(file => file !== 'index.tsx' && file !== 'index.ts')
+    .map(file => {
+      const name = file.replace(/\.(tsx|ts)$/, '');
+      return {
+        name: name,
+        value: name
+      };
+    });
+  return layoutList
+}
 
 /* get category data */
 export async function getCategoryData() {
+  try{
   const categoryDataPath = path.join(process.cwd(), 'app/category-data.json')
-  const rawData = fs.readFileSync(categoryDataPath, 'utf8')
-  return JSON.parse(rawData)
+  if (!fs.existsSync(categoryDataPath)) {
+    fs.writeFileSync(categoryDataPath, JSON.stringify({}), 'utf8')
+    return {}
+  }else{
+    const rawData = fs.readFileSync(categoryDataPath, 'utf8')
+    return JSON.parse(rawData)
+  }
+}catch(error){
+  return {}
+}
 }
 
 /* 添加或编辑分类 */
@@ -115,6 +140,7 @@ export async function addOrEditCategory(categoryData: Record<string, any>) {
           name: categoryData.name,
           description: categoryData.description,
           layout: categoryData.layout,
+          count: 0,
         }
       }
     }else{
@@ -123,12 +149,16 @@ export async function addOrEditCategory(categoryData: Record<string, any>) {
         if(data[categoryData.slug]){
           return { status: 'error', message: '分类已存在。' }
         }
+        if(data[categoryData.oldSlug] && data[categoryData.oldSlug].count > 0){
+          data[categoryData.slug].count = data[categoryData.oldSlug].count
+        }
         delete data[categoryData.oldSlug]
       }
       data[categoryData.slug] = {
         name: categoryData.name,
         description: categoryData.description,
         layout: categoryData.layout,
+        count: data[categoryData.slug].count,
       }
     }
     fs.writeFileSync(categoryDataPath, JSON.stringify(data, null, 2), 'utf8')
@@ -152,6 +182,9 @@ export async function deleteCategory(slug: string) {
     const rawData = fs.readFileSync(categoryDataPath, 'utf8')
     const categoryData = JSON.parse(rawData)
 
+    if(categoryData[slug].count > 0){
+      return { status: 'error', message: '分类下有内容，无法删除。' }
+    }
     // 删除指定的分类
     if (categoryData[slug]) {
       delete categoryData[slug]

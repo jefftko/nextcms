@@ -20,6 +20,9 @@ export default function CategoriesTable({ categories, onEdit, onDelete, loading 
                 <div className="font-semibold text-left">Layout</div>
               </th>
               <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div className="font-semibold text-left">Count</div>
+              </th>
+              <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                 <div className="font-semibold text-left">Actions</div>
               </th>
             </tr>
@@ -38,6 +41,9 @@ export default function CategoriesTable({ categories, onEdit, onDelete, loading 
                 </td>
                 <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                   <div className="text-left">{category.layout}</div>
+                </td>
+                <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                  <div className="text-left">{category.count}</div>
                 </td>
                 <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                   <div className="space-x-1">
