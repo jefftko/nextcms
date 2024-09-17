@@ -48,7 +48,7 @@ export default function ArticlesTableItem({ article, handleDelete }: ArticlesTab
         <div className="space-x-1">
           <button
             className="rounded-full text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400"
-            onClick={() => router.push(`/admin/content/edit/${article.slug}`)}
+            onClick={() => router.push(`/admin/content/article/edit/${article.slug}`)}
           >
             <span className="sr-only">Edit</span>
             <Icon kind="edit" size={6} />

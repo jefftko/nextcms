@@ -2,8 +2,13 @@
   "uncategorized": {
     "name": "Uncategorized",
     "description": "Category: uncategorized",
-    "layout": "layoutDefault",
-    "slug": "uncategorized",
+    "layout": "ListLayout",
     "count": 11
+  },
+  "asdf": {
+    "name": "sgsdf",
+    "description": "asdf",
+    "layout": "LayoutDefault",
+    "count": 0
   }
 }

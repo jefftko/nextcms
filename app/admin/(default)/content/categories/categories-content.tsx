@@ -130,7 +130,7 @@ function CategoryForm({ category, onSave, onCancel }) {
       </div>
       <div className="px-5 py-4 border-t border-slate-200 dark:border-slate-700">
               <div className="flex flex-wrap justify-end space-x-2">
-                <button className="btn-sm border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" 
+                <button className="btn-sm border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" type='button'
                 onClick={onCancel}>Cancel</button>
                 <button  type="submit" className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Save</button>
               </div>
@@ -260,7 +260,7 @@ export default function CategoriesContent() {
         onDelete={handleDeleteCategory}
         loading={loading}
       />
-      <ModalBasic isOpen={isModalOpen} setIsOpen={setIsModalOpen} title="Add Category">
+      <ModalBasic isOpen={isModalOpen} setIsOpen={setIsModalOpen} title={editingCategory ? 'Edit Category' : 'Add Category'}>
         <CategoryForm
           category={editingCategory}
           onSave={handleSaveCategory}

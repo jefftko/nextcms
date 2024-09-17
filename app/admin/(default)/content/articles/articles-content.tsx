@@ -55,7 +55,7 @@ export default function ArticlesContent({ articles, title, pageNumber = 1 }: Lis
           {/* Add article button */}
           <button
             className="btn bg-indigo-500 text-white hover:bg-indigo-600"
-            onClick={() => router.push('/admin/articles/create')}
+            onClick={() => router.push('/admin/content/article/create')}
           >
             <svg className="h-4 w-4 shrink-0 fill-current opacity-50" viewBox="0 0 16 16">
               <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1z" />
