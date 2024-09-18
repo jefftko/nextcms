@@ -3,11 +3,12 @@
 import { useEffect, useRef } from 'react'
 import { Transition } from '@headlessui/react'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
-
+import { useMediaProvider } from '@/app/admin/media-provider'
 import Image from 'next/image'
 
 export default function MediaPanel() {
   const { flyoutOpen, setFlyoutOpen } = useFlyoutContext()
+  const { selectedImage } = useMediaProvider()
 
   const panelContent = useRef<HTMLDivElement>(null)
   const closeBtn = useRef<HTMLButtonElement>(null)
@@ -43,7 +44,7 @@ export default function MediaPanel() {
       show={flyoutOpen}
       unmount={false}
       as="div"
-      id="transaction-details"
+      id="media-details"
       ref={panelContent}
       className="absolute inset-0 z-20 shadow-xl sm:left-auto"
       enter="transition-transform duration-200 ease-in-out"
@@ -70,10 +71,39 @@ export default function MediaPanel() {
         {/* Content */}
         <div className="px-4 py-8 lg:px-8">
           <div className="mx-auto max-w-sm lg:max-w-none">
-            <div className="mb-1 text-center font-semibold text-slate-800 dark:text-slate-100">
-              Bank Transfer
-            </div>
-            <div className="text-center text-sm italic">, 8:56d PM</div>
+            {selectedImage ? (
+              <>
+                <div className="mb-6 text-center mt-10">
+                  <Image
+                    src={selectedImage.source}
+                    alt={selectedImage.title}
+                    width={300}
+                    height={300}
+                    className="mx-auto rounded-lg object-contain"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">File Name</h3>
+                    <p>{selectedImage.title}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">Size</h3>
+                    <p>{selectedImage.size}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">Type</h3>
+                    <p>{selectedImage.type}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">Path</h3>
+                    <p>{selectedImage.source}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className="text-center text-slate-500 dark:text-slate-400">Please select an image to view details</p>
+            )}
           </div>
         </div>
 

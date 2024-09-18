@@ -11,7 +11,7 @@ export default function MediaManager({ data, file_path, onPathChange, onItemChan
   }, [data])
 
   return (
-    <div className="relative rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
+    <div className="relative flex h-[calc(100vh-140px)] flex-col rounded-sm border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
       <header className="px-5 py-4">
         <div className="text-left">
           {/* Start */}
@@ -44,9 +44,9 @@ export default function MediaManager({ data, file_path, onPathChange, onItemChan
           {/* End */}
         </div>
       </header>
-      <div>
+      <div className="flex-grow overflow-y-auto">
         {/* Table */}
-        <div className="overflow-x-auto">
+        <div className="h-full overflow-x-auto">
           <ul
             role="list"
             className="grid grid-cols-2 gap-x-4 gap-y-8 p-5 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8"
@@ -82,8 +82,7 @@ export default function MediaManager({ data, file_path, onPathChange, onItemChan
           </ul>
         </div>
       </div>
-
-      <div className="px-6 pb-5">
+      <div className="px-6 py-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="text-center text-sm text-slate-500 dark:text-slate-400 sm:text-left">
             Showing{' '}

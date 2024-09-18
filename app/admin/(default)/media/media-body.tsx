@@ -13,7 +13,7 @@ interface MediaBodyProps {
 }
 //props include files and filePath
 export default function MediaBody({ files, file_path }: MediaBodyProps) {
-  const { setFilePath } = useMediaProvider()
+  const { setFilePath, setSelectedImage } = useMediaProvider()
   const router = useRouter()
   const { setFlyoutOpen } = useFlyoutContext()
   useEffect(() => {
@@ -37,6 +37,8 @@ export default function MediaBody({ files, file_path }: MediaBodyProps) {
       router.push(`/admin/media/${e.source}`)
     } else {
       setFlyoutOpen(true)
+      console.log(e)
+      setSelectedImage(e)
     }
   }
 
