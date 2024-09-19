@@ -3,13 +3,11 @@ import type { Content } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
 import { FlyoutProvider } from '@/app/admin/flyout-context'
 import { ArticleDataProvider } from '@/app/admin/article-data'
-import EditorSidebar from './editor-sidebar'
 import EditorBody from './editor-body'
 
 function ArticleEditor() {
   return (
     <div className="relative flex h-[100dvh] overflow-hidden" id="editor-content">
-      <EditorSidebar />
       <EditorBody />
     </div>
   )

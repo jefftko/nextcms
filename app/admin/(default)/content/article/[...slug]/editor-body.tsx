@@ -2,79 +2,60 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useArticleData } from '@/app/admin/article-data'
-import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/navigation'
 import { useMessage } from '@/app/admin/message-provider'
-import { editContent, createContent } from '@/utils/contentActions'
-import EasyMDE from 'easymde'
-import 'easymde/dist/easymde.min.css'
-import '@fortawesome/fontawesome-free/css/all.min.css'
+import { useFlyoutContext } from '@/app/admin/flyout-context'
+import EditorPanel from './editor-panel'
 
 export default function EditorBody() {
   const { articleData, setArticleData, action } = useArticleData()
-  const [isPreview, setIsPreview] = useState(false)
   const router = useRouter()
   const { setToast } = useMessage()
-  const editorRef = useRef(null)
-  const easyMDEInstance = useRef(null)
+  const [iframeUrl, setIframeUrl] = useState('/content/editor')
+  const { setFlyoutOpen } = useFlyoutContext()
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const [currentOrigin, setCurrentOrigin] = useState('')
 
   useEffect(() => {
-    if (!editorRef.current) return
-
-    console.log(articleData)
-
-    easyMDEInstance.current = new EasyMDE({
-      element: editorRef.current,
-      initialValue: articleData.content || '',
-      autoDownloadFontAwesome: false,
-      spellChecker: false,
-      status: false,
-      minHeight: '400px',
-    })
-
-    easyMDEInstance.current.codemirror.on('change', () => {
-      if (easyMDEInstance.current) {
-        setArticleData({ ...articleData, content: easyMDEInstance.current.value() })
-      }
-    })
-
-    return () => {
-      if (easyMDEInstance.current) {
-        easyMDEInstance.current.toTextArea()
-        easyMDEInstance.current = null
-      }
+    if (typeof window !== 'undefined') {
+      setCurrentOrigin(window.location.origin)
     }
   }, [])
 
   useEffect(() => {
-    if (easyMDEInstance.current) {
-      if (articleData.body.raw !== easyMDEInstance.current.value()) {
-        easyMDEInstance.current.value(articleData.body.raw)
-      }
+    if (articleData) {
+      const encodedData = encodeURIComponent(JSON.stringify(articleData))
+      //setIframeUrl(`content/editor?data=${encodedData}&action=${action}`)
     }
-  }, [articleData.body])
+  }, [articleData, action])
 
-  const handleSave = async () => {
-    try {
-      let resData
-      if (action === 'edit') {
-        resData = await editContent(articleData)
-      } else {
-        resData = await createContent(articleData)
-      }
-      if (resData && resData.status === 'success') {
-        setToast({ message: 'Article saved successfully', type: 'success' })
-        if (action === 'create') {
-          router.push(`/admin/content/article/edit/${articleData.slug}`)
-        }
-      } else {
-        setToast({ message: resData.message || 'Error saving article', type: 'error' })
-      }
-    } catch (error) {
-      setToast({ message: 'Error saving article', type: 'error' })
-      console.error('Error saving article:', error)
+  const sendMessageToIframe = (data) => {
+    const iframeWindow = iframeRef.current?.contentWindow
+    if (iframeWindow && currentOrigin) {
+      iframeWindow.postMessage(data, currentOrigin)
     }
   }
+
+  const handleMessage = (event) => {
+    if (event.origin !== currentOrigin) return
+
+    const { type, data } = event.data
+    if (type === 'save') {
+      setArticleData(data)
+      setToast({ message: '文章保存成功', type: 'success' })
+      if (action === 'create') {
+        router.push(`/admin/content/article/edit/${data.slug}`)
+      }
+    } else if (type === 'editBlock' || type === 'editCommon') {
+      setFlyoutOpen(true)
+      sendMessageToIframe({ type: 'highlight', blockId: data.blockId })
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [currentOrigin])
 
   return (
     <div className="flex-1 flex flex-col">
@@ -83,30 +64,30 @@ export default function EditorBody() {
           onClick={() => router.push('/admin/content/articles')}
           className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
         >
-          Back to Articles
+          返回文章列表
         </button>
-        <button
-          onClick={() => setIsPreview(!isPreview)}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+
+       {/* button to show article properties */}
+       <button
+          onClick={() => setFlyoutOpen(true)}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
         >
-          {isPreview ? 'Edit' : 'Preview'}
+          Properties
         </button>
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          Save
-        </button>
+
+        
       </div>
       <div className="flex-1 p-4 overflow-auto">
-        {isPreview ? (
-          <div className="prose max-w-none">
-            <ReactMarkdown>{articleData.body.raw}</ReactMarkdown>
-          </div>
-        ) : (
-          <textarea ref={editorRef} />
+        {iframeUrl && (
+          <iframe
+            ref={iframeRef}
+            src={`${currentOrigin}/${iframeUrl}`}
+            className="w-full h-full border-0"
+            title="文章编辑器"
+          />
         )}
       </div>
+      <EditorPanel />
     </div>
   )
 }
