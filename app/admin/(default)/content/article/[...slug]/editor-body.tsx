@@ -25,9 +25,10 @@ export default function EditorBody() {
   useEffect(() => {
     if (articleData) {
       const encodedData = encodeURIComponent(JSON.stringify(articleData))
+      //sendMessageToIframe({ type: 'globalData', commonData: articleData })
       //setIframeUrl(`content/editor?data=${encodedData}&action=${action}`)
     }
-  }, [articleData, action])
+  }, [articleData, action,currentOrigin])
 
   const sendMessageToIframe = (data) => {
     const iframeWindow = iframeRef.current?.contentWindow
@@ -49,6 +50,10 @@ export default function EditorBody() {
     } else if (type === 'editBlock' || type === 'editCommon') {
       setFlyoutOpen(true)
       sendMessageToIframe({ type: 'highlight', blockId: data.blockId })
+    }
+    if (type === 'editor-ready') {
+      sendMessageToIframe({ type: 'globalData', commonData: articleData })
+      console.log('editor-ready', articleData)
     }
   }
 

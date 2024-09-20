@@ -1,20 +1,28 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { ContentBlocks } from '@/components/BlocksRenderer'
-import Layout, { layouts } from '@/layouts/index'
-import { useAppProvider } from '@/app/app-provider'
 import Loading from '@/components/ui/Loading'
-
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import { components } from '@/components/MDXComponents'
+import PostSimple from '@/layouts/PostSimple'
+import PostLayout from '@/layouts/PostLayout'
+import PostBanner from '@/layouts/PostBanner'
+import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
+const defaultLayout = 'PostLayout'
+import { allContents, allAuthors } from 'contentlayer/generated'
+import type { Authors, Content as Blog } from 'contentlayer/generated'
+const layouts = {
+  PostSimple,
+  PostLayout,
+  PostBanner,
+}
 export default function EditorBody() {
-  const [blocks, setBlocks] = useState([])
   //const currentOrigin = window.location.origin
   const [currentOrigin, setCurrentOrigin] = useState<string>('')
   const [layout, setLayout] = useState('layoutDefault')
-  const { setShowOverlay, globalData, setGlobalData } = useAppProvider()
+  const [post, setPost] = useState(null)
 
   useEffect(() => {
     // set showOverlay to true
-    setShowOverlay(true)
 
     if (typeof window !== 'undefined') {
       setCurrentOrigin(window.location.origin)
@@ -25,7 +33,12 @@ export default function EditorBody() {
         return
       }
       //console.log('Message received from parent:', event.data.blocks);
-      const { type, blockId, blocks, layout, commonData } = event.data
+      const { type, layout, commonData } = event.data
+    
+      if (type === 'globalData') {
+        setPost(commonData)
+        console.log('globalData', commonData.body.code)
+      }
 
       if (type === 'highlight' && blockId) {
         console.log('highlight', blockId)
@@ -39,13 +52,6 @@ export default function EditorBody() {
         }
       }
 
-      if (commonData && commonData !== undefined && type === 'globalData') {
-        setGlobalData(commonData)
-      }
-
-      if (blocks) {
-        setBlocks(blocks)
-      }
       if (layout && layout !== undefined && layout != 'default') {
         setLayout(layout)
       }
@@ -67,13 +73,16 @@ export default function EditorBody() {
     }
     window.parent.postMessage(data, origin)
   }
-
+  const Layout = layouts[post?.layout || defaultLayout]
   return (
     <>
-      <Layout layout={layout as keyof typeof layouts}>
-        {/*blocks.length === 0 ? (<Loading />):(<ContentBlocks blocks={blocks} />)*/}
-        {blocks.length === 0 ? <Loading /> : <ContentBlocks blocks={blocks} />}
-      </Layout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(post?.structuredData) }}
+      />
+     {post? <Layout content={coreContent(post)}>
+         <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc}  /> 
+      </Layout> : <Loading />}
     </>
   )
 }
