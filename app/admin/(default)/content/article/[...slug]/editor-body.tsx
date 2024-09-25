@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useMessage } from '@/app/admin/message-provider'
 import { useFlyoutContext } from '@/app/admin/flyout-context'
 import EditorPanel from './editor-panel'
+import EditorArea from './editor-area'
+import { coreContent } from 'pliny/utils/contentlayer'
 
 export default function EditorBody() {
   const { articleData, setArticleData, action } = useArticleData()
@@ -15,6 +17,7 @@ export default function EditorBody() {
   const { setFlyoutOpen } = useFlyoutContext()
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [currentOrigin, setCurrentOrigin] = useState('')
+  const [editMode, setEditMode] = useState('true')
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -72,6 +75,13 @@ export default function EditorBody() {
           返回文章列表
         </button>
 
+        <button
+        onClick={() => setEditMode(!editMode)}
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        {editMode ? '预览模式' : '编辑模式'}
+      </button>
+
        {/* button to show article properties */}
        <button
           onClick={() => setFlyoutOpen(true)}
@@ -83,6 +93,10 @@ export default function EditorBody() {
         
       </div>
       <div className="flex-1 p-4 overflow-auto">
+        {editMode ? (
+          <EditorArea articleData={articleData} setArticleData={setArticleData} />
+        ) : (
+          <>
         {iframeUrl && (
           <iframe
             ref={iframeRef}
@@ -90,6 +104,8 @@ export default function EditorBody() {
             className="w-full h-full border-0"
             title="文章编辑器"
           />
+        )}
+        </>
         )}
       </div>
       <EditorPanel />
