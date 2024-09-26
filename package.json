@@ -11,6 +11,7 @@
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts"
   },
   "dependencies": {
+    "@emotion/css": "^11.13.0",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.4",
